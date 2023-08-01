@@ -1,0 +1,246 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(255, 255, 255)
+}
+
+.card1 {
+    height: 400px;
+    width: 100%;
+    border: 1px solid rgba(128, 128, 128, 0.85);
+    border-radius: 8px;
+    transition: all 0.5s;
+    z-index: 0;
+    /*box-shadow: 0px 5px 5px rgba(255, 255, 255, 0.55);*/
+}
+
+.card1:hover {
+    transform: scale(1.03)
+}
+
+.card2 {
+    height: 400px;
+    width: 100%;
+    border: none;
+    background-color: #000;
+    border-radius: 8px;
+    transition: all 0.5s;
+}
+
+.card2:hover {
+    transform: scale(1.03)
+}
+
+.login {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px
+}
+
+.input-field span {
+    font-size: 12px;
+    color: #cecdcd;
+    margin-left: 10px
+}
+
+.login-button {
+    height: 35px;
+    width: 100%;
+    background-color: #000;
+    font-weight: 500;
+    color: #cdcdc4;
+    border: none;
+    font-size: 15px
+}
+
+.login-button:hover {
+    background-color: #F4882F;
+    color: black;
+}
+
+.text1 .forget {
+    color: #767676;
+    font-weight: 500
+}
+
+.text2 span {
+    font-weight: 500;
+    color: #7a7778
+}
+
+.text2 .register {
+    color: #4f4942;
+    font-weight: bold
+}
+
+#image-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#header-nav {
+    height: 10vh;
+    background-color: #ffffff;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.22);
+}
+
+#header-nav-logo {
+    display: flex;
+    justify-content: center;
+    margin-top: -1vh;
+}
+
+#header-nav-option {
+    height: 10vh;
+    align-items: center;
+    display: flex;
+}
+
+#header-nav-option ul {
+    display: flex;
+    list-style: none;
+    margin-bottom: 0;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+}
+
+#header-nav-option ul li {
+    /*margin-left: 5vw;*/
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#header-nav-option ul li a {
+    text-decoration: none;
+    color: #000000;
+    height: 5vh;
+    align-items: center;
+    display: flex;
+    padding: 0px 10px;
+}
+
+#header-nav-option ul li:hover a {
+    text-decoration: none;
+    color: #000;
+    height: 5vh;
+    align-items: center;
+    display: flex;
+    padding: 0px 10px;
+    background-color: #F4882F;
+}
+
+.nav-sub:hover {
+    border-radius: 10px 10px 0px 0px !important;
+    background-color: #F4882F;
+}
+
+li:hover > a {
+    /*color: var(--color-secondary)!important;*/
+}
+
+
+a {
+    position: relative;
+    display: inline-block;
+    text-decoration: none!important;
+    color: #000; /* Màu chữ của đường link */
+}
+
+/* Định dạng gạch chân chạy (underline) */
+a::after {
+    content: "";
+    position: absolute;
+    bottom: -2px; /* Khoảng cách gạch chân so với văn bản, tùy chỉnh theo ý muốn */
+    left: 0;
+    width: 0;
+    height: 2px; /* Độ dày của gạch chân */
+    background-color: #f00; /* Màu của gạch chân */
+    transition: width 0.5s; /* Thời gian animation chạy (0.3 giây ở đây) */
+}
+
+/* Hiệu ứng chạy khi hover (di chuột qua) */
+li:hover::after a {
+    width: 100%; /* Khi hover thì chiều rộng của gạch chân chạy đến 100% */
+}
+
+.nav-product #sub-nav-product {
+    display: none;
+}
+
+.nav-product #sub-nav-product li {
+    font-size: 1rem;
+    padding-left: 10px;
+    font-weight: 500;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.nav-product:hover #sub-nav-product {
+    position: absolute;
+    display: block !important;
+    background-color: #ffffff;
+    max-width: 10rem;
+    border-radius: 0px 10px 10px 10px !important;
+    border: 1px solid rgba(90, 90, 90, 0.45);
+    overflow: hidden;
+}
+
+.nav-product #sub-nav-product li:hover {
+    background-color: rgb(255, 160, 60);
+    color: white;
+    cursor: pointer;
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ không gian trong phần tử cha */
+    height: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ không gian trong phần tử cha */
+    object-fit: cover;
+}
+
+.nav-product:hover #sub-nav-product li ul {
+    /*display: block;*/
+}
+
+#sub-nav-product:hover {
+    /*position: absolute;*/
+    /*display: block !important;*/
+    /*display: none;*/
+}
+
+i {
+    font-size: 20px;
+}
+
+.btn-operator-subs {
+    border-radius: 0 5px 5px 0;
+}
+
+.btn-operator-plus {
+    border-radius: 5px 0 0 5px;
+}
+
+#input-quantity-product {
+    border-radius: 0;
+    text-align: center;
+    width: 5rem;
+}
+
+.btn-buy-product {
+    width: 100%;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid black;
+    font-weight: bold;
+}
+.btn-buy-product:hover {
+    width: 100%;
+    background-color: #F4882F;
+    color: #000000;
+}
