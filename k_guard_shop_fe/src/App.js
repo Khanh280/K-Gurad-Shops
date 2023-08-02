@@ -7,6 +7,7 @@ import Footer from "./component/Footer";
 import Home from "./component/Home";
 import DetailProduct from "./component/DetailProduct";
 import ShoppingCart from "./component/ShoppingCart";
+import ProductHome from "./component/ProductHome";
 
 function App() {
     return (
@@ -15,8 +16,9 @@ function App() {
             <div style={{minHeight: "97.5vh",marginTop: "10vh"}}>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
+                    <Route path="/product" element={<ProductHome/>}/>
                     <Route path="/login" element={<LoginForm/>}/>
-                    <Route path="/detail" element={<DetailProduct/>}/>
+                    <Route path="/product/detail/:id" element={<DetailProduct/>}/>
                     <Route path="/cart" element={<ShoppingCart/>}/>
                 </Routes>
             </div>

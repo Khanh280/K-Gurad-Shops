@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
+import FullFaceHot from "./FullFaceHot";
 
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
-    useEffect(()=>{
-        window.scrollTo(0,0)
-    },[])
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
     return (
         <>
-            <div className="container" style={{marginTop: "11vh"}}>
-                <i className="bi bi-house-door"><Link to="" className="ms-2">Trang chủ</Link> > Chi tiết sản phẩm</i>
+            <div className="container" style={{marginTop: "12vh"}}>
+                <div className="row bg-dark text-light">
+                    <i className="bi bi-house-door"> /<NavLink to="/product" className="ms-2 text-light">Sản phẩm</NavLink> / Chi tiết
+                        sản phẩm</i>
+                </div>
                 <hr style={{marginTop: "0"}}/>
                 <div className="row">
                     <div className="col-md-5 p-0 "
@@ -100,99 +104,16 @@ export default function DetailProduct() {
                     </div>
                 </div>
                 <div className="row mt-5 mb-5">
-                    <div className="col-md-12 text-center">
-                        <h3 className="sub-title-product">SẢN PHẨM LIÊN QUAN</h3>
-                        {/*<hr style={{*/}
-                        {/*    boxShadow: "0px 3px 10px #ff9300",*/}
-                        {/*    borderBottom: "1px solid #ff8c00d9",*/}
-                        {/*    width: "100%",*/}
-                        {/*}}/>*/}
+                    <div className="col-md-12 text-center d-flex">
+                        <div className="col-md-4">
+                            <hr/>
+                        </div>
+                        <h3 className=" col-md-4 sub-title-product">SẢN PHẨM LIÊN QUAN</h3>
+                        <div className="col-md-4">
+                            <hr/>
+                        </div>
                     </div>
-                    <Link to="/detail" className="col-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/R.478e5e20fc205672a24673778a6cd38f?rik=qHdW6vedazBF7g&pid=ImgRaw&r=0"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <Link to="/detail" className="col-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/R.93487ab8c22e6267c2fad82769142ea1?rik=Vi0QqXJVEpKjGw&riu=http%3a%2f%2fscoyco.com.vn%2fuploads%2fkinh+kyt+tt+course1_1.jpg&ehk=YyZ%2bnGgrBlJ8egVFcsJV%2bdbvi9IWrbjDc3kmXfRMzcU%3d&risl=&pid=ImgRaw&r=0"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <Link to="/detail" className="col-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <Link to="/detail" className="col-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/R.6061e441f5a6effc278cde3f862949fb?rik=IxLUDAMB8ro8Dw&pid=ImgRaw&r=0"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <div className="col-md-12 d-flex justify-content-center mt-2">
-                        <button id="load-more-product" className="btn btn-sm mt-2 justify-content-center"
-                                style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm<i
-                            className="bi bi-chevron-down"></i></button>
-                    </div>
+                    <FullFaceHot/>
                 </div>
 
             </div>

@@ -33,7 +33,7 @@ export default function Header() {
                         >Giới thiệu</NavLink>
                     </li>
                     <li className="nav-product nav-sub">
-                        <NavLink to="/c"
+                        <NavLink to="/product"
                                  style={({isActive}) => {
                                      return {
                                          backgroundColor: isActive ? "#F4882F" : "   ",

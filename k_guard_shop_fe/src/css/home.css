@@ -100,14 +100,16 @@
 
 .guard-items{
     position: relative;
+    cursor: pointer;
 }
 
 .guard-items:hover .guard-items-content{
     color: #ffffff;
     display: block;
+
 }
 .guard-items:hover .guard-items-home img{
-   opacity: 50%;
+   opacity: 30%;
 }
 .guard-items-content{
     position: absolute;
@@ -116,6 +118,7 @@
     color: white;
     transform: translate(-50%,-50%);
     display: none;
+    text-align: center;
 }
 
 .guard-items-home{
@@ -173,4 +176,14 @@
 .product-link:hover{
     color: black;
 }
-
+.hr-guard{
+    color: white !important;
+    width: 10rem;
+    border: 1px solid white;
+    margin: 0.5rem 0;
+}
+.back-up{
+    position: sticky;
+    bottom: 1vh;
+    margin: 5px;
+}

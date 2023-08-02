@@ -3,7 +3,9 @@ import "bootstrap/dist/css/bootstrap-grid.css"
 import "bootstrap/dist/js/bootstrap"
 import "../css/home.css"
 import {Link} from "react-router-dom";
-
+import FullFaceHot from "./FullFaceHot";
+import { animateScroll as scroll } from 'react-scroll';
+import BackUp from "./BackUp";
 export default function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -142,91 +144,7 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="row">
-                    <Link to="/detail" className="col-md-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "15rem"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/R.478e5e20fc205672a24673778a6cd38f?rik=qHdW6vedazBF7g&pid=ImgRaw&r=0"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <Link to="/detail" className="col-md-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/R.93487ab8c22e6267c2fad82769142ea1?rik=Vi0QqXJVEpKjGw&riu=http%3a%2f%2fscoyco.com.vn%2fuploads%2fkinh+kyt+tt+course1_1.jpg&ehk=YyZ%2bnGgrBlJ8egVFcsJV%2bdbvi9IWrbjDc3kmXfRMzcU%3d&risl=&pid=ImgRaw&r=0"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <Link to="/detail" className="col-md-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <Link to="/detail" className="col-md-3 product-link">
-                        <div className="card">
-                            <span className="sale">Mới</span>
-                            <div className="image" style={{height: "32vh"}}>
-                                <img
-                                    src="https://th.bing.com/th/id/R.6061e441f5a6effc278cde3f862949fb?rik=IxLUDAMB8ro8Dw&pid=ImgRaw&r=0"/>
-                            </div>
-                            <div className="details">
-                                <h3>Black Forest cake</h3>
-                                <div className="price-ratings">
-                                    <div className="price">
-                                        <span>$7.99 </span>
-                                    </div>
-                                    <div className="ratings">
-                                        Mua
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                    <div className="col-md-12 d-flex justify-content-center mt-2">
-                        <button id="load-more-product" className="btn btn-sm mt-2 justify-content-center"
-                                style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm<i
-                            className="bi bi-chevron-down"></i></button>
-                    </div>
+                    <FullFaceHot/>
                 </div>
 
                 <div className="row pt-5">
@@ -246,7 +164,12 @@ export default function Home() {
                                     <img
                                         src="https://product.hstatic.net/1000325215/product/ego-camo-hong-dai-ngon_master.jpg"
                                         alt="" style={{width: "100%"}}/>
-                                    <div className="guard-items-content">Găng tay</div>
+                                    <div className="guard-items-content">
+                                        <b>Găng tay</b>
+                                        <hr className="hr-guard"/>
+                                        <p>Găng tay bảo hộ đi xe máy an toàn, êm ái.</p>
+                                    </div>
+
                                 </div>
                             </div>
                             <div className="col-md-3 guard-items">
@@ -254,7 +177,11 @@ export default function Home() {
                                     <img
                                         src="https://x135shop.vn/wp-content/uploads/2020/12/125054518_1000345630475047_3941925206897407637_o-300x300.jpg"
                                         alt="" style={{height: "100%"}}/>
-                                    <div className="guard-items-content">Mũ bảo hiểm</div>
+                                    <div className="guard-items-content">
+                                        <b>Mũ bảo hiểm</b>
+                                        <hr className="hr-guard"/>
+                                        <p>Nhiều loại mũ 3/4, Fullface chính hãng, giá tốt hiệu AGV, Yohe, Arai,KYT...</p>
+                                        </div>
                                 </div>
 
                             </div>
@@ -263,7 +190,11 @@ export default function Home() {
                                     <img
                                         src="https://th.bing.com/th/id/R.69500be00c0cac645b18fd512865f797?rik=CUNOxbrfAhvipA&riu=http%3a%2f%2fwww.phukienphuot.com%2fuploads%2fimages%2fmedium%2fIMG_4732.JPG&ehk=adHLdlNr7BrMYvHWowVYsnROQ0mHx6aAplQpU9Veljo%3d&risl=&pid=ImgRaw&r=0"
                                         alt="" style={{height: "100%"}}/>
-                                    <div className="guard-items-content">Áo giáp</div>
+                                    <div className="guard-items-content">
+                                        <b>Áo khoác giáp</b>
+                                        <hr className="hr-guard"/>
+                                        <p>Đảm bảo an toàn cho cơ thể, giảm thiểu các vấn đề về chấn thương.</p>
+                                    </div>
                                 </div>
 
                             </div>
@@ -271,7 +202,11 @@ export default function Home() {
                                 <div className="guard-items-home">
                                     <img src="http://www.phukienphuot.com/uploads/images/medium/thung_xe_k1300r_11.JPG"
                                          alt="" style={{height: "100%"}}/>
-                                    <div className="guard-items-content">Thùng Givi</div>
+                                    <div className="guard-items-content">
+                                        <b>Baga - Thùng Givi</b>
+                                        <hr className="hr-guard"/>
+                                        <p>Lắp đặt baga Givi chính hãng, tiện lợi hơn trong các chuyến đi.</p>
+                                    </div>
                                 </div>
 
                             </div>
@@ -338,6 +273,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+            <BackUp/>
         </>
     )
 }
