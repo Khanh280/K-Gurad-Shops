@@ -244,3 +244,6 @@ i {
     background-color: #F4882F;
     color: #000000;
 }
+li{
+    list-style: none;
+}

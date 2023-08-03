@@ -187,3 +187,21 @@
     bottom: 1vh;
     margin: 5px;
 }
+.carousel-control-next .visually-hidden{
+    display: none;
+}
+.carousel-control-prev {
+    margin-left: -7rem;
+    display: none;
+}
+.carousel-control-next {
+    margin-right: -7rem;
+    display: none;
+}
+.carousel-control-prev .visually-hidden{
+    display: none;
+
+}
+.carousel-indicators{
+    display: none;
+}

@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import FullFaceHot from "./FullFaceHot";
 import { animateScroll as scroll } from 'react-scroll';
 import BackUp from "./BackUp";
+import {Carousel} from "react-bootstrap"
 export default function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -272,6 +273,80 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+
+
+                <div className="container">
+                    <div className="col-md-12 text-center d-flex">
+                        <div className="col-md-5">
+                            <hr/>
+                        </div>
+                        <h3 className=" col-md-2 sub-title-product">Tin tức</h3>
+                        <div className="col-md-5">
+                            <hr/>
+                        </div>
+                    </div>
+                    <Carousel interval={1000}>
+
+                        <Carousel.Item>
+                            <div
+                                className="row portfolio-container"
+                                data-aos="fade-up"
+                                data-aos-delay={400}
+                            >
+                                <Link to={`/post`} className="col-md-3 product-link py-2">
+                                    <div className="card">
+                                        <span className="sale">HOT</span>
+                                        <div className="image" style={{height: "32vh"}}>
+                                            <img
+                                                src="https://taidat.vn/wp-content/uploads/2021/05/li-nen-chon-ao-mua-bo-kyt-cho-mua-mua-bao-1-600x420.jpg"/>
+                                        </div>
+                                        <div className="details">
+                                            <p>Lí do nên chọn áo mưa bộ KYT cho mùa mưa bão</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                                <Link to={`/post`} className="col-md-3 product-link py-2">
+                                    <div className="card">
+                                        <span className="sale">HOT</span>
+                                        <div className="image" style={{height: "32vh"}}>
+                                            <img
+                                                src="https://taidat.vn/wp-content/uploads/2021/05/mu-bao-hiem-yohe-851-1.jpg"/>
+                                        </div>
+                                        <div className="details">
+                                            <p>3 lý do khiến cả nam lẫn nữ đều thích mũ Yohe 851</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                                <Link to={`/post`} className="col-md-3 product-link py-2">
+                                    <div className="card">
+                                        <span className="sale">HOT</span>
+                                        <div className="image" style={{height: "32vh"}}>
+                                            <img
+                                                src="https://taidat.vn/wp-content/uploads/2021/04/chia-se-kinh-nghiem-chay-xe-duong-dai-10-600x525.jpg"/>
+                                        </div>
+                                        <div className="details">
+                                            <p>Chia sẻ kinh nghiệm chạy xe đường dài</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                                <Link to={`/post`} className="col-md-3 product-link py-2">
+                                    <div className="card">
+                                        <span className="sale">HOT</span>
+                                        <div className="image" style={{height: "32vh"}}>
+                                            <img
+                                                src="https://taidat.vn/wp-content/uploads/2021/05/vi-sao-kyt-venom-chiem-tron-trai-tim-gioi-tre-21-600x426.jpg"/>
+                                        </div>
+                                        <div className="details">
+                                            <p>KYT Helmet – Thương hiệu nón bảo hiểm chất lượng, độc đáo cho biker</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+
+                        </Carousel.Item>
+                    </Carousel>
+                </div>
+
             </div>
             <BackUp/>
         </>

@@ -59,7 +59,7 @@ export default function ShoppingCart() {
     }, [])
     return (
         <>
-            <div className="px-3" style={{marginTop: "13vh"}}>
+            <div className="px-4" style={{marginTop: "13vh"}}>
                 <div className="d-flex">
                     <div className="col-md-9 ">
                         <div className="" align="center">

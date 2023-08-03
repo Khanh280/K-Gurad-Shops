@@ -9,15 +9,16 @@ export default function DetailProduct() {
     }, [])
     return (
         <>
-            <div className="container" style={{marginTop: "12vh"}}>
-                <div className="row bg-dark text-light">
-                    <i className="bi bi-house-door"> /<NavLink to="/product" className="ms-2 text-light">Sản phẩm</NavLink> / Chi tiết
-                        sản phẩm</i>
+            <div className="px-5" style={{marginTop: "12vh"}}>
+                <div className="row bg-dark text-light mb-2 align-items-center" style={{height: "3rem"}}>
+                    <div className="col-md-4">
+                        <Link to="/"><i className="bi bi-house-door" style={{color: "#fff"}}></i></Link> /<NavLink
+                        to="/product" className="ms-2 text-light">Sản phẩm / Chi tiết sản phẩm</NavLink>
+                    </div>
                 </div>
-                <hr style={{marginTop: "0"}}/>
                 <div className="row">
                     <div className="col-md-5 p-0 "
-                         style={{border: "1px solid #b3b3b33b", borderRadius: "10px", height: "36rem"}}>
+                         style={{border: "1px solid #b3b3b33b", borderRadius: "10px", height: "41rem"}}>
                         <div className="row">
                             <img
                                 src="https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1"
