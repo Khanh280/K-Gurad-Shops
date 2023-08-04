@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import "../css/cart.css"
 import {Form, Formik, Field} from "formik";
+import Swal from "sweetalert2";
+import BackUp from "./BackUp";
 
 export default function ShoppingCart() {
     const [shoppingCart, setShoppingCarts] = useState(10)
@@ -10,9 +12,6 @@ export default function ShoppingCart() {
         for (let i = 0; i < shoppingCart; i++) {
             cart.push(
                 <tr className="row-table-height">
-                    <td className="row-table-height">
-                        <p className="row-table">1</p>
-                    </td>
                     <td className="row-table-height">
                         <img
                             src="https://twomotion.net/wp-content/uploads/2020/06/AGV-Pista-GP-R-Limited.png"
@@ -43,12 +42,27 @@ export default function ShoppingCart() {
                         <div className="row-table">
                             {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
                             {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
-                            <i className="bi bi-x" style={{cursor:"pointer"}} title="Xóa"></i>
+                            <i className="bi bi-x" style={{cursor:"pointer"}} title="Xóa" onClick={()=>modals("AGV")}></i>
                         </div>
                     </td>
                 </tr>)
         }
         return cart;
+    }
+    const modals = async (name) => {
+        Swal.fire({
+            icon: "warning",
+            title: "Xóa Penalty",
+            html: `Bạn có muốn xoá đơn hàng <span style="color: red">${name}</span> không?`,
+            showCancelButton: true,
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không',
+            reverseButtons: true
+        }).then((res) => {
+            if (res.isConfirmed) {
+
+            }
+        })
     }
     useEffect(() => {
         window.scrollTo(0,0)
@@ -69,7 +83,6 @@ export default function ShoppingCart() {
                         <table className="col-md-12 table ">
                             <thead>
                             <tr>
-                                <th>Id</th>
                                 <th>Hình ảnh</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Mã sản phẩm</th>
@@ -217,6 +230,7 @@ export default function ShoppingCart() {
                     </div>
                 </div>
             </div>
+            <BackUp/>
         </>
     )
 }

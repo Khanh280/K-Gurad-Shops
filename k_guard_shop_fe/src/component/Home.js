@@ -4,9 +4,12 @@ import "bootstrap/dist/js/bootstrap"
 import "../css/home.css"
 import {Link} from "react-router-dom";
 import FullFaceHot from "./FullFaceHot";
-import { animateScroll as scroll } from 'react-scroll';
+import {animateScroll as scroll} from 'react-scroll';
 import BackUp from "./BackUp";
 import {Carousel} from "react-bootstrap"
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+
 export default function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -181,8 +184,9 @@ export default function Home() {
                                     <div className="guard-items-content">
                                         <b>Mũ bảo hiểm</b>
                                         <hr className="hr-guard"/>
-                                        <p>Nhiều loại mũ 3/4, Fullface chính hãng, giá tốt hiệu AGV, Yohe, Arai,KYT...</p>
-                                        </div>
+                                        <p>Nhiều loại mũ 3/4, Fullface chính hãng, giá tốt hiệu AGV, Yohe,
+                                            Arai,KYT...</p>
+                                    </div>
                                 </div>
 
                             </div>
@@ -285,8 +289,8 @@ export default function Home() {
                             <hr/>
                         </div>
                     </div>
+                    <marquee behavior="scroll" direction="right" scrollamount="20"></marquee>
                     <Carousel interval={1000}>
-
                         <Carousel.Item>
                             <div
                                 className="row portfolio-container"
@@ -342,13 +346,12 @@ export default function Home() {
                                     </div>
                                 </Link>
                             </div>
-
                         </Carousel.Item>
                     </Carousel>
                 </div>
-
             </div>
             <BackUp/>
+            <ToastContainer />
         </>
     )
 }

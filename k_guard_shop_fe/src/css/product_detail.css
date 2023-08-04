@@ -1,0 +1,7 @@
+.image-detail:hover img {
+    transform: scale(0.9);
+    opacity: 30%;
+}
+.image-detail img {
+    transform: scale(0.8);
+}

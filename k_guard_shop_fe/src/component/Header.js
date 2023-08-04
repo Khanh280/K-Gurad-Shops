@@ -1,8 +1,31 @@
 import "bootstrap/dist/css/bootstrap-grid.css"
-import React from "react";
-import {Link, NavLink} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, NavLink, useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+
 
 export default function Header() {
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username")
+    const role = localStorage.getItem("role")
+    const [isLogin, setIsLogin] = useState(false);
+    const navigate = useNavigate();
+
+    const handlerLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        localStorage.removeItem("role");
+        setIsLogin(false);
+        toast.success("Đăng xuất thành công !!");
+        navigate("/login")
+    };
+    useEffect(() => {
+        if (token) {
+            setIsLogin(() => true);
+        } else {
+
+        }
+    }, [token])
     return (
         <div id="header-nav" className="row">
             <div id="header-nav-logo" className="col-md-2">
@@ -84,34 +107,104 @@ export default function Header() {
                         >Liên hệ</NavLink>
                     </li>
 
-                    <li>
-                        <NavLink to="/login" className=""
-                                 style={({isActive}) => {
-                                     return {
-                                         backgroundColor: isActive ? "#F4882F" : "   ",
-                                         color: isActive ? "black" : "",
-                                         borderRadius: "10px",
-                                     }
-                                 }}
-                        >Đăng nhập
-                            <i style={{marginLeft: "0.5rem"}}
-                               className="fa-regular fa-user"></i>
-                        </NavLink>
-                    </li>
 
-                    <li>
-                        <NavLink to="/cart" className="me-5"
-                                 style={({isActive}) => {
-                                     return {
-                                         backgroundColor: isActive ? "#F4882F" : "   ",
-                                         color: isActive ? "black" : "",
-                                         borderRadius: "10px",
-                                     }
-                                 }}
-                        >
-                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>2</sup></i>
-                        </NavLink>
-                    </li>
+                    {
+                        isLogin ?
+                            role && role === "ROLE_ADMIN" ?
+                                <>
+                                    <li className="nav-product nav-sub me-3">
+                                        <Link to="" className=""
+                                              style={{
+                                                  color: "black",
+                                                  borderRadius: "10px"
+                                              }}
+                                        >{username}
+                                            <i style={{marginLeft: "0.5rem"}}
+                                               className="fa-regular fa-user"></i>
+                                        </Link>
+                                        <ul id="sub-nav-product" style={{maxWidth: "12rem"}}>
+
+                                            <li className="d-flex justify-content-between align-items-center">Quản
+                                                lý cửa hàng
+                                                <i className="bi bi-person-lines-fill pe-2"
+                                                   style={{fontSize: "1.5rem"}}></i>
+                                            </li>
+                                            <li onClick={() => handlerLogout()}
+                                                className="d-flex justify-content-between align-items-center">Đăng xuất
+                                                <i className="bi bi-box-arrow-right  pe-2"
+                                                   style={{fontSize: "1.5rem"}}></i>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                    </li>
+                                </>
+                                :
+                                <>
+                                    <li className="nav-product nav-sub me-3">
+                                        <Link to="" className=""
+                                              style={{
+                                                  color: "black",
+                                                  borderRadius: "10px"
+                                              }}
+                                        >{username}
+                                            <i style={{marginLeft: "0.5rem"}}
+                                               className="fa-regular fa-user"></i>
+                                        </Link>
+                                        <ul id="sub-nav-product" style={{maxWidth: "12rem"}}>
+                                            <li onClick={() => handlerLogout()}
+                                                className="d-flex justify-content-between align-items-center">Đăng xuất
+                                                <i className="bi bi-box-arrow-right  pe-2"
+                                                   style={{fontSize: "1.5rem"}}></i>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/cart" className="me-5"
+                                                 style={({isActive}) => {
+                                                     return {
+                                                         backgroundColor: isActive ? "#F4882F" : "   ",
+                                                         color: isActive ? "black" : "",
+                                                         borderRadius: "10px",
+                                                     }
+                                                 }}
+                                        >
+                                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>2</sup></i>
+                                        </NavLink>
+                                    </li>
+                                </>
+                            :
+                            <>
+                                <li>
+                                    <NavLink to="/login" className=""
+                                             style={({isActive}) => {
+                                                 return {
+                                                     backgroundColor: isActive ? "#F4882F" : "   ",
+                                                     color: isActive ? "black" : "",
+                                                     borderRadius: "10px",
+                                                 }
+                                             }}
+                                    >Đăng nhập
+                                        <i style={{marginLeft: "0.5rem"}}
+                                           className="fa-regular fa-user"></i>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/cart" className="me-5"
+                                             style={({isActive}) => {
+                                                 return {
+                                                     backgroundColor: isActive ? "#F4882F" : "   ",
+                                                     color: isActive ? "black" : "",
+                                                     borderRadius: "10px",
+                                                 }
+                                             }}
+                                    >
+                                        <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>2</sup></i>
+                                    </NavLink>
+                                </li>
+                            </>
+
+                    }
                 </ul>
             </div>
         </div>

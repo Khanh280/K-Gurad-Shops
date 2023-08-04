@@ -1,9 +1,6 @@
 package com.example.k_guard_shop_be.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Users {
@@ -13,15 +10,19 @@ public class Users {
     private String username;
     private String password;
     private String verifyCode;
+    @ManyToOne
+    @JoinColumn
+    private Roles roles;
 
     public Users() {
     }
 
-    public Users(Long id, String username, String password, String verifyCode) {
+    public Users(Long id, String username, String password, String verifyCode, Roles roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.verifyCode = verifyCode;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -54,5 +55,13 @@ public class Users {
 
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
+    }
+
+    public Roles getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Roles roles) {
+        this.roles = roles;
     }
 }

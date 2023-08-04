@@ -1,37 +1,29 @@
-package com.example.k_guard_shop_be.model;
+package com.example.k_guard_shop_be.dto;
 
+import com.example.k_guard_shop_be.model.Users;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
-@Entity
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CustomerDTO {
     private Long id;
     private String name;
     private String address;
     private String phoneNumber;
     private Integer gender;
-    @JoinColumn
-    @ManyToOne
     private Users users;
     private String email;
-    @CreationTimestamp
-    @JoinColumn(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
-    @UpdateTimestamp
-    @JoinColumn(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
-    @JoinColumn(columnDefinition = "DEFAULT BIT(0)")
     private boolean isDelete;
 
-    public Customer() {
+    public CustomerDTO() {
     }
 
-    public Customer(Long id, String name, String address, String phoneNumber, Integer gender, Users users, String email, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
+    public CustomerDTO(Long id, String name, String address, String phoneNumber, Integer gender, Users users, String email, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
         this.id = id;
         this.name = name;
         this.address = address;

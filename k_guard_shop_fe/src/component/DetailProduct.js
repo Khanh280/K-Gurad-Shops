@@ -1,12 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {Link, NavLink} from "react-router-dom";
 import FullFaceHot from "./FullFaceHot";
-
+import "../css/product_detail.css"
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
+    const [imagemain, setImageMain] = useState("https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1");
+    const selectImage = (url) => {
+        setImageMain(() => url)
+    }
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
+    useEffect(() => {
+    }, [imagemain])
     return (
         <>
             <div className="px-5" style={{marginTop: "12vh"}}>
@@ -21,30 +27,34 @@ export default function DetailProduct() {
                          style={{border: "1px solid #b3b3b33b", borderRadius: "10px", height: "41rem"}}>
                         <div className="row">
                             <img
-                                src="https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1"
+                                src={imagemain}
                                 style={{width: "100%", borderRadius: "20px"}}/>
                         </div>
 
                         <div className="row m-0" style={{borderTop: "1px solid #b3b3b33b"}}>
-                            <div className="col-md-3">
+                            <div className="col-md-3 image-detail">
                                 <img
                                     src="https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1"
-                                    style={{width: "100%"}}/>
+                                    onClick={() => selectImage("https://th.bing.com/th/id/OIP.ycxdk81Hf058msVUOTE4YwHaHa?pid=ImgDet&w=900&h=900&rs=1")}
+                                    style={{width: "100%", cursor: "pointer"}}/>
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-3 image-detail">
                                 <img
                                     src="https://th.bing.com/th/id/R.10b758fe9dd43ffdceeadec4266be587?rik=PZfQKsdIRwfGsw&pid=ImgRaw&r=0"
-                                    style={{width: "100%"}}/>
+                                    onClick={() => selectImage("https://th.bing.com/th/id/R.10b758fe9dd43ffdceeadec4266be587?rik=PZfQKsdIRwfGsw&pid=ImgRaw&r=0")}
+                                    style={{width: "100%", cursor: "pointer"}}/>
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-3 image-detail">
                                 <img
                                     src="https://twomotion.net/wp-content/uploads/2020/06/AGV-Pista-GP-R-Limited.png"
-                                    style={{width: "100%"}}/>
+                                    onClick={() => selectImage("https://twomotion.net/wp-content/uploads/2020/06/AGV-Pista-GP-R-Limited.png")}
+                                    style={{width: "100%", cursor: "pointer"}}/>
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-3 image-detail">
                                 <img
                                     src="https://images.motocard.com/eyJidWNrZXQiOiJtb3RvY2FyZCIsImtleSI6InByb2R1Y3RzL2ltYWdlcy8wNzYyMi9hZ3YtcGlzdGFfZ3Bfcl9yb3NzaV93aW50ZXJfdGVzdF8yMDE5X2xpbWl0ZWRfZWRpdGlvbi0yLU0tMDc2MjI2MTM0LmpwZyIsImVkaXRzIjp7IndlYnAiOnsicXVhbGl0eSI6ODV9LCJqcGVnIjp7InF1YWxpdHkiOjkxfSwicmVzaXplIjp7IndpZHRoIjoxMTAwLCJoZWlnaHQiOjExMDAsImZpdCI6ImNvdmVyIn19LCJ2IjoiNmRmYTA4N2I0OTM5NTAwYzE3MTNkOTI4OThmOWM4NmQifQ=="
-                                    style={{width: "100%"}}/>
+                                    onClick={() => selectImage("https://images.motocard.com/eyJidWNrZXQiOiJtb3RvY2FyZCIsImtleSI6InByb2R1Y3RzL2ltYWdlcy8wNzYyMi9hZ3YtcGlzdGFfZ3Bfcl9yb3NzaV93aW50ZXJfdGVzdF8yMDE5X2xpbWl0ZWRfZWRpdGlvbi0yLU0tMDc2MjI2MTM0LmpwZyIsImVkaXRzIjp7IndlYnAiOnsicXVhbGl0eSI6ODV9LCJqcGVnIjp7InF1YWxpdHkiOjkxfSwicmVzaXplIjp7IndpZHRoIjoxMTAwLCJoZWlnaHQiOjExMDAsImZpdCI6ImNvdmVyIn19LCJ2IjoiNmRmYTA4N2I0OTM5NTAwYzE3MTNkOTI4OThmOWM4NmQifQ==")}
+                                    style={{width: "100%", cursor: "pointer"}}/>
                             </div>
                         </div>
 

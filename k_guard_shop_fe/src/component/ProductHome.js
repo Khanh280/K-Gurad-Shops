@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, NavLink} from "react-router-dom";
 import "../css/product_home.css"
+import BackUp from "./BackUp";
 
 export default function ProductHome() {
     const [products, setProducts] = useState(12)
@@ -60,7 +61,9 @@ export default function ProductHome() {
         }
         return cart;
     }
-
+    useEffect(() => {
+    window.scrollTo(0,0)
+    }, [])
     return (
         <>
             <div className="px-5" style={{marginTop: "12vh"}}>
@@ -148,6 +151,7 @@ export default function ProductHome() {
                     </div>
                 </div>
             </div>
+            <BackUp/>
         </>
     )
 }

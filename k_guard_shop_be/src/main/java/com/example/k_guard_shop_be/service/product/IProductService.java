@@ -1,4 +1,4 @@
-package com.example.k_guard_shop_be.service;
+package com.example.k_guard_shop_be.service.product;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.model.Images;
@@ -13,5 +13,4 @@ public interface IProductService {
     void saveProduct(Product product);
     void deleteProduct(Long id);
     Product getProductById(Long id);
-    void saveImage (List<Images> imagesList);
 }

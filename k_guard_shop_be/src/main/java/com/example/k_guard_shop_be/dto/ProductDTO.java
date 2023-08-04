@@ -1,5 +1,6 @@
 package com.example.k_guard_shop_be.dto;
 
+import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.ProductType;
 import com.example.k_guard_shop_be.model.Sizes;
 
@@ -26,12 +27,12 @@ public class ProductDTO {
     private boolean isDelete;
     @NotNull(message = "Khong duoc de trong")
     @Size(min = 1,message = "It nhat 1 anh")
-    private List<String> image;
+    private List<Images> image;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, Long price, String description, Sizes sizes, ProductType productType, LocalDateTime createDate, LocalDateTime updateDate, Integer quantity, boolean isDelete, List<String> image) {
+    public ProductDTO(Long id, String name, Long price, String description, Sizes sizes, ProductType productType, LocalDateTime createDate, LocalDateTime updateDate, Integer quantity, boolean isDelete, List<Images> image) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -125,11 +126,11 @@ public class ProductDTO {
         isDelete = delete;
     }
 
-    public List<String> getImage() {
+    public List<Images> getImage() {
         return image;
     }
 
-    public void setImage(List<String> image) {
+    public void setImage(List<Images> image) {
         this.image = image;
     }
 }

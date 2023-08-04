@@ -1,7 +1,6 @@
-package com.example.k_guard_shop_be.service;
+package com.example.k_guard_shop_be.service.product;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
-import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
 import com.example.k_guard_shop_be.repository.IImageRepository;
 import com.example.k_guard_shop_be.repository.IProductRepository;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductService implements IProductService {
@@ -37,10 +34,5 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(Long id) {
         return iProductRepository.getProductById(id);
-    }
-
-    @Override
-    public void saveImage(List<Images> imagesList) {
-        iImageRepository.saveAll(imagesList);
     }
 }
