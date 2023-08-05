@@ -41,17 +41,28 @@ public class UsersController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication); // lưu đối tượng authenticate đã được xác thực, có các quyền tương ứng
-            JwtUserDetails principal = (JwtUserDetails) authentication.getPrincipal();// lấy ra thông điệp đã được xác thực từ authenticate ( thông điệp ở đây là JwtUserDetail chứa username, password và quyền)
-            GrantedAuthority authority = principal.getAuthorities().stream().findFirst().orElse(null);// lấy râ quyền từ principal if không có thì null
-            final String token = jwtTokenUtil.generateToken(principal.getUsername());//gọi jwtTokenUtil vầ truyền vào username để chuyển generate ra token.
-
-            return ResponseEntity.ok(new JwtResponse(token, principal.getUsername(), authority != null ? authority.getAuthority() : null));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            JwtUserDetails principal = (JwtUserDetails) authentication.getPrincipal();
+            GrantedAuthority grantedAuthority = principal.getAuthorities().stream().findFirst().orElse(null);
+            final String token = jwtTokenUtil.generateToken(principal.getUsername());
+            return ResponseEntity.ok(new JwtResponse(token, principal.getUsername(), grantedAuthority != null ? grantedAuthority.getAuthority() : null));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đăng nhập thất bại");
         }
-//        Users users = usersService.findByUsername(authenticationRequest.getUsername());
-//        final UserDetails userDetails = usersService.loadUserByUsername(authenticationRequest.getUsername());
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword())
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authentication); // lưu đối tượng authenticate đã được xác thực, có các quyền tương ứng
+//            JwtUserDetails principal = (JwtUserDetails) authentication.getPrincipal();// lấy ra thông điệp đã được xác thực từ authenticate ( thông điệp ở đây là JwtUserDetail chứa username, password và quyền)
+//            GrantedAuthority authority = principal.getAuthorities().stream().findFirst().orElse(null);// lấy râ quyền từ principal if không có thì null
+//            final String token = jwtTokenUtil.generateToken(principal.getUsername());//gọi jwtTokenUtil vầ truyền vào username để chuyển generate ra token.
+//
+//            return ResponseEntity.ok(new JwtResponse(token, principal.getUsername(), authority != null ? authority.getAuthority() : null));
+//        } catch (BadCredentialsException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đăng nhập thất bại");
+//        }
+
     }
 
     @PostMapping("/checkEmail")

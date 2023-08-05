@@ -1,7 +1,5 @@
-export const login = async ()=>{
-    try{
+import axios from "axios";
 
-    }catch (e) {
-
-    }
+export const saveCustomer = async (customer)=>{
+    await axios.post("http://localhost:8080/api/customer",customer)
 }

@@ -9,4 +9,5 @@ public interface IUsersService { Users findByUsername(String username);
 
     Users findById(Long id);
     void saveNewPassword(Users users);
+    void createUser(Users users);
 }

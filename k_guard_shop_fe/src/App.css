@@ -8,13 +8,18 @@ body {
 }
 
 .card1 {
-    height: 400px;
-    width: 100%;
     border: 1px solid rgba(128, 128, 128, 0.85);
-    border-radius: 8px;
     transition: all 0.5s;
     z-index: 0;
-    /*box-shadow: 0px 5px 5px rgba(255, 255, 255, 0.55);*/
+    border-dadius: 10px;
+    padding: 15px;
+    background-color: rgba(255,255,255,0.85);
+    display: grid;
+    align-items: center;
+    min-height: 30rem;
+}
+.height-row{
+    min-height: 8rem;
 }
 
 .card1:hover {

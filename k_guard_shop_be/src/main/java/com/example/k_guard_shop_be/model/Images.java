@@ -7,9 +7,10 @@ public class Images {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn
+    @JoinColumn(name = "product")
     @ManyToOne
     private Product product;
+    @Column(name = "link", nullable = false)
     private String link;
 
     public Images() {

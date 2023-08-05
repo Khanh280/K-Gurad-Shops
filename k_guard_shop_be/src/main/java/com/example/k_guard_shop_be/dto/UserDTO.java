@@ -1,25 +1,25 @@
-package com.example.k_guard_shop_be.model;
+package com.example.k_guard_shop_be.dto;
 
-import javax.persistence.*;
+import com.example.k_guard_shop_be.model.Roles;
 
-@Entity
-public class Users {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+public class UserDTO {
+
     private Long id;
-    @Column(name = "username", nullable = false,unique = true)
+    @NotBlank(message = "Tên đăng nhập không được để trống")
+    @Size(min=8,max = 20,message = "Tên đăng nhập từ 8-20 ký tự")
+    @Pattern(regexp = "^[a-z0-9]{8,}$",message = "Tên đăng nhập phải là ký tự thường")
     private String username;
-    @Column(name = "password", nullable = false)
+    @NotBlank(message = "Mật khẩu không được để trống")
+    @Pattern(regexp = "^[a-z0-9]{8,}$",message = "Mật khẩu ít nhất 8 ký tự và không chứa ký tự đặt biệt như @,#,$... ")
     private String password;
     private String verifyCode;
-    @ManyToOne
-    @JoinColumn(name = "roles")
     private Roles roles;
 
-    public Users() {
-    }
-
-    public Users(Long id, String username, String password, String verifyCode, Roles roles) {
+    public UserDTO(Long id, String username, String password, String verifyCode, Roles roles) {
         this.id = id;
         this.username = username;
         this.password = password;

@@ -4,6 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,13 +13,18 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "address", nullable = false)
     private String address;
+    @Column(name = "phone_number", nullable = false,unique = true)
     private String phoneNumber;
+    @Column(name = "gender", nullable = false)
     private Integer gender;
-    @JoinColumn
     @ManyToOne
+    @JoinColumn(name = "users")
     private Users users;
+    @Column(name = "email", nullable = false,unique = true)
     private String email;
     @CreationTimestamp
     @JoinColumn(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")

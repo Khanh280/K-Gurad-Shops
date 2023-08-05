@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,13 +12,15 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn
+    @JoinColumn(name = "orders")
     @ManyToOne
     private Orders orders;
-    @JoinColumn
+    @JoinColumn(name="product")
     @ManyToOne
     private Product product;
+    @Column(name = "price", nullable = false)
     private Long price;
+    @JoinColumn(name = "quantity",nullable = false)
     private Integer quantity;
     @CreationTimestamp
     @JoinColumn(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
@@ -25,6 +28,7 @@ public class OrderDetail {
     @UpdateTimestamp
     @JoinColumn(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
+    @Column(name = "is_delete",columnDefinition = "DEFAULT BIT(0)")
     private boolean isDelete;
 
     public OrderDetail() {

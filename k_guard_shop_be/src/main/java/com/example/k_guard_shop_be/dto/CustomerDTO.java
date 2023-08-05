@@ -1,20 +1,27 @@
 package com.example.k_guard_shop_be.dto;
+import org.springframework.validation.annotation.Validated;
 
-import com.example.k_guard_shop_be.model.Users;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class CustomerDTO {
     private Long id;
+    @NotBlank(message = "Tên không được để trống")
+    @Pattern(regexp = "^[A-Za-z]+$",message = "Tên không được chứa số, ký tự đặc biệt như @,#,$...")
     private String name;
+    @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
+    @NotBlank(message = "Số điện thoại không được để trống")
+    @Pattern(regexp = "^(\\+84)[0-9]{9}|0[0-9]{9}$",message= "Số điện thoại không đúng định dạng")
     private String phoneNumber;
+    @NotNull(message = "Vui lòng chọn giới tính hợp lệ")
+    @Min(value = 0,message = "Vui lòng chọn giới tính hợp lệ")
     private Integer gender;
-    private Users users;
+    @Valid
+    private UserDTO userDTO;
+    @NotBlank(message = "Không được để trống")
+    @Email(message="Email không hợp lệ. VD: kguarshop@gmail.com")
     private String email;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
@@ -23,13 +30,13 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-    public CustomerDTO(Long id, String name, String address, String phoneNumber, Integer gender, Users users, String email, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
+    public CustomerDTO(Long id, String name, String address, String phoneNumber, Integer gender, UserDTO userDTO, String email, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
-        this.users = users;
+        this.userDTO = userDTO;
         this.email = email;
         this.createDate = createDate;
         this.updateDate = updateDate;
@@ -76,12 +83,12 @@ public class CustomerDTO {
         this.gender = gender;
     }
 
-    public Users getUsers() {
-        return users;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
-    public void setUsers(Users users) {
-        this.users = users;
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getEmail() {

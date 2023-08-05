@@ -5,6 +5,7 @@ import {Field, Form, Formik} from "formik";
 import axios from "axios";
 import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function LoginForm() {
     const navigate = useNavigate();
@@ -45,7 +46,8 @@ export default function LoginForm() {
                                             username: "",
                                             password: ""
                                         }}
-                                        onSubmit={async (values) => {
+                                        onSubmit={async (values, {setSubmitting}) => {
+
                                             try {
                                                 const response = await axios.post("http://localhost:8080/api/user/authenticate", values)
                                                 if (response.data.token) {
@@ -56,54 +58,85 @@ export default function LoginForm() {
                                                 await navigate("/");
                                             } catch (e) {
                                                 toast.error("Đăng nhập thất bại.")
+                                            }finally {
+                                                setSubmitting(false)
                                             }
                                         }}
                                     >
-                                        <Form>
-                                            <div className="row">
-                                                <div className="col-md-12 d-flex flex-column">
+                                        {
+                                            ({isSubmitting}) => (
+                                                <Form>
+                                                    <div className="row">
+                                                        <div className="col-md-12 d-flex flex-column">
                                                     <span
-                                                        className="login ms-0 col-md-12 justify-content-center d-flex">Đăng nhập</span>{" "}
-                                                </div>
-                                                <div className="col-md-12 input-field d-flex flex-column mt-3">
-                                                    {" "}
-                                                    <label className="pb-1" htmlFor="username"><b>Tên đăng
-                                                        nhập</b></label>{" "}
-                                                    <Field className="form-control" id="username" name="username"
-                                                           style={{height: "4vh"}} placeholder=""/>{" "}
-                                                    <label className="mt-3 pb-1" htmlFor="password"><b>Mật
-                                                        khẩu</b></label>{" "}
-                                                    <Field className="form-control" type="password" id="password"
-                                                           name="password" style={{height: "4vh"}} placeholder=""/>{" "}
-                                                    <div className="mt-3 text1 justify-content-between d-flex">
-                                                        {" "}
-                                                        <div>
-                                                            <input type="checkbox" id="miss-user"/><label
-                                                            htmlFor="miss-user" style={{cursor: "pointer"}}> Nhớ tài
-                                                            khoản</label>
+                                                        className="login ms-0 col-md-12 justify-content-center d-flex"><h3>Đăng nhập</h3></span>{" "}
                                                         </div>
-                                                        <div>
-                                                            <b className=" " style={{cursor: "pointer"}}>Quên mật
-                                                                khẩu?</b>{" "}
+                                                        <div className="col-md-12 input-field d-flex flex-column mt-3">
+                                                            {" "}
+                                                            <label className="pb-1" htmlFor="username"><b>Tên đăng
+                                                                nhập</b></label>{" "}
+                                                            <Field className="form-control" id="username"
+                                                                   name="username"
+                                                                   style={{height: "4vh"}} placeholder=""/>{" "}
+                                                            <label className="mt-3 pb-1" htmlFor="password"><b>Mật
+                                                                khẩu</b></label>{" "}
+                                                            <Field className="form-control" type="password"
+                                                                   id="password"
+                                                                   name="password" style={{height: "4vh"}}
+                                                                   placeholder=""/>{" "}
+                                                            <div className="mt-3 text1 justify-content-between d-flex">
+                                                                {" "}
+                                                                <div>
+                                                                    <input type="checkbox" id="miss-user"/><label
+                                                                    htmlFor="miss-user" style={{cursor: "pointer"}}> Nhớ
+                                                                    tài
+                                                                    khoản</label>
+                                                                </div>
+                                                                <div>
+                                                                    <b className=" " style={{cursor: "pointer"}}>Quên
+                                                                        mật
+                                                                        khẩu?</b>{" "}
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                className="text2 mt-4 d-flex flex-row align-items-center">
+                                                                {" "}
+                                                                <label>
+                                                                    Bạn chưa có tài khoản?
+                                                                    <Link to="/register" className=""
+                                                                          style={{textDecoration: "none"}}><b
+                                                                        className="ms-1">Đăng
+                                                                        ký tại đây.</b></Link>
+                                                                </label>{" "}
+                                                            </div>
+                                                            {
+                                                                isSubmitting ?
+                                                                    <button type="submit"
+                                                                            style={{
+                                                                                cursor: "pointer",
+                                                                                borderRadius: "5px",
+                                                                                // opacity: "30%",
+                                                                                pointerEvents: "none"
+                                                                            }}
+                                                                            disabled={true}
+                                                                            className="mt-4 login-button">
+                                                                        <PulseLoader className="d-flex align-items-center justify-content-center" color="#F4882F" size={10} margin={10} />
+                                                                    </button>
+                                                                    :
+                                                                    <button type="submit"
+                                                                            style={{
+                                                                                cursor: "pointer",
+                                                                                borderRadius: "5px"
+                                                                            }}
+                                                                            className="mt-4 login-button">
+                                                                        Đăng nhập ngay
+                                                                    </button>
+                                                            }
                                                         </div>
                                                     </div>
-                                                    <div className="text2 mt-4 d-flex flex-row align-items-center">
-                                                        {" "}
-                                                        <label>
-                                                            Bạn chưa có tài khoản?
-                                                            <Link to="/register" className=""
-                                                                  style={{textDecoration: "none"}}><b className="ms-1">Đăng
-                                                                ký tại đây.</b></Link>
-                                                        </label>{" "}
-                                                    </div>
-                                                    <button type="submit"
-                                                            style={{cursor: "pointer", borderRadius: "5px"}}
-                                                            className="mt-4 login-button">
-                                                        Đăng nhập ngay
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </Form>
+                                                </Form>
+                                            )
+                                        }
                                     </Formik>
                                 </div>
                             </div>

@@ -33,16 +33,16 @@ public class UsersService implements UserDetailsService, IUsersService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users users = iUserRepository.findByUsername(username);
-        if (users == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        String role = users.getRoles().getRole();
-        authorities.add(new SimpleGrantedAuthority(role));
-
-        return new JwtUserDetails(users.getId(), users.getUsername(), users.getPassword(), authorities);
+      Users users = iUserRepository.findByUsername(username);
+      if (users == null){
+          System.out.println("adfa");
+      }
+      List<GrantedAuthority> authorityList = new ArrayList<>();
+      String role = users.getRoles().getRole();
+      authorityList.add(new SimpleGrantedAuthority(role));
+      return new JwtUserDetails(users.getId(),users.getUsername(),users.getPassword(),authorityList);
     }
+
 
     @Override
     public Users findByUsername(String username) {
@@ -72,5 +72,10 @@ public class UsersService implements UserDetailsService, IUsersService {
         String password = passwordEncoder.encode(user.getPassword());
         users.setPassword(password);
         iUserRepository.saveNewPassword(users.getId(), users.getPassword());
+    }
+
+    @Override
+    public void createUser(Users users) {
+        iUserRepository.save(users);
     }
 }

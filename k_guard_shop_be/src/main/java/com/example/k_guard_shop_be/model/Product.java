@@ -11,13 +11,16 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name",nullable = false)
     private String name;
+    @Column(name = "price",nullable = false)
     private Long price;
+    @Column(name = "description",nullable = false)
     private String description;
-    @JoinColumn
+    @JoinColumn(name = "sizes")
     @ManyToOne
     private Sizes sizes;
-    @JoinColumn
+    @JoinColumn(name = "product_type")
     @ManyToOne
     private ProductType productType;
     @CreationTimestamp
@@ -26,6 +29,7 @@ public class Product {
     @UpdateTimestamp
     @JoinColumn(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
+    @Column(name = "quantity",nullable = false)
     private Integer quantity;
     @JoinColumn(columnDefinition = "DEFAULT BIT(0)")
     private boolean isDelete;

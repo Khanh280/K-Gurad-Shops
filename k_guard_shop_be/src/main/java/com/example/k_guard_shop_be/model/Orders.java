@@ -10,7 +10,7 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn
+    @JoinColumn(name = "customer")
     @ManyToOne
     private Customer customer;
     @CreationTimestamp
