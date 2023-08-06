@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class CustomerDTO {
     private Long id;
     @NotBlank(message = "Tên không được để trống")
-    @Pattern(regexp = "^[A-Za-z]+$",message = "Tên không được chứa số, ký tự đặc biệt như @,#,$...")
+    @Pattern(regexp = "^(\\s)*[A-Z][a-z]*(\\s)*([A-Z][a-z]*(\\s)*)*([A-Z][a-z]*(\\s)*)$",message = "Tên không được chứa số, ký tự đặc biệt như @,#,$... VD: Kieu Quoc Khanh")
     private String name;
     @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
@@ -20,7 +20,7 @@ public class CustomerDTO {
     private Integer gender;
     @Valid
     private UserDTO userDTO;
-    @NotBlank(message = "Không được để trống")
+    @NotBlank(message = "Email không được để trống")
     @Email(message="Email không hợp lệ. VD: kguarshop@gmail.com")
     private String email;
     private LocalDateTime createDate;

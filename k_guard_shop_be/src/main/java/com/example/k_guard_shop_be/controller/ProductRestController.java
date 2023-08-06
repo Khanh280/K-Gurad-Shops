@@ -41,6 +41,14 @@ public class ProductRestController {
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
+    @GetMapping("/top-product/{quantity}")
+    public ResponseEntity<List<IProductDTO>> getTopProduct(@PathVariable("quantity")Integer quantity){
+        List<IProductDTO> productPage = iProductService.getTopProduct(quantity);
+        if (productPage.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
+    }
 
     @PostMapping("")
     @Transactional
@@ -66,16 +74,14 @@ public class ProductRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/product-detail")
-    public ResponseEntity<?> getProduct(@RequestBody String id) {
+    @PostMapping("/detail")
+    public ResponseEntity<?> getProductById(@RequestBody String id) {
         Product product = iProductService.getProductById(Long.parseLong(id));
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Map<Product,List<Images>> productImagesMap = new HashMap<>();
         List<Images> imagesList = iImageService.getAllByProductId(Long.parseLong(id));
-        productImagesMap.put(product,imagesList);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(imagesList, HttpStatus.OK);
     }
 
     @ExceptionHandler(Throwable.class)

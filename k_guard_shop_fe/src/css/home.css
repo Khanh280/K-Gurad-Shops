@@ -22,12 +22,49 @@
 .card{
     overflow: hidden;
     background-color: #fff;
-    height: 21rem;
+    min-height: 21rem;
     width: 100%;
     border-radius: 10px;
     border-bottom: 8px solid #F4882F;
     position: relative;
     cursor: pointer;
+}
+.card-product-home{
+    overflow: hidden;
+    background-color: #fff;
+    min-height: 21rem;
+    width: 100%;
+    border-radius: 10px;
+    border-bottom: 8px solid #F4882F;
+    position: relative;
+    cursor: pointer;
+}
+.card-product-home .image img{
+    min-height: 13rem;
+    width: 100%;
+    object-fit: cover;
+}
+.card-product-home {
+    /* Định nghĩa các thuộc tính của .card ở trạng thái ban đầu */
+    transition: transform 0.3s; /* Thời gian chuyển đổi là 0.5 giây */
+}
+.card-product-home:hover{
+    transform: scale(1.03)
+}
+.card-post-home{
+    overflow: hidden;
+    background-color: #fff;
+    min-height: 16rem;
+    width: 100%;
+    border-radius: 10px;
+    border-bottom: 8px solid #F4882F;
+    position: relative;
+    cursor: pointer;
+}
+.card-post-home .image img{
+    min-height: 10rem;
+    width: 100%;
+    object-fit: cover;
 }
 
 .sale{
@@ -47,9 +84,12 @@
 }
 
 .card .image img{
-    height: 250px;
+    min-height: 19rem;
     width: 100%;
     object-fit: cover;
+}
+.image{
+    min-height: 16rem;
 }
 
 .card .details{

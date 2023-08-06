@@ -12,10 +12,10 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn(name = "orders")
+    @JoinColumn(name = "orders_id")
     @ManyToOne
     private Orders orders;
-    @JoinColumn(name="product")
+    @JoinColumn(name="product_id")
     @ManyToOne
     private Product product;
     @Column(name = "price", nullable = false)

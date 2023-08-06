@@ -93,9 +93,11 @@ export default function LoginForm() {
                                                                     khoản</label>
                                                                 </div>
                                                                 <div>
-                                                                    <b className=" " style={{cursor: "pointer"}}>Quên
-                                                                        mật
-                                                                        khẩu?</b>{" "}
+                                                                    <Link to="" className="register-link"
+                                                                          style={{textDecoration: "none"}}><b
+                                                                        className="ms-1">Quên
+                                                                        mật khẩu?</b></Link>
+                                                                    {/*<b className=" " style={{cursor: "pointer"}}>?</b>{" "}*/}
                                                                 </div>
                                                             </div>
                                                             <div
@@ -103,7 +105,7 @@ export default function LoginForm() {
                                                                 {" "}
                                                                 <label>
                                                                     Bạn chưa có tài khoản?
-                                                                    <Link to="/register" className=""
+                                                                    <Link to="/register" className="register-link"
                                                                           style={{textDecoration: "none"}}><b
                                                                         className="ms-1">Đăng
                                                                         ký tại đây.</b></Link>

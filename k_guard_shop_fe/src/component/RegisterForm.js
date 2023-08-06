@@ -1,9 +1,10 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {Field, Form, Formik} from "formik";
+import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as ProductService from "../service/ProductService";
 import * as yup from "yup";
 import PulseLoader from "react-spinners/PulseLoader";
+import {toast} from "react-toastify";
 
 export default function RegisterForm() {
     const [customer, setCustomer] = useState({
@@ -14,8 +15,10 @@ export default function RegisterForm() {
         username: "",
         password: "",
         email: ""
-
     })
+
+    const navigate = useNavigate();
+
     useEffect(() => {
         console.log(customer)
     }, [customer])
@@ -34,21 +37,36 @@ export default function RegisterForm() {
                                 gender: 0,
                                 username: "",
                                 password: "",
+                                confirmPassword: "",
                                 email: ""
                             }}
-                            // validationSchema={}
-                            onSubmit={async (values, {setSubmitting}) => {
+                            validationSchema={yup.object({
+                                name: yup.string().required("Tên không được để trống"),
+                                address: yup.string().required("Địa chỉ không được để trống"),
+                                phoneNumber: yup.string().required("Số điện thoại không được để trống"),
+                                gender: yup.number().required("Vui lòng chọn giới tính")
+                                    .min(0, "Vui lòng chọn giới tính hợp lệ")
+                                    .max(2, "Vui lòng chọn giới tính hợp lệ"),
+                                username: yup.string().required("Tên đăng nhập không được để trống"),
+                                password: yup.string().required("Mật khẩu không được để trống"),
+                                confirmPassword: yup.string().required("Mật khẩu không được để trống"),
+                                email: yup.string().required("Email không được để trống")
+                            })}
+                            onSubmit={async (values, {setSubmitting, resetForm}) => {
                                 const newValue = {
                                     ...values,
                                     userDTO: {
                                         id: "",
                                         username: values.username,
-                                        password: values.password
+                                        password: values.password,
+                                        confirmPassword: values.confirmPassword
                                     }
                                 }
                                 console.log(newValue)
                                 try {
                                     await ProductService.saveCustomer(newValue);
+                                    navigate("/login")
+                                    toast.success("Đăng ký tài khoản thành công.")
                                 } catch (e) {
                                     await setCustomer({
                                         ...customer,
@@ -88,6 +106,8 @@ export default function RegisterForm() {
                                                         <Field className="form-control " id="username" name="username"
                                                                style={{height: "4vh"}}
                                                                placeholder=" "/>
+                                                        <ErrorMessage name="username" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.username !== "" ?
                                                                 <p className="text-danger">{customer.username}</p>
@@ -98,8 +118,11 @@ export default function RegisterForm() {
                                                     <div className="col-md-4">
                                                         <label className=" mt-1 mb-0" htmlFor="password"><b>Mật khẩu</b></label>
                                                         <Field className="form-control " id="password" name="password"
+                                                               type="password"
                                                                style={{height: "4vh"}}
                                                                placeholder=" "/>
+                                                        <ErrorMessage name="password" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.password !== "" ?
                                                                 <p className="text-danger">{customer.password}</p>
@@ -109,12 +132,14 @@ export default function RegisterForm() {
                                                     </div>
                                                     <div className="col-md-4">
                                                         <label className="mt-1 mb-0" htmlFor="confirmPassword"><b>Xác
-                                                            nhận lại
-                                                            mật
-                                                            khẩu</b></label>
+                                                            nhận lại mật khẩu</b></label>
                                                         <Field className="form-control " id="confirmPassword"
+                                                               name="confirmPassword"
+                                                               type="password"
                                                                style={{height: "4vh"}}
                                                                placeholder=" "/>
+                                                        <ErrorMessage name="confirmPassword" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.password !== "" ?
                                                                 <p className="text-danger">{customer.password}</p>
@@ -130,6 +155,8 @@ export default function RegisterForm() {
                                                         <Field className="form-control " id="name" name="name"
                                                                style={{height: "4vh"}}
                                                                placeholder=" "/>
+                                                        <ErrorMessage name="name" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.name !== "" ?
                                                                 <p className="text-danger">{customer.name}</p>
@@ -143,6 +170,8 @@ export default function RegisterForm() {
                                                         <Field className="form-control " id="email" name="email"
                                                                style={{height: "4vh"}}
                                                                placeholder=" "/>
+                                                        <ErrorMessage name="email" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.email !== "" ?
                                                                 <p className="text-danger">{customer.email}</p>
@@ -157,6 +186,8 @@ export default function RegisterForm() {
                                                                name="phoneNumber"
                                                                style={{height: "4vh"}}
                                                                placeholder=" "/>
+                                                        <ErrorMessage name="phoneNumber" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.phoneNumber !== "" ?
                                                                 <p className="text-danger">{customer.phoneNumber}</p>
@@ -171,6 +202,8 @@ export default function RegisterForm() {
                                                             chỉ</b></label>
                                                         <Field className="form-control " id="address" name="address"
                                                                placeholder=""/>
+                                                        <ErrorMessage name="address" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.address !== "" ?
                                                                 <p className="text-danger">{customer.address}</p>
@@ -184,10 +217,12 @@ export default function RegisterForm() {
                                                         <Field as="select" className="form-control " id="gender"
                                                                name="gender"
                                                                placeholder="">
-                                                            <option value="0">Nam</option>
-                                                            <option value="1">Nữ</option>
-                                                            <option value="2">Khác</option>
+                                                            <option value={0}>Nam</option>
+                                                            <option value={1}>Nữ</option>
+                                                            <option value={2}>Khác</option>
                                                         </Field>
+                                                        <ErrorMessage name="gender" component="p"
+                                                                      className="text-danger"/>
                                                         {
                                                             customer.gender !== "" ?
                                                                 <p className="text-danger">{customer.gender}</p>

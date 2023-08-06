@@ -2,9 +2,12 @@ import React, {useEffect, useState} from "react";
 import {Link, NavLink} from "react-router-dom";
 import "../css/product_home.css"
 import BackUp from "./BackUp";
+import axios from "axios";
 
 export default function ProductHome() {
-    const [products, setProducts] = useState(12)
+    const [products, setProducts] = useState()
+    const [totalPage, setTotalPage] = useState()
+    const [page, setPage] = useState(0)
 
     const dropDownOption = (options) => {
         let ulElement;
@@ -32,38 +35,30 @@ export default function ProductHome() {
             ulIcon.style.transform = 'rotate(0deg)';
         }
     }
-
-    const fora = () => {
-        const cart = [];
-        for (let i = 0; i < products; i++) {
-            cart.push(
-                <Link to={`/product/detail/${1}`} className="col-md-3 product-link">
-                    <div className="card mt-2" style={{height: "15rem"}}>
-                        {/*<span className="sale">Mới</span>*/}
-                        <div className="image" style={{height: "15rem"}}>
-                            <img
-                                src="https://th.bing.com/th/id/R.93487ab8c22e6267c2fad82769142ea1?rik=Vi0QqXJVEpKjGw&riu=http%3a%2f%2fscoyco.com.vn%2fuploads%2fkinh+kyt+tt+course1_1.jpg&ehk=YyZ%2bnGgrBlJ8egVFcsJV%2bdbvi9IWrbjDc3kmXfRMzcU%3d&risl=&pid=ImgRaw&r=0"
-                                style={{width: "100%", height: "90%"}}/>
-                        </div>
-                        <div className="details" style={{padding: "0 10px"}}>
-                            <h3 style={{fontSize: "1rem"}}>Black Forest cake</h3>
-                            <div className="price-ratings">
-                                <div className="price">
-                                    <span>$7.99 </span>
-                                </div>
-                                <div className="ratings">
-                                    Mua
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Link>)
-        }
-        return cart;
+    const getAllProduct = async () => {
+        const res = await axios.get("http://localhost:8080/api/product")
+        await setProducts(() => res.data.content)
+        await setTotalPage(() => res.data.totalPages)
+        await setPage(prevState => prevState+1)
+        console.log(res.data.content)
     }
+
+    const loadMore = async () => {
+        // if (page <= totalPage + 1) {
+        //     console.log(page)
+        //     const res = await axios.get("http://localhost:8080/api/product?page=" + page)
+        //     await setProducts(prevState => [...prevState, ...res.data.content])
+        //     await setPage(prevState => prevState+1)
+        // }
+    }
+
     useEffect(() => {
-    window.scrollTo(0,0)
+        getAllProduct()
+        window.scrollTo(0, 0)
     }, [])
+    if (!products) {
+        return null;
+    }
     return (
         <>
             <div className="px-5" style={{marginTop: "12vh"}}>
@@ -141,10 +136,33 @@ export default function ProductHome() {
                     </div>
                     <div className="col-md-9 pe-0">
                         {
-                            fora()
+                            products.map((product, index) =>
+                                <Link key={index} to={`/product/detail/${product.id}`} className="col-md-3 product-link">
+                                    <div className="card-product-home mt-2" style={{minHeight: "13rem"}}>
+                                        {/*<span className="sale">Mới</span>*/}
+                                        <div className="image" style={{minHeight: "6rem"}}>
+                                            <img
+                                                src={product.linkImage}
+                                                style={{width: "100%", height: "100%"}}/>
+                                        </div>
+                                        <div className="details" style={{padding: "0 10px"}}>
+                                            <h3 style={{fontSize: "1rem"}}>{product.name}</h3>
+                                            <div className="price-ratings">
+                                                <div className="price">
+                                                    <span>{product.price}</span>
+                                                </div>
+                                                <div className="ratings">
+                                                    Mua
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            )
                         }
                         <div className="col-md-12 d-flex justify-content-center mt-2">
                             <button id="load-more-product" className="btn btn-sm mt-2 justify-content-center"
+                                    onClick={() => loadMore()}
                                     style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm<i
                                 className="bi bi-chevron-down"></i></button>
                         </div>

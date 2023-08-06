@@ -1,6 +1,7 @@
 package com.example.k_guard_shop_be.controller;
 
 import com.example.k_guard_shop_be.dto.CustomerDTO;
+import com.example.k_guard_shop_be.dto.UserDTO;
 import com.example.k_guard_shop_be.model.Customer;
 import com.example.k_guard_shop_be.model.Roles;
 import com.example.k_guard_shop_be.model.Users;
@@ -44,9 +45,13 @@ public class CustomerRestController {
     @Transactional
     @PostMapping("")
     public ResponseEntity<?> saveCustomer(@Validated @RequestBody CustomerDTO customerDTO, BindingResult bindingResult) {
-
+        UserDTO userDTO = customerDTO.getUserDTO();
+        Map<String, String> errorMap = new HashMap<>();
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
+            if(!userDTO.getConfirmPassword().equals(userDTO.getPassword())){
+                errorMap.put("password","Mật khẩu không trùng khớp");
+//                return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+            }
             String[] fieldToCheck = {"name", "address", "phoneNumber", "gender", "email", "userDTO.username", "userDTO.password"};
             for (String field : fieldToCheck) {
                 FieldError fieldError = bindingResult.getFieldError(field);
@@ -61,16 +66,19 @@ public class CustomerRestController {
             }
             return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
         }
+
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO, customer);
         String salt = BCrypt.gensalt();
-        String test = BCrypt.hashpw(customer.getUsers().getPassword(), salt);
-        Users users = customer.getUsers();
+        String test = BCrypt.hashpw(customerDTO.getUserDTO().getPassword(), salt);
+
+        Users users = new Users(null,userDTO.getUsername(), userDTO.getPassword(), null,null);
+//        BeanUtils.copyProperties(customerDTO.getUserDTO(),users);
         users.setPassword(test);
         users.setRoles(new Roles(2L, "ROLE_CUSTOMER"));
         customer.setUsers(users);
-        iUsersService.createUser(users);
-        iCustomerService.saveCustomer(customer);
+//        iUsersService.createUser(users);
+//        iCustomerService.saveCustomer(customer);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

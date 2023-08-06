@@ -7,10 +7,10 @@ public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn(name="customer")
+    @JoinColumn(name="customer_id")
     @ManyToOne
     private Customer customer;
-    @JoinColumn(name = "product")
+    @JoinColumn(name = "product_id")
     @ManyToOne
     private Product product;
     @Column(name = "quantity",nullable = false)

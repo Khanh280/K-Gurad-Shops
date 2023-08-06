@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface IProductService {
     Page<IProductDTO> getAll(Pageable pageable);
+    List<IProductDTO> getTopProduct(Integer quantity);
     void saveProduct(Product product);
     void deleteProduct(Long id);
     Product getProductById(Long id);

@@ -252,3 +252,6 @@ i {
 li{
     list-style: none;
 }
+.register-link:hover{
+    color: #F4882F;
+}

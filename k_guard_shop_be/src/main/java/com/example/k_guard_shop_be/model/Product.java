@@ -17,10 +17,10 @@ public class Product {
     private Long price;
     @Column(name = "description",nullable = false)
     private String description;
-    @JoinColumn(name = "sizes")
+    @JoinColumn(name = "sizes_id")
     @ManyToOne
     private Sizes sizes;
-    @JoinColumn(name = "product_type")
+    @JoinColumn(name = "product_type_id")
     @ManyToOne
     private ProductType productType;
     @CreationTimestamp

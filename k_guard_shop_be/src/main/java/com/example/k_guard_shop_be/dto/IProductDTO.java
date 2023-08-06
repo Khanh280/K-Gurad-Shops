@@ -7,4 +7,5 @@ public interface IProductDTO {
     String getQuantity();
     String getProductType();
     String getDescription();
+    String getLinkImage();
 }

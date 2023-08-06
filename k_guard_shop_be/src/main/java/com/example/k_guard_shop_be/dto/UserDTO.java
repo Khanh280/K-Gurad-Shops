@@ -10,19 +10,23 @@ public class UserDTO {
 
     private Long id;
     @NotBlank(message = "Tên đăng nhập không được để trống")
-    @Size(min=8,max = 20,message = "Tên đăng nhập từ 8-20 ký tự")
-    @Pattern(regexp = "^[a-z0-9]{8,}$",message = "Tên đăng nhập phải là ký tự thường")
+    @Size(min = 8, max = 20, message = "Tên đăng nhập từ 8-20 ký tự")
+    @Pattern(regexp = "^[a-z0-9]{8,}$", message = "Tên đăng nhập phải là ký tự thường")
     private String username;
     @NotBlank(message = "Mật khẩu không được để trống")
-    @Pattern(regexp = "^[a-z0-9]{8,}$",message = "Mật khẩu ít nhất 8 ký tự và không chứa ký tự đặt biệt như @,#,$... ")
+    @Pattern(regexp = "^[a-z0-9]{8,}$", message = "Mật khẩu ít nhất 8 ký tự và không chứa ký tự đặt biệt như @,#,$... ")
     private String password;
+    @NotBlank(message = "Mật khẩu không được để trống")
+    @Pattern(regexp = "^[a-z0-9]{8,}$", message = "Mật khẩu ít nhất 8 ký tự và không chứa ký tự đặt biệt như @,#,$... ")
+    private String confirmPassword;
     private String verifyCode;
     private Roles roles;
 
-    public UserDTO(Long id, String username, String password, String verifyCode, Roles roles) {
+    public UserDTO(Long id, String username, String password, String confirmPassword, String verifyCode, Roles roles) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.confirmPassword = confirmPassword;
         this.verifyCode = verifyCode;
         this.roles = roles;
     }
@@ -65,5 +69,13 @@ public class UserDTO {
 
     public void setRoles(Roles roles) {
         this.roles = roles;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

@@ -13,7 +13,7 @@ public class Users {
     private String password;
     private String verifyCode;
     @ManyToOne
-    @JoinColumn(name = "roles")
+    @JoinColumn(name = "roles_id")
     private Roles roles;
 
     public Users() {
