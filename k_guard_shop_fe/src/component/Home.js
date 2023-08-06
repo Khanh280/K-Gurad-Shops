@@ -298,10 +298,10 @@ export default function Home() {
                                 data-aos-delay={400}
                             >
                                 <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card">
+                                    <div className="card-post-home">
                                         <span className="sale">HOT</span>
-                                        <div className="image" style={{height: "32vh"}}>
-                                            <img
+                                        <div className="image" style={{minHeight: "10rem"}}>
+                                            <img style={{maxHeight: "11rem"}}
                                                 src="https://taidat.vn/wp-content/uploads/2021/05/li-nen-chon-ao-mua-bo-kyt-cho-mua-mua-bao-1-600x420.jpg"/>
                                         </div>
                                         <div className="details">
@@ -310,10 +310,10 @@ export default function Home() {
                                     </div>
                                 </Link>
                                 <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card">
+                                    <div className="card-post-home">
                                         <span className="sale">HOT</span>
-                                        <div className="image" style={{height: "32vh"}}>
-                                            <img
+                                        <div className="image" style={{minHeight: "10rem"}}>
+                                            <img style={{maxHeight: "11rem"}}
                                                 src="https://taidat.vn/wp-content/uploads/2021/05/mu-bao-hiem-yohe-851-1.jpg"/>
                                         </div>
                                         <div className="details">
@@ -322,10 +322,10 @@ export default function Home() {
                                     </div>
                                 </Link>
                                 <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card">
+                                    <div className="card-post-home">
                                         <span className="sale">HOT</span>
-                                        <div className="image" style={{height: "32vh"}}>
-                                            <img
+                                        <div className="image" style={{minHeight: "10rem"}}>
+                                            <img style={{maxHeight: "11rem"}}
                                                 src="https://taidat.vn/wp-content/uploads/2021/04/chia-se-kinh-nghiem-chay-xe-duong-dai-10-600x525.jpg"/>
                                         </div>
                                         <div className="details">
@@ -334,10 +334,10 @@ export default function Home() {
                                     </div>
                                 </Link>
                                 <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card">
+                                    <div className="card-post-home">
                                         <span className="sale">HOT</span>
-                                        <div className="image" style={{height: "32vh"}}>
-                                            <img
+                                        <div className="image" style={{minHeight: "10rem"}}>
+                                            <img style={{maxHeight: "11rem"}}
                                                 src="https://taidat.vn/wp-content/uploads/2021/05/vi-sao-kyt-venom-chiem-tron-trai-tim-gioi-tre-21-600x426.jpg"/>
                                         </div>
                                         <div className="details">
