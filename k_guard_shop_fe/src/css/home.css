@@ -28,6 +28,9 @@
     border-bottom: 8px solid #F4882F;
     position: relative;
     cursor: pointer;
+    border-top: 1px solid rgba(0,0,0,.125);
+    border-left: 1px solid rgba(0,0,0,.125);
+    border-right: 1px solid rgba(0,0,0,.125);
 }
 .card-product-home{
     overflow: hidden;
@@ -94,6 +97,7 @@
 
 .card .details{
     padding: 10px;
+    min-height: 8rem;
 }
 
 .price-ratings{

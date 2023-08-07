@@ -24,7 +24,7 @@ export default function DetailProduct() {
         setProduct(res.data[0].product)
         setImageMain(res.data[0].link)
         setImages(res.data)
-        setDes(res.data[0].product.description.split("-" || "."))
+        setDes(res.data[0].product.description.split("- " || "."))
     }
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -43,19 +43,19 @@ export default function DetailProduct() {
                 <div className="row bg-dark text-light mb-2 align-items-center" style={{height: "3rem"}}>
                     <div className="col-md-4">
                         <Link to="/"><i className="bi bi-house-door" style={{color: "#fff"}}></i></Link> /<NavLink
-                        to="/product" className="ms-2 text-light">Sản phẩm / Chi tiết sản phẩm</NavLink>
+                        to="/product" className="ms-2 text-light">Sản phẩm </NavLink> / Chi tiết sản phẩm
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-5 p-0 ">
-                        <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px"}}>
+                    <div className="col-md-4 p-0 ">
+                        <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px",overflow: "hidden"}}>
                             <div className="row">
                                 <img
                                     src={imageMain}
-                                    style={{width: "100%", borderRadius: "20px"}}/>
+                                    style={{width: "100%", objectFit: "cover"}}/>
                             </div>
 
-                            <div className="row m-0" style={{borderTop: "1px solid #b3b3b33b"}}>
+                            <div className="row m-0 align-items-center" style={{borderTop: "1px solid #b3b3b33b"}}>
                                 {
                                     images.map((image, index) =>
                                         <div key={index} className="col-md-3 image-detail">
@@ -71,7 +71,7 @@ export default function DetailProduct() {
 
                     </div>
 
-                    <div className="col-md-7">
+                    <div className="col-md-8">
                         <div className="row">
                             <h3>{product?.name}</h3>
                             <h5>Mã sản phẩm: SP-{product?.id}</h5>

@@ -3,3 +3,38 @@
     justify-content: space-between;
     cursor: pointer;
 }
+.card-product-home{
+    border-top: 1px solid rgba(0,0,0,.125);
+    border-left: 1px solid rgba(0,0,0,.125);
+    border-right: 1px solid rgba(0,0,0,.125);
+}
+.dropdown-item-product-type li:hover{
+    cursor: pointer;
+    color: #F4882F;
+}
+.option-product{
+    text-decoration: none;
+    color: #000;
+    height: 2rem !important;
+    align-items: center;
+    display: flex;
+    padding: 0px 10px;
+    background-color: #ffffff !important;
+}
+.option-product li{
+    color: #000;
+    height: 100% !important;
+    width: 100%;
+    align-items: center;
+    display: flex;
+}
+.option-product a li:hover{
+    background-color: rgb(255, 160, 60);
+    color: white;
+    cursor: pointer;
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ không gian trong phần tử cha */
+    height: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ không gian trong phần tử cha */
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+}

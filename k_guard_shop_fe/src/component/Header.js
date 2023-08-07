@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap-grid.css"
 import React, {useEffect, useState} from "react";
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
+import axios from "axios";
 
 
 export default function Header() {
@@ -10,6 +11,17 @@ export default function Header() {
     const role = localStorage.getItem("role")
     const [isLogin, setIsLogin] = useState(false);
     const navigate = useNavigate();
+    const [productTypes, setProductType] = useState();
+    const [brands, setBrand] = useState();
+
+    const getAllProductType = async () => {
+        const res = await axios.get("http://localhost:8080/api/product/product-type")
+        setProductType(() => res.data)
+    }
+    const getAllBrand = async () => {
+        const res = await axios.get("http://localhost:8080/api/product/brand")
+        setBrand(() => res.data)
+    }
 
     const handlerLogout = () => {
         localStorage.removeItem("token");
@@ -20,12 +32,17 @@ export default function Header() {
         navigate("/login")
     };
     useEffect(() => {
+        getAllProductType()
+        getAllBrand()
         if (token) {
             setIsLogin(() => true);
         } else {
 
         }
     }, [token])
+    if (!productTypes || !brands) {
+        return null;
+    }
     return (
         <div id="header-nav" className="row">
             <div id="header-nav-logo" className="col-md-2">
@@ -67,15 +84,17 @@ export default function Header() {
                         >Sản phẩm
                         </NavLink>
                         <ul id="sub-nav-product">
-                            <li>Mũ FullFace</li>
-                            <li>Mũ 3/4</li>
-                            <li>Giáp bảo hộ</li>
-                            <li>Găng tay</li>
-                            <li>Giày bảo hộ</li>
+                            {
+                                productTypes.map((productType) =>
+                                    <NavLink to={`/product/${productType.id}`} className="p-0 option-product">
+                                        <li>{productType.name}</li>
+                                    </NavLink>
+                                )
+                            }
                         </ul>
                     </li>
                     <li className="nav-product nav-sub">
-                        <NavLink to="/d"
+                        <NavLink to="/product-brand"
                                  style={({isActive}) => {
                                      return {
                                          backgroundColor: isActive ? "#F4882F" : "   ",
@@ -85,14 +104,13 @@ export default function Header() {
                                  }}
                         >Thương hiệu</NavLink>
                         <ul id="sub-nav-product">
-                            <li>HJC</li>
-                            <li>LS2</li>
-                            <li>KYT</li>
-                            <li>AGV</li>
-                            <li>Yohe</li>
-                            <li>ALPINESTARS</li>
-                            <li>FOX RACING</li>
-                            <li>JOE ROCKET</li>
+                            {
+                                brands.map((brand) =>
+                                    <NavLink to={`/product-brand/${brand.id}`} className="p-0 option-product">
+                                        <li>{brand.name}</li>
+                                    </NavLink>
+                                )
+                            }
                         </ul>
                     </li>
                     <li>

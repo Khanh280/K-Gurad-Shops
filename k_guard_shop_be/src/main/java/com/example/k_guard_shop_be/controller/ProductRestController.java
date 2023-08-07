@@ -2,17 +2,24 @@ package com.example.k_guard_shop_be.controller;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.dto.ProductDTO;
+import com.example.k_guard_shop_be.model.Brand;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
+import com.example.k_guard_shop_be.model.ProductType;
+import com.example.k_guard_shop_be.repository.IProductTypeRepository;
+import com.example.k_guard_shop_be.service.brand.IBrandService;
 import com.example.k_guard_shop_be.service.product.IImageService;
 import com.example.k_guard_shop_be.service.product.IProductService;
+import com.example.k_guard_shop_be.service.product_type.IProductTypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -31,23 +38,47 @@ public class ProductRestController {
     private IProductService iProductService;
     @Autowired
     private IImageService iImageService;
+    @Autowired
+    private IProductTypeService iProductTypeService;
+    @Autowired
+    private IBrandService iBrandService;
 
     @GetMapping("")
-    public ResponseEntity<Page<IProductDTO>> getAllProduct(@RequestParam(value = "page", defaultValue = "0") Integer page) {
+    public ResponseEntity<Page<IProductDTO>> getAllProduct(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                           @RequestParam(value = "productType", defaultValue = "") String productType,
+                                                           @RequestParam(value = "brand", defaultValue = "0") Long brand) {
         Pageable pageable = PageRequest.of(page, 8);
-        Page<IProductDTO> productPage = iProductService.getAll(pageable);
+        Page<IProductDTO> productPage;
+        if(brand != 0){
+            productPage = iProductService.getAllByBrand(pageable,brand);
+            return new ResponseEntity<>(productPage, HttpStatus.OK);
+        }
+            productPage = iProductService.getAll(pageable, productType);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
+
     @GetMapping("/top-product/{quantity}")
-    public ResponseEntity<List<IProductDTO>> getTopProduct(@PathVariable("quantity")Integer quantity){
+    public ResponseEntity<List<IProductDTO>> getTopProduct(@PathVariable("quantity") Integer quantity) {
         List<IProductDTO> productPage = iProductService.getTopProduct(quantity);
         if (productPage.size() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/product-type")
+    public ResponseEntity<?> getProductType() {
+        List<ProductType> productTypeList = iProductTypeService.getAll();
+        return new ResponseEntity<>(productTypeList, HttpStatus.OK);
+    }
+
+    @GetMapping("/brand")
+    public ResponseEntity<?> getbrand() {
+        List<Brand> brandList = iBrandService.getAll();
+        return new ResponseEntity<>(brandList, HttpStatus.OK);
     }
 
     @PostMapping("")
@@ -62,7 +93,7 @@ public class ProductRestController {
 
         List<Images> imagesList = new ArrayList<>();
         for (Images i : productDTO.getImage()) {
-            imagesList.add(new Images(i.getId(),product, i.getLink()));
+            imagesList.add(new Images(i.getId(), product, i.getLink()));
         }
         iImageService.saveImage(imagesList);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -75,6 +106,7 @@ public class ProductRestController {
     }
 
     @PostMapping("/detail")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getProductById(@RequestBody String id) {
         Product product = iProductService.getProductById(Long.parseLong(id));
         if (product == null) {

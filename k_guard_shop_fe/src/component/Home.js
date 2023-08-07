@@ -290,6 +290,64 @@ export default function Home() {
                         </div>
                     </div>
                     <marquee behavior="scroll" direction="right" scrollamount="20"></marquee>
+                    {/*<Carousel interval={1000}>*/}
+                    {/*    <Carousel.Item>*/}
+                    {/*        <div*/}
+                    {/*            className="row portfolio-container"*/}
+                    {/*            data-aos="fade-up"*/}
+                    {/*            data-aos-delay={400}*/}
+                    {/*        >*/}
+                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
+                    {/*                <div className="card-post-home">*/}
+                    {/*                    <span className="sale">HOT</span>*/}
+                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
+                    {/*                        <img style={{maxHeight: "11rem"}}*/}
+                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/05/li-nen-chon-ao-mua-bo-kyt-cho-mua-mua-bao-1-600x420.jpg"/>*/}
+                    {/*                    </div>*/}
+                    {/*                    <div className="details">*/}
+                    {/*                        <p>Lí do nên chọn áo mưa bộ KYT cho mùa mưa bão</p>*/}
+                    {/*                    </div>*/}
+                    {/*                </div>*/}
+                    {/*            </Link>*/}
+                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
+                    {/*                <div className="card-post-home">*/}
+                    {/*                    <span className="sale">HOT</span>*/}
+                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
+                    {/*                        <img style={{maxHeight: "11rem"}}*/}
+                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/05/mu-bao-hiem-yohe-851-1.jpg"/>*/}
+                    {/*                    </div>*/}
+                    {/*                    <div className="details">*/}
+                    {/*                        <p>3 lý do khiến cả nam lẫn nữ đều thích mũ Yohe 851</p>*/}
+                    {/*                    </div>*/}
+                    {/*                </div>*/}
+                    {/*            </Link>*/}
+                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
+                    {/*                <div className="card-post-home">*/}
+                    {/*                    <span className="sale">HOT</span>*/}
+                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
+                    {/*                        <img style={{maxHeight: "11rem"}}*/}
+                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/04/chia-se-kinh-nghiem-chay-xe-duong-dai-10-600x525.jpg"/>*/}
+                    {/*                    </div>*/}
+                    {/*                    <div className="details">*/}
+                    {/*                        <p>Chia sẻ kinh nghiệm chạy xe đường dài</p>*/}
+                    {/*                    </div>*/}
+                    {/*                </div>*/}
+                    {/*            </Link>*/}
+                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
+                    {/*                <div className="card-post-home">*/}
+                    {/*                    <span className="sale">HOT</span>*/}
+                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
+                    {/*                        <img style={{maxHeight: "11rem"}}*/}
+                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/05/vi-sao-kyt-venom-chiem-tron-trai-tim-gioi-tre-21-600x426.jpg"/>*/}
+                    {/*                    </div>*/}
+                    {/*                    <div className="details">*/}
+                    {/*                        <p>KYT Helmet – Thương hiệu nón bảo hiểm chất lượng, độc đáo cho biker</p>*/}
+                    {/*                    </div>*/}
+                    {/*                </div>*/}
+                    {/*            </Link>*/}
+                    {/*        </div>*/}
+                    {/*    </Carousel.Item>*/}
+                    {/*</Carousel>*/}
                     <Carousel interval={1000}>
                         <Carousel.Item>
                             <div
@@ -297,54 +355,6 @@ export default function Home() {
                                 data-aos="fade-up"
                                 data-aos-delay={400}
                             >
-                                <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card-post-home">
-                                        <span className="sale">HOT</span>
-                                        <div className="image" style={{minHeight: "10rem"}}>
-                                            <img style={{maxHeight: "11rem"}}
-                                                src="https://taidat.vn/wp-content/uploads/2021/05/li-nen-chon-ao-mua-bo-kyt-cho-mua-mua-bao-1-600x420.jpg"/>
-                                        </div>
-                                        <div className="details">
-                                            <p>Lí do nên chọn áo mưa bộ KYT cho mùa mưa bão</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card-post-home">
-                                        <span className="sale">HOT</span>
-                                        <div className="image" style={{minHeight: "10rem"}}>
-                                            <img style={{maxHeight: "11rem"}}
-                                                src="https://taidat.vn/wp-content/uploads/2021/05/mu-bao-hiem-yohe-851-1.jpg"/>
-                                        </div>
-                                        <div className="details">
-                                            <p>3 lý do khiến cả nam lẫn nữ đều thích mũ Yohe 851</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card-post-home">
-                                        <span className="sale">HOT</span>
-                                        <div className="image" style={{minHeight: "10rem"}}>
-                                            <img style={{maxHeight: "11rem"}}
-                                                src="https://taidat.vn/wp-content/uploads/2021/04/chia-se-kinh-nghiem-chay-xe-duong-dai-10-600x525.jpg"/>
-                                        </div>
-                                        <div className="details">
-                                            <p>Chia sẻ kinh nghiệm chạy xe đường dài</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link to={`/post`} className="col-md-3 product-link py-2">
-                                    <div className="card-post-home">
-                                        <span className="sale">HOT</span>
-                                        <div className="image" style={{minHeight: "10rem"}}>
-                                            <img style={{maxHeight: "11rem"}}
-                                                src="https://taidat.vn/wp-content/uploads/2021/05/vi-sao-kyt-venom-chiem-tron-trai-tim-gioi-tre-21-600x426.jpg"/>
-                                        </div>
-                                        <div className="details">
-                                            <p>KYT Helmet – Thương hiệu nón bảo hiểm chất lượng, độc đáo cho biker</p>
-                                        </div>
-                                    </div>
-                                </Link>
                             </div>
                         </Carousel.Item>
                     </Carousel>

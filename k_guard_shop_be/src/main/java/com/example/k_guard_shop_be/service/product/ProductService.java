@@ -19,8 +19,43 @@ public class ProductService implements IProductService {
     private IImageRepository iImageRepository;
 
     @Override
-    public Page<IProductDTO> getAll(Pageable pageable) {
-        return iProductRepository.getAll(pageable);
+    public Page<IProductDTO> getAll(Pageable pageable, String productType) {
+        Long productTypeId = 0L;
+        switch (productType) {
+            case "fullface":
+            case "1":
+                productTypeId = 1L;
+                break;
+            case "3/4":
+            case "2":
+                productTypeId = 2L;
+                break;
+            case "armor":
+            case "3":
+                productTypeId = 3L;
+                break;
+            case "glove":
+            case "4":
+                productTypeId = 4L;
+                break;
+            case "shoe":
+            case "5":
+                productTypeId = 5L;
+                break;
+            case "barrel":
+            case "6":
+                productTypeId = 6L;
+                break;
+            default:
+                productTypeId = null;
+
+        }
+        return iProductRepository.getAll(pageable, productTypeId);
+    }
+
+    @Override
+    public Page<IProductDTO> getAllByBrand(Pageable pageable, Long brand) {
+        return iProductRepository.getAllByBrand(pageable,brand);
     }
 
     @Override

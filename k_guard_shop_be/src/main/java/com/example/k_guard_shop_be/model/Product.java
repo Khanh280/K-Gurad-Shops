@@ -20,6 +20,9 @@ public class Product {
     @JoinColumn(name = "sizes_id")
     @ManyToOne
     private Sizes sizes;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
     @JoinColumn(name = "product_type_id")
     @ManyToOne
     private ProductType productType;
@@ -37,12 +40,13 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String name, Long price, String description, Sizes sizes, ProductType productType, LocalDateTime createDate, LocalDateTime updateDate, Integer quantity, boolean isDelete) {
+    public Product(Long id, String name, Long price, String description, Sizes sizes, Brand brand, ProductType productType, LocalDateTime createDate, LocalDateTime updateDate, Integer quantity, boolean isDelete) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
         this.sizes = sizes;
+        this.brand = brand;
         this.productType = productType;
         this.createDate = createDate;
         this.updateDate = updateDate;
@@ -128,5 +132,13 @@ public class Product {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 }

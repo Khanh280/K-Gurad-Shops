@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useParams} from "react-router-dom";
 import "../css/product_home.css"
 import BackUp from "./BackUp";
 import axios from "axios";
@@ -8,6 +8,9 @@ export default function ProductHome() {
     const [products, setProducts] = useState()
     const [totalPage, setTotalPage] = useState()
     const [page, setPage] = useState(0)
+    const brand = useParams();
+    const type = useParams();
+    const [types,setType] = useState();
 
     const dropDownOption = (options) => {
         let ulElement;
@@ -35,27 +38,47 @@ export default function ProductHome() {
             ulIcon.style.transform = 'rotate(0deg)';
         }
     }
-    const getAllProduct = async () => {
-        const res = await axios.get("http://localhost:8080/api/product")
+    const getAllProduct = async (nameType) => {
+        const res = await axios.get("http://localhost:8080/api/product?productType=" + (nameType || ""))
         await setProducts(() => res.data.content)
         await setTotalPage(() => res.data.totalPages)
-        await setPage(prevState => prevState+1)
-        console.log(res.data.content)
+        await setType(() => nameType)
+        setPage(() => 0)
+    }
+    const getAllProductByType = async (type) => {
+        const res = await axios.get("http://localhost:8080/api/product?productType=" + type)
+        await setProducts(() => res.data.content)
+        await setTotalPage(() => res.data.totalPages)
+        await setType(() => type)
+        setPage(() => 0)
+    }
+    const getAllProductByBrand = async (brand) => {
+        const res = await axios.get("http://localhost:8080/api/product?brand=" + brand)
+        await setProducts(() => res.data.content)
+        await setTotalPage(() => res.data.totalPages)
+        setPage(() => 0)
     }
 
-    const loadMore = async () => {
-        // if (page <= totalPage + 1) {
-        //     console.log(page)
-        //     const res = await axios.get("http://localhost:8080/api/product?page=" + page)
-        //     await setProducts(prevState => [...prevState, ...res.data.content])
-        //     await setPage(prevState => prevState+1)
-        // }
+
+    const loadMore = async (page, type, brand) => {
+        if (page + 1 < totalPage) {
+            console.log(page)
+            const res = await axios.get("http://localhost:8080/api/product?page=" + (page + 1) + "&productType=" + (type || "") + "&brand=" + (brand || "0"))
+            await setProducts(prevState => [...prevState, ...res.data.content])
+            await setPage(prevState => prevState + 1)
+        }
     }
 
     useEffect(() => {
-        getAllProduct()
+        if (type.type !== undefined) {
+            getAllProductByType(type.type);
+        } else if (brand.brand) {
+            getAllProductByBrand(brand.brand)
+        } else {
+            getAllProduct()
+        }
         window.scrollTo(0, 0)
-    }, [])
+    }, [brand.brand, type.type])
     if (!products) {
         return null;
     }
@@ -90,23 +113,26 @@ export default function ProductHome() {
                             </div>
                             <p id="click" onClick={() => dropDownOption("fullface")}>Mũ bảo hiểm
                                 <i id="fullface-icon" className="bi bi-chevron-down"></i></p>
-                            <ul id="fullface" className="ms-2" style={{borderLeft: "1px solid gray", display: 'none'}}>
-                                <li className="ms-1">Mũ 3/4</li>
-                                <li className="ms-1">Mũ Fullface</li>
+                            <ul id="fullface" className="ms-2 dropdown-item-product-type"
+                                style={{borderLeft: "1px solid gray", display: 'none'}}>
+                                <li className="ms-1" onClick={() => getAllProduct("3/4")}>Mũ 3/4</li>
+                                <li className="ms-1" onClick={() => getAllProduct("fullface")}>Mũ Fullface</li>
                             </ul>
-                            <p id="click" onClick={() => dropDownOption("armor")}>Giáp bảo hộ
-                                <i id="armor-icon" className="bi bi-chevron-down"></i></p>
-                            <ul id="armor" className="ms-2" style={{borderLeft: "1px solid gray", display: 'none'}}>
-                                <li className="ms-1">ALPINESTARS</li>
-                                <li className="ms-1">FOX RACING</li>
-                                <li className="ms-1">JOE ROCKET</li>
-                            </ul>
+                            {/*<p id="click" onClick={() => dropDownOption("armor")}>Giáp bảo hộ*/}
+                            {/*    <i id="armor-icon" className="bi bi-chevron-down"></i></p>*/}
+                            {/*<ul id="armor" className="ms-2 dropdown-item-product-type" style={{borderLeft: "1px solid gray", display: 'none'}}>*/}
+                            {/*    <li className="ms-1">ALPINESTARS</li>*/}
+                            {/*    <li className="ms-1">FOX RACING</li>*/}
+                            {/*    <li className="ms-1">JOE ROCKET</li>*/}
+                            {/*</ul>*/}
                             <p id="click" onClick={() => dropDownOption("different")}>Đồ bảo hộ khác
                                 <i id="different-icon" className="bi bi-chevron-down"></i></p>
-                            <ul id="different" className="ms-2" style={{borderLeft: "1px solid gray", display: 'none'}}>
-                                <li className="ms-1">Găng tay</li>
-                                <li className="ms-1">Giày bảo hộ</li>
-                                <li className="ms-1">JOE ROCKET</li>
+                            <ul id="different" className="ms-2 dropdown-item-product-type"
+                                style={{borderLeft: "1px solid gray", display: 'none'}}>
+                                <li className="ms-1" onClick={() => getAllProduct("armor")}>Giáp bảo hộ</li>
+                                <li className="ms-1" onClick={() => getAllProduct("glove")}>Găng tay</li>
+                                <li className="ms-1" onClick={() => getAllProduct("shoe")}>Giày bảo hộ</li>
+                                <li className="ms-1" onClick={() => getAllProduct("barrel")}>Thùng Givi</li>
                             </ul>
 
                         </div>
@@ -137,19 +163,21 @@ export default function ProductHome() {
                     <div className="col-md-9 pe-0">
                         {
                             products.map((product, index) =>
-                                <Link key={index} to={`/product/detail/${product.id}`} className="col-md-3 product-link">
+                                <Link key={index} to={`/product/detail/${product.id}`}
+                                      className="col-md-3 product-link">
                                     <div className="card-product-home mt-2" style={{minHeight: "13rem"}}>
                                         {/*<span className="sale">Mới</span>*/}
                                         <div className="image" style={{minHeight: "6rem"}}>
                                             <img
-                                                src={product.linkImage}
+                                                src={product?.linkImage}
                                                 style={{width: "100%", height: "100%"}}/>
                                         </div>
-                                        <div className="details" style={{padding: "0 10px"}}>
-                                            <h3 style={{fontSize: "1rem"}}>{product.name}</h3>
+                                        <div className="details align-items-center d-grid"
+                                             style={{padding: "0 10px", minHeight: "6.5rem"}}>
+                                            <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
                                             <div className="price-ratings">
                                                 <div className="price">
-                                                    <span>{product.price}</span>
+                                                    <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                 </div>
                                                 <div className="ratings">
                                                     Mua
@@ -160,12 +188,18 @@ export default function ProductHome() {
                                 </Link>
                             )
                         }
-                        <div className="col-md-12 d-flex justify-content-center mt-2">
-                            <button id="load-more-product" className="btn btn-sm mt-2 justify-content-center"
-                                    onClick={() => loadMore()}
-                                    style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm<i
-                                className="bi bi-chevron-down"></i></button>
-                        </div>
+                        {
+                            page < totalPage - 1 ?
+                                <div className="col-md-12 d-flex justify-content-center mt-2">
+                                    <button id="load-more-product" className="btn btn-sm mt-2 justify-content-center"
+                                            onClick={() => loadMore(page, types, brand.brand)}
+                                            style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm
+                                        <i className="bi bi-chevron-down"></i></button>
+                                </div>
+                                :
+                                ""
+                        }
+
                     </div>
                 </div>
             </div>

@@ -14,10 +14,13 @@ function App() {
     return (
         <>
             <Header/>
-            <div style={{minHeight: "97.5vh",marginTop: "10vh"}}>
+            <div style={{minHeight: "97.5vh", marginTop: "10vh"}}>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/product" element={<ProductHome/>}/>
+                    <Route path="/product-brand" element={<ProductHome/>}/>
+                    <Route path="/product/:type" element={<ProductHome/>}/>
+                    <Route path="/product-brand/:brand" element={<ProductHome/>}/>
                     <Route path="/login" element={<LoginForm/>}/>
                     <Route path="/register" element={<RegisterForm/>}/>
                     <Route path="/product/detail/:id" element={<DetailProduct/>}/>

@@ -26,11 +26,11 @@ export default function FullFaceHot() {
                                 <img
                                     src={product?.linkImage}/>
                             </div>
-                            <div className="details">
-                                <h3>{product?.name}</h3>
+                            <div className="details align-items-center d-grid">
+                                <h6>{product?.name}</h6>
                                 <div className="price-ratings">
                                     <div className="price">
-                                        <span>{product?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
+                                        <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                     </div>
                                     <div className="ratings">
                                         Mua
