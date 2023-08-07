@@ -24,7 +24,9 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             "from product p\n" +
             "         inner join images i on p.id = i.product_id\n" +
             "         inner join product_type pt on p.product_type_id = pt.id\n" +
+            "         inner join brand b on p.brand_id = b.id\n" +
             "where p.is_delete = false \n" +
+            "  and b.id = coalesce(:brandId, b.id)\n" +
             "and pt.id = coalesce(:productTypeId,pt.id) \n" +
             "and i.id IN (SELECT MIN(i.id) AS id\n" +
             "                                       FROM images i\n" +
@@ -33,13 +35,15 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             "from product p\n" +
             "         inner join images i on p.id = i.product_id\n" +
             "         inner join product_type pt on p.product_type_id = pt.id\n" +
+            "         inner join brand b on p.brand_id = b.id\n" +
             "where p.is_delete = false \n" +
+            "  and b.id = coalesce(:brandId, b.id)\n" +
             "and pt.id = coalesce(:productTypeId,pt.id) \n" +
             "and i.id IN (SELECT MIN(i.id) AS id\n" +
             "                                       FROM images i\n" +
             "                                       GROUP BY i.product_id)"
             , nativeQuery = true)
-    Page<IProductDTO> getAll(Pageable pageable, @Param("productTypeId") Long productTypeId);
+    Page<IProductDTO> getAll(Pageable pageable, @Param("productTypeId") Long productTypeId, @Param("brandId") Long brandId);
 
     @Query(value = "select p.id          as id,\n" +
             "       p.name        as name,\n" +
@@ -97,4 +101,31 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "select * from product p where p.is_delete = false and p.id = :id", nativeQuery = true)
     Product getProductById(@Param("id") Long id);
+
+    @Query(value = "select p.id          as id,\n" +
+            "       p.name        as name,\n" +
+            "       p.price       as price,\n" +
+            "       p.quantity    as quantity,\n" +
+            "       pt.name       as productType,\n" +
+            "       p.description as description,\n" +
+            "       i.link        as linkImage\n" +
+            "from product p\n" +
+            "         inner join images i on p.id = i.product_id\n" +
+            "         inner join product_type pt on p.product_type_id = pt.id\n" +
+            "where p.is_delete = false \n" +
+            "and p.name like concat('%',:name,'%') \n" +
+            "and i.id IN (SELECT MIN(i.id) AS id\n" +
+            "                                       FROM images i\n" +
+            "                                       GROUP BY i.product_id)"
+            , countQuery = "select count(*)" +
+            "from product p\n" +
+            "         inner join images i on p.id = i.product_id\n" +
+            "         inner join product_type pt on p.product_type_id = pt.id\n" +
+            "where p.is_delete = false \n" +
+            "and p.name like concat('%',:name,'%') \n" +
+            "and i.id IN (SELECT MIN(i.id) AS id\n" +
+            "                                       FROM images i\n" +
+            "                                       GROUP BY i.product_id)"
+            , nativeQuery = true)
+    Page<IProductDTO> searchByName(Pageable pageable, @Param("name") String name);
 }

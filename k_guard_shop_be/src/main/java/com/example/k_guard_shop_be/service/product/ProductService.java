@@ -19,8 +19,8 @@ public class ProductService implements IProductService {
     private IImageRepository iImageRepository;
 
     @Override
-    public Page<IProductDTO> getAll(Pageable pageable, String productType) {
-        Long productTypeId = 0L;
+    public Page<IProductDTO> getAll(Pageable pageable, String productType,Long brandId) {
+        Long productTypeId;
         switch (productType) {
             case "fullface":
             case "1":
@@ -50,7 +50,7 @@ public class ProductService implements IProductService {
                 productTypeId = null;
 
         }
-        return iProductRepository.getAll(pageable, productTypeId);
+        return iProductRepository.getAll(pageable, productTypeId,brandId);
     }
 
     @Override
@@ -61,6 +61,11 @@ public class ProductService implements IProductService {
     @Override
     public List<IProductDTO> getTopProduct(Integer quantity) {
         return iProductRepository.getTopProduct(quantity);
+    }
+
+    @Override
+    public Page<IProductDTO> searchByName(Pageable pageable,String name) {
+        return iProductRepository.searchByName(pageable,name);
     }
 
     @Override

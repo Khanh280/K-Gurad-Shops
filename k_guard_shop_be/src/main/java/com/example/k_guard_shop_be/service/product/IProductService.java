@@ -9,9 +9,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IProductService {
-    Page<IProductDTO> getAll(Pageable pageable,String productType);
+    Page<IProductDTO> getAll(Pageable pageable,String productType,Long brandId);
     Page<IProductDTO> getAllByBrand(Pageable pageable,Long brand);
     List<IProductDTO> getTopProduct(Integer quantity);
+    Page<IProductDTO> searchByName(Pageable pageable,String name);
     void saveProduct(Product product);
     void deleteProduct(Long id);
     Product getProductById(Long id);

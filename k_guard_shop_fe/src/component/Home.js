@@ -164,46 +164,51 @@ export default function Home() {
                     <div className="col-md-12">
                         <div className="row">
                             <div className="col-md-3 guard-items">
-                                <div className="guard-items-home">
-                                    <img
-                                        src="https://product.hstatic.net/1000325215/product/ego-camo-hong-dai-ngon_master.jpg"
-                                        alt="" style={{width: "100%"}}/>
-                                    <div className="guard-items-content">
-                                        <b>Găng tay</b>
-                                        <hr className="hr-guard"/>
-                                        <p>Găng tay bảo hộ đi xe máy an toàn, êm ái.</p>
-                                    </div>
+                                <Link to={`/product/glove`}>
+                                    <div className="guard-items-home">
+                                        <img
+                                            src="https://product.hstatic.net/1000325215/product/ego-camo-hong-dai-ngon_master.jpg"
+                                            alt="" style={{width: "100%"}}/>
+                                        <div className="guard-items-content">
+                                            <b>Găng tay</b>
+                                            <hr className="hr-guard"/>
+                                            <p>Găng tay bảo hộ đi xe máy an toàn, êm ái.</p>
+                                        </div>
 
-                                </div>
+                                    </div>
+                                </Link>
                             </div>
                             <div className="col-md-3 guard-items">
-                                <div className="guard-items-home">
-                                    <img
-                                        src="https://x135shop.vn/wp-content/uploads/2020/12/125054518_1000345630475047_3941925206897407637_o-300x300.jpg"
-                                        alt="" style={{height: "100%"}}/>
-                                    <div className="guard-items-content">
-                                        <b>Mũ bảo hiểm</b>
-                                        <hr className="hr-guard"/>
-                                        <p>Nhiều loại mũ 3/4, Fullface chính hãng, giá tốt hiệu AGV, Yohe,
-                                            Arai,KYT...</p>
+                                <Link to={`/product/fullface`}>
+                                    <div className="guard-items-home">
+                                        <img
+                                            src="https://x135shop.vn/wp-content/uploads/2020/12/125054518_1000345630475047_3941925206897407637_o-300x300.jpg"
+                                            alt="" style={{height: "100%"}}/>
+                                        <div className="guard-items-content">
+                                            <b>Mũ bảo hiểm</b>
+                                            <hr className="hr-guard"/>
+                                            <p>Nhiều loại mũ 3/4, Fullface chính hãng, giá tốt hiệu AGV, Yohe,
+                                                Arai,KYT...</p>
+                                        </div>
                                     </div>
-                                </div>
-
+                                </Link>
                             </div>
                             <div className="col-md-3 guard-items">
-                                <div className="guard-items-home">
-                                    <img
-                                        src="https://th.bing.com/th/id/R.69500be00c0cac645b18fd512865f797?rik=CUNOxbrfAhvipA&riu=http%3a%2f%2fwww.phukienphuot.com%2fuploads%2fimages%2fmedium%2fIMG_4732.JPG&ehk=adHLdlNr7BrMYvHWowVYsnROQ0mHx6aAplQpU9Veljo%3d&risl=&pid=ImgRaw&r=0"
-                                        alt="" style={{height: "100%"}}/>
-                                    <div className="guard-items-content">
-                                        <b>Áo khoác giáp</b>
-                                        <hr className="hr-guard"/>
-                                        <p>Đảm bảo an toàn cho cơ thể, giảm thiểu các vấn đề về chấn thương.</p>
+                                <Link to={`/product/armor`}>
+                                    <div className="guard-items-home">
+                                        <img
+                                            src="https://th.bing.com/th/id/R.69500be00c0cac645b18fd512865f797?rik=CUNOxbrfAhvipA&riu=http%3a%2f%2fwww.phukienphuot.com%2fuploads%2fimages%2fmedium%2fIMG_4732.JPG&ehk=adHLdlNr7BrMYvHWowVYsnROQ0mHx6aAplQpU9Veljo%3d&risl=&pid=ImgRaw&r=0"
+                                            alt="" style={{height: "100%"}}/>
+                                        <div className="guard-items-content">
+                                            <b>Áo khoác giáp</b>
+                                            <hr className="hr-guard"/>
+                                            <p>Đảm bảo an toàn cho cơ thể, giảm thiểu các vấn đề về chấn thương.</p>
+                                        </div>
                                     </div>
-                                </div>
-
+                                </Link>
                             </div>
                             <div className="col-md-3 guard-items">
+                                <Link to={`/product/barrel`}>
                                 <div className="guard-items-home">
                                     <img src="http://www.phukienphuot.com/uploads/images/medium/thung_xe_k1300r_11.JPG"
                                          alt="" style={{height: "100%"}}/>
@@ -213,7 +218,7 @@ export default function Home() {
                                         <p>Lắp đặt baga Givi chính hãng, tiện lợi hơn trong các chuyến đi.</p>
                                     </div>
                                 </div>
-
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -361,7 +366,7 @@ export default function Home() {
                 </div>
             </div>
             <BackUp/>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     )
 }

@@ -13,10 +13,7 @@ import com.example.k_guard_shop_be.service.product.IProductService;
 import com.example.k_guard_shop_be.service.product_type.IProductTypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,14 +43,34 @@ public class ProductRestController {
     @GetMapping("")
     public ResponseEntity<Page<IProductDTO>> getAllProduct(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                            @RequestParam(value = "productType", defaultValue = "") String productType,
-                                                           @RequestParam(value = "brand", defaultValue = "0") Long brand) {
-        Pageable pageable = PageRequest.of(page, 8);
-        Page<IProductDTO> productPage;
-        if(brand != 0){
-            productPage = iProductService.getAllByBrand(pageable,brand);
-            return new ResponseEntity<>(productPage, HttpStatus.OK);
+                                                           @RequestParam(value = "brand", defaultValue = "") Long brand,
+                                                           @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
+    ) {
+        Sort sort;
+        switch (orderBy) {
+            case "new":
+                sort = Sort.by("id").descending();
+                break;
+            case "a-z":
+                sort = Sort.by("name").ascending();
+                break;
+            case "priceAscending":
+                sort = Sort.by("price").ascending();
+                break;
+            case "priceDescending":
+                sort = Sort.by("price").descending();
+                break;
+            default:
+                sort = Sort.by("id").descending();
+                break;
         }
-            productPage = iProductService.getAll(pageable, productType);
+        Pageable pageable = PageRequest.of(page, 8, sort);
+        Page<IProductDTO> productPage;
+//        if (brand != 0) {
+            productPage = iProductService.getAll(pageable,productType, brand);
+//            return new ResponseEntity<>(productPage, HttpStatus.OK);
+//        }
+//        productPage = iProductService.getAll(pageable, productType);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -79,6 +96,14 @@ public class ProductRestController {
     public ResponseEntity<?> getbrand() {
         List<Brand> brandList = iBrandService.getAll();
         return new ResponseEntity<>(brandList, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProduct(@RequestParam(value = "name", defaultValue = "") String name, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<IProductDTO> iProductDTO = iProductService.searchByName(pageable, name);
+
+        return new ResponseEntity<>(iProductDTO, HttpStatus.OK);
     }
 
     @PostMapping("")
