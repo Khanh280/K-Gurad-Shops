@@ -4,6 +4,7 @@ import FullFaceHot from "./FullFaceHot";
 import "../css/product_detail.css"
 import axios from "axios";
 import "../css/home.css"
+import {animateScroll as scroll} from "react-scroll";
 
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
@@ -27,9 +28,7 @@ export default function DetailProduct() {
         setDes(res.data[0].product.description.split("- " || "."))
     }
     useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [])
-    useEffect(() => {
+        scroll.scrollToTop();
         getProductById(param)
     }, [param])
     useEffect(() => {
@@ -123,7 +122,7 @@ export default function DetailProduct() {
                         </div>
                     </div>
                 </div>
-                <div className="row mt-5 mb-5">
+                <div className=" row mt-5 mb-5">
                     <div className="col-md-12 text-center d-flex">
                         <div className="col-md-4">
                             <hr/>

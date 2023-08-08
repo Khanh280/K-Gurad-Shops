@@ -52,7 +52,7 @@ export default function ShoppingCart() {
     const modals = async (name) => {
         Swal.fire({
             icon: "warning",
-            title: "Xóa Penalty",
+            title: "Xóa sản phẩm",
             html: `Bạn có muốn xoá đơn hàng <span style="color: red">${name}</span> không?`,
             showCancelButton: true,
             confirmButtonText: 'Có',
@@ -64,6 +64,7 @@ export default function ShoppingCart() {
             }
         })
     }
+
     useEffect(() => {
         window.scrollTo(0,0)
         console.log("mount")
@@ -76,16 +77,18 @@ export default function ShoppingCart() {
             <div className="px-4" style={{marginTop: "13vh"}}>
                 <div className="d-flex">
                     <div className="col-md-9 ">
-                        <div className="" align="center">
-                            <h4>Danh sách sản phẩm </h4>
+                        <div className="" align="">
+                            <div className="row col-md-4">
+                                <h4 className="px-0" style={{display: "flex",color: "#F4882F"}}>K-Guard Shop | Giỏ hàng</h4>
+                            </div>
                         </div>
 
-                        <table className="col-md-12 table ">
+                        <table className="col-md-12">
                             <thead>
-                            <tr>
-                                <th>Hình ảnh</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Mã sản phẩm</th>
+                            <tr style={{border: "2px solid #f4882fc7",height: "3rem"}}>
+                                <th>Sản phẩm</th>
+                                <th></th>
+                                <th>Brand</th>
                                 <th>Loại</th>
                                 <th>Số lượng</th>
                                 <th>Chức năng</th>

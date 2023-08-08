@@ -255,3 +255,10 @@ li{
 .register-link:hover{
     color: #F4882F;
 }
+.load-more-btn{
+    display: flex;
+    align-items: center;
+}
+.load-more-btn:hover{
+    color: #F4882F;
+}
