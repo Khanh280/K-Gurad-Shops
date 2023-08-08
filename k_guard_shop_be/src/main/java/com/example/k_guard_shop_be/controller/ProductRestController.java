@@ -41,36 +41,16 @@ public class ProductRestController {
     private IBrandService iBrandService;
 
     @GetMapping("")
-    public ResponseEntity<Page<IProductDTO>> getAllProduct(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<Page<IProductDTO>> getAllProduct(@RequestParam(value = "nameSearch", defaultValue = "") String nameSearch,
+                                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                            @RequestParam(value = "productType", defaultValue = "") String productType,
                                                            @RequestParam(value = "brand", defaultValue = "") Long brand,
                                                            @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
     ) {
-        Sort sort;
-        switch (orderBy) {
-            case "new":
-                sort = Sort.by("id").descending();
-                break;
-            case "a-z":
-                sort = Sort.by("name").ascending();
-                break;
-            case "priceAscending":
-                sort = Sort.by("price").ascending();
-                break;
-            case "priceDescending":
-                sort = Sort.by("price").descending();
-                break;
-            default:
-                sort = Sort.by("id").descending();
-                break;
-        }
+        Sort sort = checkOrderBy(orderBy);
         Pageable pageable = PageRequest.of(page, 8, sort);
         Page<IProductDTO> productPage;
-//        if (brand != 0) {
-            productPage = iProductService.getAll(pageable,productType, brand);
-//            return new ResponseEntity<>(productPage, HttpStatus.OK);
-//        }
-//        productPage = iProductService.getAll(pageable, productType);
+        productPage = iProductService.getAll(pageable, productType, brand,nameSearch);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -99,10 +79,14 @@ public class ProductRestController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchProduct(@RequestParam(value = "name", defaultValue = "") String name, @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        Pageable pageable = PageRequest.of(page, 8);
-        Page<IProductDTO> iProductDTO = iProductService.searchByName(pageable, name);
-
+    public ResponseEntity<?> searchProduct(@RequestParam(value = "name", defaultValue = "") String name,
+                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                           @RequestParam(value = "productType", defaultValue = "") String productType,
+                                           @RequestParam(value = "brand", defaultValue = "") Long brand,
+                                           @RequestParam(value = "orderBy", defaultValue = "0") String orderBy) {
+        Sort sort = checkOrderBy(orderBy);
+        Pageable pageable = PageRequest.of(page, 8, sort);
+        Page<IProductDTO> iProductDTO = iProductService.searchByName(pageable, name, productType, brand);
         return new ResponseEntity<>(iProductDTO, HttpStatus.OK);
     }
 
@@ -144,5 +128,27 @@ public class ProductRestController {
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<String> error(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT FOUND");
+    }
+
+    public Sort checkOrderBy(String orderBy) {
+        Sort sort;
+        switch (orderBy) {
+            case "new":
+                sort = Sort.by("id").descending();
+                break;
+            case "a-z":
+                sort = Sort.by("name").ascending();
+                break;
+            case "priceAscending":
+                sort = Sort.by("price").ascending();
+                break;
+            case "priceDescending":
+                sort = Sort.by("price").descending();
+                break;
+            default:
+                sort = Sort.by("id").descending();
+                break;
+        }
+        return sort;
     }
 }

@@ -19,7 +19,43 @@ public class ProductService implements IProductService {
     private IImageRepository iImageRepository;
 
     @Override
-    public Page<IProductDTO> getAll(Pageable pageable, String productType,Long brandId) {
+    public Page<IProductDTO> getAll(Pageable pageable, String productType,Long brandId,String nameSearch) {
+        Long productTypeId= checkProductType(productType);
+        return iProductRepository.getAll(pageable, productTypeId,brandId,nameSearch);
+    }
+
+    @Override
+    public Page<IProductDTO> getAllByBrand(Pageable pageable, Long brand) {
+        return iProductRepository.getAllByBrand(pageable,brand);
+    }
+
+    @Override
+    public List<IProductDTO> getTopProduct(Integer quantity) {
+        return iProductRepository.getTopProduct(quantity);
+    }
+
+    @Override
+    public Page<IProductDTO> searchByName(Pageable pageable,String name,String productType,Long brandId) {
+        Long productTypeId= checkProductType(productType);
+        return iProductRepository.searchByName(pageable,name,productTypeId,brandId);
+    }
+
+    @Override
+    public void saveProduct(Product product) {
+        iProductRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        iProductRepository.deleteProduct(id);
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return iProductRepository.getProductById(id);
+    }
+
+    public Long checkProductType(String productType){
         Long productTypeId;
         switch (productType) {
             case "fullface":
@@ -48,38 +84,7 @@ public class ProductService implements IProductService {
                 break;
             default:
                 productTypeId = null;
-
         }
-        return iProductRepository.getAll(pageable, productTypeId,brandId);
-    }
-
-    @Override
-    public Page<IProductDTO> getAllByBrand(Pageable pageable, Long brand) {
-        return iProductRepository.getAllByBrand(pageable,brand);
-    }
-
-    @Override
-    public List<IProductDTO> getTopProduct(Integer quantity) {
-        return iProductRepository.getTopProduct(quantity);
-    }
-
-    @Override
-    public Page<IProductDTO> searchByName(Pageable pageable,String name) {
-        return iProductRepository.searchByName(pageable,name);
-    }
-
-    @Override
-    public void saveProduct(Product product) {
-        iProductRepository.save(product);
-    }
-
-    @Override
-    public void deleteProduct(Long id) {
-        iProductRepository.deleteProduct(id);
-    }
-
-    @Override
-    public Product getProductById(Long id) {
-        return iProductRepository.getProductById(id);
+        return productTypeId;
     }
 }
