@@ -38,6 +38,33 @@ public class ShoppingCartRestController {
         session.setAttribute("cart",shoppingCartList);
         return new ResponseEntity<>(session.getAttribute("cart"),HttpStatus.OK);
     }
+    @PostMapping("/edit-cart/{operator}/{productId}")
+    public ResponseEntity<?> updateCart(@PathVariable("operator") String operator,@PathVariable("productId")Long productId,HttpServletRequest httpServletRequest){
+        HttpSession session = httpServletRequest.getSession();
+        List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
+        Integer sign = 0;
+    switch (operator){
+        case "minus":
+            sign = -1;
+            break;
+        case "plus":
+            sign = 1;
+            break;
+        default:
+    }
+        if ( shoppingCartList != null){
+            for (int i = 0; i < shoppingCartList.size(); i++) {
+                if(shoppingCartList.get(i).getProduct().getId()==productId){
+                    shoppingCartList.get(i).setQuantity(shoppingCartList.get(i).getQuantity()+sign);
+                    if(shoppingCartList.get(i).getQuantity() == 0){
+                        shoppingCartList.remove(shoppingCartList.get(i));
+                    }
+                }
+            }
+        }
+        session.setAttribute("cart",shoppingCartList);
+    return new ResponseEntity<>(session.getAttribute("cart"),HttpStatus.OK);
+    }
     @GetMapping("")
     public ResponseEntity<?> showCart(HttpServletRequest httpServletRequest){
         HttpSession session = httpServletRequest.getSession();
