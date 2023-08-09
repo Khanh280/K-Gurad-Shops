@@ -31,6 +31,7 @@ import java.util.Map;
 @CrossOrigin("*")
 @RequestMapping("/api/product")
 public class ProductRestController {
+
     @Autowired
     private IProductService iProductService;
     @Autowired

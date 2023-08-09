@@ -225,6 +225,10 @@ i {
 
 .btn-operator-subs {
     border-radius: 0 5px 5px 0;
+
+}
+.btn-operator-subs:focus, .btn-operator-plus:focus{
+    box-shadow: none;
 }
 
 .btn-operator-plus {
@@ -233,8 +237,10 @@ i {
 
 #input-quantity-product {
     border-radius: 0;
+    /*border: none;*/
+    background-color: white;
     text-align: center;
-    width: 5rem;
+    width: 3rem;
 }
 
 .btn-buy-product {

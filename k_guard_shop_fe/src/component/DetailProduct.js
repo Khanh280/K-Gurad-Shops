@@ -5,6 +5,7 @@ import "../css/product_detail.css"
 import axios from "axios";
 import "../css/home.css"
 import {animateScroll as scroll} from "react-scroll";
+import {Field, Form, Formik} from "formik";
 
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
@@ -47,7 +48,7 @@ export default function DetailProduct() {
                 </div>
                 <div className="row">
                     <div className="col-md-4 p-0 ">
-                        <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px",overflow: "hidden"}}>
+                        <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px", overflow: "hidden"}}>
                             <div className="row">
                                 <img
                                     src={imageMain}
@@ -86,40 +87,64 @@ export default function DetailProduct() {
                                 }
                             </p>
                         </div>
-                        <div className="row d-flex mb-2 ">
-                            <div className="col-md-3">
-                                <div className="row">
-                                    <div>
-                                        <select className="form-control" name="" id="">
-                                            <option value="">Chọn Size</option>
-                                            <option value="">M</option>
-                                            <option value="">L</option>
-                                            <option value="">XL</option>
-                                        </select>
+                        <Formik
+                            initialValues={{
+                                product: "",
+                                quantity: "",
+                                size: "",
+                                image:""
+                            }}
+                            onSubmit={(value) => {
+                                const saveCart = async () => {
+                                    const newValue = {...value, product: product, quantity: quantity,image: imageMain}
+                                    // console.log(newValue)
+                                    const res = await axios.post("http://localhost:8080/api/shopping-cart", newValue,
+                                        {withCredentials: true})
+                                    console.log(res.data)
+                                }
+                                saveCart()
+                            }}
+                        >
+                            <Form>
+                                <div className="row d-flex mb-2 ">
+                                    <div className="col-md-3">
+                                        <div className="row">
+                                            <div>
+                                                <Field as="select" className="form-control" name="size" id="">
+                                                    <option value="0">Chọn Size</option>
+                                                    <option value="1">M</option>
+                                                    <option value="2">L</option>
+                                                    <option value="3">XL</option>
+                                                </Field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3 d-flex">
+                                        <button type="button" className="btn btn-dark btn-operator-plus"
+                                                onClick={() => setQuantity(prevState => prevState - 1)}><span
+                                            style={{fontWeight: "bold"}}>-</span></button>
+                                        <Field name="quantity" id="input-quantity-product" className="form-control"
+                                               type="number"
+                                               value={quantity} style={{width: "4rem"}}/>
+                                        <button type="button" className="btn btn-dark btn-operator-subs"
+                                                onClick={() => setQuantity(prevState => prevState + 1)}><span
+                                            style={{fontWeight: "bold"}}>+</span></button>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-md-3 d-flex">
-                                <button className="btn btn-dark btn-operator-plus"
-                                        onClick={() => setQuantity(prevState => prevState - 1)}><span
-                                    style={{fontWeight: "bold"}}>-</span></button>
-                                <input id="input-quantity-product" className="form-control" type="number"
-                                       value={quantity}/>
-                                <button className="btn btn-dark btn-operator-subs"
-                                        onClick={() => setQuantity(prevState => prevState + 1)}><span
-                                    style={{fontWeight: "bold"}}>+</span></button>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-12 justify-content-center d-flex">
-                                <button className="btn btn-buy-product"><i className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
-                                    HÀNG
-                                </button>
-                            </div>
-                            <div className="col-md-12 mt-2">
-                                <img src="/anh/size-fullface.jpg" alt="" style={{width: "100%"}}/>
-                            </div>
-                        </div>
+                                <div className="row">
+                                    <div className="col-md-12 justify-content-center d-flex">
+                                        <button type="submit" className="btn btn-buy-product"><i
+                                            className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
+                                            HÀNG
+                                        </button>
+                                    </div>
+                                    <div className="col-md-12 mt-2">
+                                        <img src="/anh/size-fullface.jpg" alt="" style={{width: "100%"}}/>
+                                    </div>
+                                </div>
+                            </Form>
+                        </Formik>
+
                     </div>
                 </div>
                 <div className=" row mt-5 mb-5">

@@ -15,17 +15,26 @@ public class ShoppingCart {
     private Product product;
     @Column(name = "quantity",nullable = false)
     private Integer quantity;
+    @Column(name = "image",nullable = false)
+    private String image;
     @Column(name = "is_delete",columnDefinition = "DEFAULT BIT(0)")
     private boolean isDelete;
 
     public ShoppingCart() {
     }
 
-    public ShoppingCart(Long id, Customer customer, Product product, Integer quantity, boolean isDelete) {
+    public ShoppingCart(Customer customer, Product product, Integer quantity) {
+        this.customer = customer;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    public ShoppingCart(Long id, Customer customer, Product product, Integer quantity, String image, boolean isDelete) {
         this.id = id;
         this.customer = customer;
         this.product = product;
         this.quantity = quantity;
+        this.image = image;
         this.isDelete = isDelete;
     }
 
@@ -67,5 +76,13 @@ public class ShoppingCart {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

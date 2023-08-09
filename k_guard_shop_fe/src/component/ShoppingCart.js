@@ -3,52 +3,17 @@ import "../css/cart.css"
 import {Form, Formik, Field} from "formik";
 import Swal from "sweetalert2";
 import BackUp from "./BackUp";
+import axios from "axios";
 
 export default function ShoppingCart() {
-    const [shoppingCart, setShoppingCarts] = useState(10)
-    const [quantity, setQuantity] = useState(1);
-    const fora = () => {
-        const cart = [];
-        for (let i = 0; i < shoppingCart; i++) {
-            cart.push(
-                <tr className="row-table-height">
-                    <td className="row-table-height">
-                        <img
-                            src="https://twomotion.net/wp-content/uploads/2020/06/AGV-Pista-GP-R-Limited.png"
-                            style={{width: "5rem"}}/>
-                    </td>
-                    <td className="row-table-height">
-                        <p className="row-table">AGV Pista soleluna 2022</p>
-                    </td>
-                    <td className="row-table-height">
-                        <p className="row-table">SP-0001</p>
-                    </td>
-                    <td className="row-table-height">
-                        <p className="row-table">Nón fullface</p>
-                    </td>
-                    <td className="row-table-height">
-                        <div className="row-table d-flex">
-                            <button className="btn btn-dark btn-operator-plus"
-                                    onClick={() => setQuantity(prevState => prevState - 1)}><span
-                                style={{fontWeight: "bold"}}>-</span></button>
-                            <input id="input-quantity-product" className="form-control" type="text" readOnly
-                                   value={quantity}/>
-                            <button className="btn btn-dark btn-operator-subs"
-                                    onClick={() => setQuantity(prevState => prevState + 1)}><span
-                                style={{fontWeight: "bold"}}>+</span></button>
-                        </div>
-                    </td>
-                    <td className="row-table-height">
-                        <div className="row-table">
-                            {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
-                            {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
-                            <i className="bi bi-x" style={{cursor:"pointer"}} title="Xóa" onClick={()=>modals("AGV")}></i>
-                        </div>
-                    </td>
-                </tr>)
-        }
-        return cart;
+    const [shoppingCarts, setShoppingCarts] = useState()
+    const [quantity, setQuantity] = useState();
+    let total;
+    const getAllCart = async () => {
+        const res = await axios.get("http://localhost:8080/api/shopping-cart", {withCredentials: true})
+        setShoppingCarts(() => res.data)
     }
+
     const modals = async (name) => {
         Swal.fire({
             icon: "warning",
@@ -66,7 +31,8 @@ export default function ShoppingCart() {
     }
 
     useEffect(() => {
-        window.scrollTo(0,0)
+        getAllCart()
+        window.scrollTo(0, 0)
         console.log("mount")
         return () => {
             console.log("unmount")
@@ -77,15 +43,18 @@ export default function ShoppingCart() {
             <div className="px-4" style={{marginTop: "13vh"}}>
                 <div className="d-flex">
                     <div className="col-md-9 ">
-                        <div className="" align="">
+                        <div className="bg-dark" align="">
                             <div className="row col-md-4">
-                                <h4 className="px-0" style={{display: "flex",color: "#F4882F"}}>K-Guard Shop | Giỏ hàng</h4>
+                                <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard Shop | Giỏ
+                                    hàng</h4>
                             </div>
                         </div>
 
                         <table className="col-md-12">
                             <thead>
-                            <tr style={{border: "2px solid #f4882fc7",height: "3rem"}}>
+                            <tr
+                                // style={{border: "2px solid #f4882fc7",height: "3rem"}}
+                            >
                                 <th>Sản phẩm</th>
                                 <th></th>
                                 <th>Brand</th>
@@ -95,38 +64,63 @@ export default function ShoppingCart() {
                             </tr>
                             </thead>
                             <tbody>
-                            {/*<tr className="row-table-height">*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <p className="row-table">1</p>*/}
-                            {/*    </td>*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <img*/}
-                            {/*            src="https://twomotion.net/wp-content/uploads/2020/06/AGV-Pista-GP-R-Limited.png"*/}
-                            {/*            style={{width: "5rem"}}/>*/}
-                            {/*    </td>*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <p className="row-table">AGV Pista soleluna 2022</p>*/}
-                            {/*    </td>*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <p className="row-table">SP-0001</p>*/}
-                            {/*    </td>*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <p className="row-table">Nón fullface</p>*/}
-                            {/*    </td>*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <p className="row-table">3</p>*/}
-                            {/*    </td>*/}
-                            {/*    <td className="row-table-height">*/}
-                            {/*        <div className="row-table">*/}
-                            {/*            <button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
-                            {/*                className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
-                            {/*            <button className="btn btn-sm btn-cart btn-danger ms-1" title="Xóa"><i*/}
-                            {/*                className="bi bi-trash" title="Xóa"></i></button>*/}
-                            {/*        </div>*/}
-                            {/*    </td>*/}
-                            {/*</tr>*/}
                             {
-                                fora()
+                                shoppingCarts ?
+                                    shoppingCarts.map((shoppingCart, index) =>
+                                        <tr key={index} className="row-table-height">
+                                            <td className="row-table-height">
+                                                <img
+                                                    src={shoppingCart.image}
+                                                    style={{width: "5rem"}}/>
+                                            </td>
+                                            <td className="row-table-height">
+                                                <p className="row-table">{shoppingCart.product.name}</p>
+                                            </td>
+                                            <td className="row-table-height">
+                                                <p className="row-table">SP-{shoppingCart.product.id}</p>
+                                            </td>
+                                            <td className="row-table-height">
+                                                <p className="row-table">{shoppingCart.product.productType.name}</p>
+                                            </td>
+                                            <td className="row-table-height">
+                                                <div className="row-table d-flex">
+                                                    <button className="btn btn-dark btn-operator-plus"
+                                                            style={{backgroundColor: "white", border: "none",}}
+                                                            onClick={() => setQuantity(prevState => prevState - 1)}><span
+                                                        style={{
+                                                            fontWeight: "bold",
+                                                            color: "black"
+                                                        }}>-</span></button>
+                                                    <input id="input-quantity-product" className="form-control"
+                                                           type="text"
+                                                           readOnly
+                                                           style={{border: "none",}}
+                                                           value={shoppingCart.quantity}/>
+                                                    <button className="btn btn-dark btn-operator-subs"
+                                                            style={{backgroundColor: "white", border: "none",}}
+                                                            onClick={() => setQuantity(prevState => prevState + 1)}><span
+                                                        style={{
+                                                            fontWeight: "bold",
+                                                            color: "black"
+                                                        }}>+</span></button>
+                                                </div>
+                                            </td>
+                                            <td className="row-table-height">
+                                                <div className="row-table">
+                                                    {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
+                                                    {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
+                                                    <i className="bi bi-x" style={{cursor: "pointer"}} title="Xóa"
+                                                       onClick={() => modals("AGV")}></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )
+                                    :
+                                    <tr>
+                                        <td colSpan={5}>
+                                            Hiện không có sản phẩm nào.
+                                        </td>
+                                    </tr>
                             }
                             </tbody>
                         </table>
@@ -211,7 +205,7 @@ export default function ShoppingCart() {
                                     <div className="">
                                         <div className="d-flex justify-content-between mt-2">
                                             <b>Tổng tiền hàng</b>
-                                            <span>3000đ</span>
+                                            <span>{total}</span>
                                         </div>
                                         <div className="d-flex justify-content-between mt-2">
                                             <b>Phí vận chuyển</b>
