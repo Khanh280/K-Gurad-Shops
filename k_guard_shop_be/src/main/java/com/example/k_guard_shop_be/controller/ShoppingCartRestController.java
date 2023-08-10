@@ -51,6 +51,7 @@ public class ShoppingCartRestController {
             sign = 1;
             break;
         default:
+            sign =0;
     }
         if ( shoppingCartList != null){
             for (int i = 0; i < shoppingCartList.size(); i++) {
@@ -65,6 +66,24 @@ public class ShoppingCartRestController {
         session.setAttribute("cart",shoppingCartList);
     return new ResponseEntity<>(session.getAttribute("cart"),HttpStatus.OK);
     }
+    @PostMapping("/delete-product-cart")
+    public ResponseEntity<?> deleteProductCart(@RequestBody String productId,HttpServletRequest httpServletRequest){
+        HttpSession session = httpServletRequest.getSession();
+        List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
+        if(shoppingCartList!=null){
+            for (int i = 0; i < shoppingCartList.size(); i++) {
+                if(shoppingCartList.get(i).getProduct().getId()== Long.parseLong(productId)){
+                    shoppingCartList.remove(shoppingCartList.get(i));
+                    break;
+                }
+            }
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        session.setAttribute("cart",shoppingCartList);
+        return new ResponseEntity<>(session.getAttribute("cart"),HttpStatus.OK);
+    }
+
     @GetMapping("")
     public ResponseEntity<?> showCart(HttpServletRequest httpServletRequest){
         HttpSession session = httpServletRequest.getSession();

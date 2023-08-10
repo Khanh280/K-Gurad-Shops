@@ -4,6 +4,10 @@ import "../css/product_home.css"
 import BackUp from "./BackUp";
 import axios from "axios";
 import {Field, Form, Formik} from "formik";
+import {useDispatch} from "react-redux";
+import Swal from "sweetalert2";
+import {updateCart} from "../redux/actions/cart";
+import {toast, ToastContainer} from "react-toastify";
 
 export default function ProductHome() {
     const [products, setProducts] = useState()
@@ -14,6 +18,9 @@ export default function ProductHome() {
     const type = useParams();
     const [types, setType] = useState();
     const [nameSearch, setNameSearch] = useState("");
+    const [chooseOption, setChooseOption] = useState(0)
+    const [sizes, setSize] = useState()
+    const dispatch = useDispatch()
     const dropDownOption = (options) => {
         let ulElement;
         let ulIcon;
@@ -62,6 +69,10 @@ export default function ProductHome() {
         await setTotalPage(() => res.data.totalPages)
         setPage(() => 0)
     }
+    const getSize = async () => {
+        const res = await axios.get("http://localhost:8080/api/product/size")
+        setSize(() => res.data)
+    }
 
 
     const loadMore = async (page, type, brand, orderBy, nameSearch) => {
@@ -72,7 +83,66 @@ export default function ProductHome() {
             await setPage(prevState => prevState + 1)
         }
     }
-    const [chooseOption, setChooseOption] = useState(0)
+    const modals = async (product) => {
+        const {value: formValues} = await Swal.fire({
+            // icon: "success",
+            title: "Thêm vào giỏ hàng",
+            html: `
+                <form id="swal-form" style="justify-content: center;display: flex;min-height: 6rem">
+                <table>
+                <tr>
+                <td>Sản phẩm: </td>
+                <td><p id="name" style="margin: 0"></td>
+                </tr>
+                <tr>
+                <td>Số lượng</td>
+                <td><input type="text" id="quantity"></td>
+                </tr>
+                <br>
+                <tr>
+                <td style="justify-content: start;align-items: center;display: flex">Size</td>
+                <td>
+                <select name="size" id="sizeSelect" style="width: 100%"></select>
+                </td>
+                </tr>
+                </table>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không',
+            reverseButtons: true,
+            didOpen: () => {
+                // Focus on the first input when the modal is opened
+                document.getElementById('quantity').focus();
+                document.getElementById('name').innerHTML = product.name;
+                const selectElement = document.getElementById("sizeSelect");
+
+                sizes.forEach(size => {
+                    const option = document.createElement("option");
+                    option.value = size.id;
+                    option.textContent = size.name;
+                    selectElement.appendChild(option);
+                })
+            }
+        })
+        if (formValues) {
+            const quantity = document.getElementById('quantity').value;
+            const size = document.getElementById('sizeSelect').value;
+            product = {
+                ...product,
+                productType: {
+                    id: ""
+                },
+                sizes: {
+                    id: size
+                }
+            }
+            const productCart = {product: product, quantity: quantity, image: product.linkImage}
+            const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
+            dispatch(updateCart(res.data.length))
+            toast.success("Thêm vào giỏ hàng thành công.")
+        }
+    }
 
     useEffect(() => {
         if (type.type !== undefined) {
@@ -82,6 +152,7 @@ export default function ProductHome() {
         } else {
             getAllProduct()
         }
+        getSize()
         window.scrollTo(0, 0)
     }, [brand.brand, type.type])
     if (!products) {
@@ -249,37 +320,47 @@ export default function ProductHome() {
                         </div>
                     </div>
                     <div className="col-md-9 pe-0">
-                        {
-                            products.map((product, index) =>
-                                <Link key={index} to={`/product/detail/${product.id}`}
-                                      className="col-md-3 product-link">
-                                    <div className="card-product-home mt-2" style={{minHeight: "13rem"}}>
-                                        {/*<span className="sale">Mới</span>*/}
-                                        <div className="image" style={{minHeight: "6rem"}}>
-                                            <img
-                                                src={product?.linkImage}
-                                                style={{width: "100%", height: "100%"}}/>
-                                        </div>
-                                        <div className="details align-items-center d-grid"
-                                             style={{padding: "0 10px", minHeight: "6.5rem"}}>
-                                            <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
-                                            <div className="price-ratings">
-                                                <div className="price">
-                                                    <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
-                                                </div>
-                                                <div className="ratings">
-                                                    Mua
+                        <div className="row">
+                            {
+                                products.map((product, index) =>
+                                        // <Link key={index} to={`/product/detail/${product.id}`}
+                                        //       className="col-md-3 product-link">
+                                        <div className="col-md-3">
+                                            <div className=" card-product-home mt-2" style={{maxHeight: "20rem"}}>
+                                                {/*<span className="sale">Mới</span>*/}
+                                                <Link key={index} to={`/product/detail/${product.id}`}
+                                                      className="product-link detail-link">
+                                                    <div className="image">
+                                                        <img
+                                                            src={product?.linkImage}
+                                                            style={{width: "100%", height: "100%"}}/>
+                                                        <p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>
+                                                    </div>
+                                                </Link>
+                                                <div className="details align-items-center d-grid"
+                                                     style={{padding: "0 10px", minHeight: "5rem"}}>
+                                                    <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
+                                                    <div className="price-ratings">
+                                                        <div className="price">
+                                                            <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
+                                                        </div>
+                                                        <div className="ratings">
+                                                            <i className="bi bi-cart-plus" onClick={() => modals(product)}
+                                                               style={{fontSize: "1.5rem"}}></i>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            )
-                        }
+                                    // </Link>
+                                )
+                            }
+                        </div>
                         {
                             page < totalPage - 1 ?
                                 <div className="col-md-12 d-flex justify-content-center mt-2">
-                                    <button id="load-more-product" className="btn btn-sm mt-2 justify-content-center load-more-btn"
+                                    <button id="load-more-product"
+                                            className="btn btn-sm mt-2 justify-content-center load-more-btn"
                                             onClick={() => loadMore(page, types, brand.brand, orderBy, nameSearch)}
                                             style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm
                                         <i className="bi bi-chevron-down"></i></button>
@@ -291,6 +372,7 @@ export default function ProductHome() {
                     </div>
                 </div>
             </div>
+            <ToastContainer style={{top: "5.6rem"}}/>
             <BackUp/>
         </>
     )

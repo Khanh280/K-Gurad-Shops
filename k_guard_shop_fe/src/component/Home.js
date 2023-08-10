@@ -9,8 +9,12 @@ import BackUp from "./BackUp";
 import {Carousel} from "react-bootstrap"
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
+import {useDispatch} from "react-redux";
+import {getAllCart} from "../redux/actions/cart";
 
 export default function Home() {
+
+
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])

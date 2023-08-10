@@ -7,7 +7,6 @@ export default function FullFaceHot() {
     const getTop4Product = async () => {
         const res = await axios.get("http://localhost:8080/api/product/top-product/4")
         setProducts(()=> res.data)
-        console.log(res.data)
     }
     useEffect(() => {
         getTop4Product()

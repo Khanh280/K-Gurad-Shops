@@ -5,7 +5,12 @@ import "../css/product_detail.css"
 import axios from "axios";
 import "../css/home.css"
 import {animateScroll as scroll} from "react-scroll";
-import {Field, Form, Formik} from "formik";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import * as yup from "yup";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+import {useDispatch} from "react-redux";
+import {updateCart} from "../redux/actions/cart";
 
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
@@ -13,11 +18,14 @@ export default function DetailProduct() {
     const [images, setImages] = useState();
     const [imageMain, setImageMain] = useState();
     const [des, setDes] = useState()
+    const [sizes, setSize] = useState()
     const param = useParams();
     const selectImage = (url) => {
         setImageMain(() => url)
     }
+    const dispatch = useDispatch()
     const getProductById = async () => {
+
         const res = await axios.post("http://localhost:8080/api/product/detail", param.id, {
             headers: {
                 'Content-Type': 'text/plain', // Set the Content-Type header to indicate the raw data format
@@ -28,12 +36,17 @@ export default function DetailProduct() {
         setImages(res.data)
         setDes(res.data[0].product.description.split("- " || "."))
     }
+    const getSize = async () => {
+        const res = await axios.get("http://localhost:8080/api/product/size")
+        setSize(() => res.data)
+    }
     useEffect(() => {
         scroll.scrollToTop();
         getProductById(param)
     }, [param])
     useEffect(() => {
-    }, [imageMain])
+        getSize()
+    }, [])
     if (!images || !imageMain || !product) {
         return null;
     }
@@ -92,15 +105,34 @@ export default function DetailProduct() {
                                 product: "",
                                 quantity: "",
                                 size: "",
-                                image:""
+                                image: ""
                             }}
-                            onSubmit={(value) => {
+                            validationSchema={yup.object({
+                                size: yup.number().required("Vui lòng chọn size").min(1, "Vui lòng chọn size")
+                            })}
+                            onSubmit={(value, {resetForm}) => {
                                 const saveCart = async () => {
-                                    const newValue = {...value, product: product, quantity: quantity,image: imageMain}
-                                    // console.log(newValue)
-                                    const res = await axios.post("http://localhost:8080/api/shopping-cart", newValue,
-                                        {withCredentials: true})
-                                    console.log(res.data)
+                                    if (quantity > 0 && quantity <= 10) {
+                                        try {
+                                            const newValue = {
+                                                ...value,
+                                                product: product,
+                                                quantity: quantity,
+                                                image: imageMain
+                                            }
+                                            const res = await axios.post("http://localhost:8080/api/shopping-cart", newValue,
+                                                {withCredentials: true})
+                                            toast.success("Thêm vào giỏ hàng thành công.")
+                                            await dispatch(updateCart(res.data.length))
+                                            resetForm(
+                                                setQuantity(() => 1)
+                                            )
+                                        } catch (e) {
+                                            toast.error("Thêm vào giỏ hàng thất bại.")
+                                        }
+                                    } else {
+                                        toast.error("Số lượng sản phẩm quá lớn.")
+                                    }
                                 }
                                 saveCart()
                             }}
@@ -111,25 +143,50 @@ export default function DetailProduct() {
                                         <div className="row">
                                             <div>
                                                 <Field as="select" className="form-control" name="size" id="">
-                                                    <option value="0">Chọn Size</option>
-                                                    <option value="1">M</option>
-                                                    <option value="2">L</option>
-                                                    <option value="3">XL</option>
+                                                    <option value={0}>Chọn Size <sup>*</sup></option>
+                                                    {
+                                                        sizes.map((size, index) =>
+                                                            <option value={size.id}>{size.name}</option>
+                                                        )
+                                                    }
                                                 </Field>
+                                                <ErrorMessage name="size" component="span" style={{color: "red"}}/>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-md-3 d-flex">
+                                    <div className="col-md-2 d-flex" style={{maxHeight: "2.4rem"}}>
                                         <button type="button" className="btn btn-dark btn-operator-plus"
-                                                onClick={() => setQuantity(prevState => prevState - 1)}><span
-                                            style={{fontWeight: "bold"}}>-</span></button>
+                                                style={{
+                                                    opacity: quantity <= 1 ? "20%" : "",
+                                                    pointerEvents: quantity <= 1 ? "none" : ""
+                                                }}
+                                                onClick={() => setQuantity(prevState => prevState - 1)}>
+                                            <span style={{fontWeight: "bold",}}>-</span></button>
                                         <Field name="quantity" id="input-quantity-product" className="form-control"
                                                type="number"
                                                value={quantity} style={{width: "4rem"}}/>
                                         <button type="button" className="btn btn-dark btn-operator-subs"
+                                                style={{
+                                                    opacity: quantity >= 10 ? "20%" : "",
+                                                    pointerEvents: quantity >= 10 ? "none" : ""
+                                                }}
                                                 onClick={() => setQuantity(prevState => prevState + 1)}><span
                                             style={{fontWeight: "bold"}}>+</span></button>
                                     </div>
+                                    <div className="col-md-7 input-group flex-nowrap">
+                                          <span className="input-group-text" id="addon-wrapping">
+                                            Tổng tiền
+                                          </span>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                readOnly
+                                                aria-label="Username"
+                                                aria-describedby="addon-wrapping"
+                                                value={(quantity * product?.price)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')+"đ"}
+                                            />
+                                    </div>
+
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12 justify-content-center d-flex">
@@ -159,8 +216,8 @@ export default function DetailProduct() {
                     </div>
                     <FullFaceHot/>
                 </div>
-
             </div>
+            <ToastContainer style={{top: "5.6rem"}}/>
         </>
     )
 }

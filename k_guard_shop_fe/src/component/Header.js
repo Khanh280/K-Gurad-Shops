@@ -3,9 +3,11 @@ import React, {useEffect, useState} from "react";
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import axios from "axios";
-
+import {getAllCart} from "../redux/actions/cart";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function Header() {
+    const quantityProduct = useSelector(state => state.cart)
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username")
     const role = localStorage.getItem("role")
@@ -13,6 +15,7 @@ export default function Header() {
     const navigate = useNavigate();
     const [productTypes, setProductType] = useState();
     const [brands, setBrand] = useState();
+    const dispatch = useDispatch()
 
     const getAllProductType = async () => {
         const res = await axios.get("http://localhost:8080/api/product/product-type")
@@ -32,6 +35,7 @@ export default function Header() {
         navigate("/login")
     };
     useEffect(() => {
+        dispatch(getAllCart())
         getAllProductType()
         getAllBrand()
         if (token) {
@@ -187,7 +191,7 @@ export default function Header() {
                                                      }
                                                  }}
                                         >
-                                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>2</sup></i>
+                                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct}</sup></i>
                                         </NavLink>
                                     </li>
                                 </>
@@ -217,7 +221,7 @@ export default function Header() {
                                                  }
                                              }}
                                     >
-                                        <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>2</sup></i>
+                                        <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct}</sup></i>
                                     </NavLink>
                                 </li>
                             </>

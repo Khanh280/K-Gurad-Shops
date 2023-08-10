@@ -3,6 +3,7 @@ package com.example.k_guard_shop_be.service.product;
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
+import com.example.k_guard_shop_be.model.Sizes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +17,5 @@ public interface IProductService {
     void saveProduct(Product product);
     void deleteProduct(Long id);
     Product getProductById(Long id);
+    List<Sizes> getAllSize();
 }

@@ -38,3 +38,30 @@
     display: flex;
     align-items: center;
 }
+.ratings{
+        color:#F4882F;
+}
+.ratings:hover{
+    color:#000;
+}
+.detail-link:hover div{
+    /*background-color: black;*/
+}
+.detail-link div p {
+    display: none;
+}
+.detail-link:hover div p{
+    display: block;
+    color: white;
+    position: absolute;
+    bottom: -12px;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    font-weight: bold;
+    background-color: #F4882F;
+    justify-content: center;
+}
+.detail-link:hover img{
+    /*opacity: 60%;*/
+}

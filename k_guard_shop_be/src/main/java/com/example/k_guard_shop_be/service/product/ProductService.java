@@ -2,8 +2,10 @@ package com.example.k_guard_shop_be.service.product;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.model.Product;
+import com.example.k_guard_shop_be.model.Sizes;
 import com.example.k_guard_shop_be.repository.IImageRepository;
 import com.example.k_guard_shop_be.repository.IProductRepository;
+import com.example.k_guard_shop_be.repository.ISizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,8 @@ public class ProductService implements IProductService {
     private IProductRepository iProductRepository;
     @Autowired
     private IImageRepository iImageRepository;
+    @Autowired
+    private ISizeRepository iSizeRepository;
 
     @Override
     public Page<IProductDTO> getAll(Pageable pageable, String productType,Long brandId,String nameSearch) {
@@ -53,6 +57,11 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(Long id) {
         return iProductRepository.getProductById(id);
+    }
+
+    @Override
+    public List<Sizes> getAllSize() {
+        return iSizeRepository.findAll();
     }
 
     public Long checkProductType(String productType){

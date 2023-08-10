@@ -125,7 +125,10 @@ public class ProductRestController {
         List<Images> imagesList = iImageService.getAllByProductId(Long.parseLong(id));
         return new ResponseEntity<>(imagesList, HttpStatus.OK);
     }
-
+    @GetMapping("/size")
+    public ResponseEntity<?> getSize(){
+        return new ResponseEntity<>(iProductService.getAllSize(),HttpStatus.OK);
+    }
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<String> error(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT FOUND");

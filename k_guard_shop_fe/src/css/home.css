@@ -92,7 +92,7 @@
     object-fit: cover;
 }
 .image{
-    min-height: 16rem;
+    min-height: 14rem;
 }
 
 .card .details{
@@ -131,9 +131,7 @@
 }
 
 
-.ratings{
-    color:#F9B208;
-}
+
 .card {
     /* Định nghĩa các thuộc tính của .card ở trạng thái ban đầu */
     transition: transform 0.3s; /* Thời gian chuyển đổi là 0.5 giây */
@@ -220,6 +218,7 @@
 .product-link:hover{
     color: black;
 }
+
 .hr-guard{
     color: white !important;
     width: 10rem;
