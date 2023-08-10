@@ -92,11 +92,15 @@ export default function ProductHome() {
                 <table>
                 <tr>
                 <td>Sản phẩm: </td>
-                <td><p id="name" style="margin: 0"></td>
+                <td><p id="name" style="margin: 0">
+                </td>
                 </tr>
                 <tr>
-                <td>Số lượng</td>
-                <td><input type="text" id="quantity"></td>
+                <td style="justify-content: start;align-items: center;display: flex">Số lượng</td>
+                <td>
+                <input type="text"  id="quantity" style="width: 100%;">
+                <p style="color:red;" id="error"></p>
+                </td>
                 </tr>
                 <br>
                 <tr>
@@ -111,11 +115,28 @@ export default function ProductHome() {
             confirmButtonText: 'Có',
             cancelButtonText: 'Không',
             reverseButtons: true,
+            width: "50%",
             didOpen: () => {
                 // Focus on the first input when the modal is opened
                 document.getElementById('quantity').focus();
                 document.getElementById('name').innerHTML = product.name;
                 const selectElement = document.getElementById("sizeSelect");
+                const quantityInput = document.getElementById("quantity")
+                const confirm = Swal.getConfirmButton()
+                confirm.disabled = true;
+                quantityInput.oninput = function () {
+                    const quantity = quantityInput.value
+
+                    if (quantity <= 0 || isNaN(quantity)) {
+                        confirm.disabled = true;
+                        document.getElementById('error').innerText = "Số lượng sản phẩm > 0 và <= 10"
+                    } else {
+                        confirm.disabled = false;
+                        document.getElementById('error').innerText = ""
+
+
+                    }
+                }
 
                 sizes.forEach(size => {
                     const option = document.createElement("option");
@@ -143,7 +164,10 @@ export default function ProductHome() {
             toast.success("Thêm vào giỏ hàng thành công.")
         }
     }
-
+    const resetFieldName = (resetForm) => {
+        resetForm(); // Reset the form
+        setNameSearch(() => "")
+    };
     useEffect(() => {
         if (type.type !== undefined) {
             getAllProductByType(type.type);
@@ -196,17 +220,21 @@ export default function ProductHome() {
                                         search()
 
                                     }}>
-                                    <Form>
-                                        <div className="mb-2 d-flex">
-                                            <Field name="name" className="form-control" type="text"
-                                                   style={{width: "100%", borderRadius: "5px"}}
-                                                   placeholder="Tên sản phẩm"/>
-                                            <button type="submit"
-                                                    className="btn bg-dark text-light align-items-center d-flex ms-2">
-                                                <i className="bi bi-search"></i>
-                                            </button>
-                                        </div>
-                                    </Form>
+                                    {({resetForm}) => (
+                                        <Form>
+                                            <div className="mb-2 d-flex " style={{position: "relative"}}>
+                                                <Field name="name" className="form-control" type="text"
+                                                       style={{width: "100%", borderRadius: "5px"}}
+                                                       placeholder="Tên sản phẩm"/><span className="cancel-search"
+                                                                                         onClick={() => resetFieldName(resetForm)}><i
+                                                className="bi bi-x-circle-fill"></i></span>
+                                                <button type="submit"
+                                                        className="btn bg-dark text-light align-items-center d-flex ms-2">
+                                                    <i className="bi bi-search"></i>
+                                                </button>
+                                            </div>
+                                        </Form>
+                                    )}
                                 </Formik>
                                 {/*can fix lai cach active*/}
                                 <p id="click"

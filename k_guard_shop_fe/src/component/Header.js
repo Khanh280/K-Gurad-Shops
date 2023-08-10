@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import axios from "axios";
-import {getAllCart} from "../redux/actions/cart";
+import {getAllCart, updateCart} from "../redux/actions/cart";
 import {useDispatch, useSelector} from "react-redux";
 
 export default function Header() {

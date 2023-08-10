@@ -65,3 +65,15 @@
 .detail-link:hover img{
     /*opacity: 60%;*/
 }
+.cancel-search{
+    position: absolute;
+    top: 50%;
+    right: 4rem;
+    transform: translate(0px, -50%);
+    opacity: 0.5;
+}
+.cancel-search:hover{
+    color: black;
+    opacity: 100%;
+    cursor: pointer;
+}

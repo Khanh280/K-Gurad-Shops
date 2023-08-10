@@ -5,13 +5,19 @@ import Swal from "sweetalert2";
 import BackUp from "./BackUp";
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {updateCart} from "../redux/actions/cart";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+import {cleanup} from "@testing-library/react";
 
 export default function ShoppingCart() {
     const dispatch = useDispatch()
     const [shoppingCarts, setShoppingCarts] = useState()
     const [quantity, setQuantity] = useState();
+    const [isLogin,setIsLogin] = useState(false)
+    const token = localStorage.getItem("token")
+    const navigate = useNavigate()
     const getAllCart = async () => {
         const res = await axios.get("http://localhost:8080/api/shopping-cart", {withCredentials: true})
         setShoppingCarts(() => res.data)
@@ -54,11 +60,18 @@ export default function ShoppingCart() {
     }
 
     useEffect(() => {
+        if(token){
+            setIsLogin(()=>true)
+        }
         getAllCart()
         window.scrollTo(0, 0)
         console.log("mount")
         return () => {
-            console.log("unmount")
+            // shoppingCarts
+            const save =  async ()=>{
+                await axios.post("http://localhost:8080/api/shopping-cart/save","",{withCredentials:true})
+            }
+            save()
         }
     }, [])
     if (!shoppingCarts) {
@@ -161,7 +174,13 @@ export default function ShoppingCart() {
                                             initialValues={{
                                                 id: ""
                                             }}
-                                            onSubmit={(values) => {
+                                            onSubmit={async (values) => {
+                                                if(isLogin){
+                                                    toast.success("Thanh toán thành công")
+                                                }else {
+                                                   await navigate("/login")
+                                                    await toast.warning("Cần phải đăng nhập để thanh toán")
+                                                }
                                                 console.log("sdfds")
                                             }}>
                                             <Form className="mb-2">
@@ -241,7 +260,7 @@ export default function ShoppingCart() {
                                                     </div>
                                                     <div className="row mt-2">
                                                         <div>
-                                                            <button className="btn login-button">Đặt hàng</button>
+                                                            <button type="submit" className="btn login-button">Đặt hàng</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -258,8 +277,8 @@ export default function ShoppingCart() {
                             </div>
                     }
                 </div>
+                <ToastContainer/>
             </div>
-
         </>
     )
 }
