@@ -16,7 +16,7 @@ import java.util.List;
 public class ShoppingCartRestController {
 
     @PostMapping("")
-    public ResponseEntity<?> save(@RequestBody ShoppingCart shoppingCart,HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> saveCartSession(@RequestBody ShoppingCart shoppingCart,HttpServletRequest httpServletRequest){
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         HttpSession session = httpServletRequest.getSession();
         if(session.getAttribute("cart") !=null){
@@ -37,6 +37,14 @@ public class ShoppingCartRestController {
         }
         session.setAttribute("cart",shoppingCartList);
         return new ResponseEntity<>(session.getAttribute("cart"),HttpStatus.OK);
+    }
+    @PostMapping("/save")
+    public ResponseEntity<?> saveShoppingCart(HttpServletRequest httpServletRequest){
+        HttpSession session = httpServletRequest.getSession();
+        List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
+        System.out.println(shoppingCartList);
+        System.out.println("Save success");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/edit-cart/{operator}/{productId}")
     public ResponseEntity<?> updateCart(@PathVariable("operator") String operator,@PathVariable("productId")Long productId,HttpServletRequest httpServletRequest){
