@@ -20,6 +20,8 @@ export default function ProductHome() {
     const [nameSearch, setNameSearch] = useState("");
     const [chooseOption, setChooseOption] = useState(0)
     const [sizes, setSize] = useState()
+    const [isLogin,setIsLogin] = useState(false)
+    const token = localStorage.getItem("token")
     const dispatch = useDispatch()
     const dropDownOption = (options) => {
         let ulElement;
@@ -159,7 +161,11 @@ export default function ProductHome() {
                 }
             }
             const productCart = {product: product, quantity: quantity, image: product.linkImage}
-            const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
+            if(isLogin){
+
+            }else {
+                const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
+            }
             dispatch(updateCart(res.data.length))
             toast.success("Thêm vào giỏ hàng thành công.")
         }
@@ -169,6 +175,9 @@ export default function ProductHome() {
         setNameSearch(() => "")
     };
     useEffect(() => {
+        if(token){
+            setIsLogin(()=>true)
+        }
         if (type.type !== undefined) {
             getAllProductByType(type.type);
         } else if (brand.brand) {
