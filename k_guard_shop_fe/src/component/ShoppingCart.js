@@ -15,11 +15,18 @@ export default function ShoppingCart() {
     const dispatch = useDispatch()
     const [shoppingCarts, setShoppingCarts] = useState()
     const [quantity, setQuantity] = useState();
-    const [isLogin,setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(false)
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
-    const getAllCart = async () => {
-        const res = await axios.get("http://localhost:8080/api/shopping-cart", {withCredentials: true})
+    const getAllCart = async (isLogin) => {
+        const res = await axios.post("http://localhost:8080/api/shopping-cart/session", `${isLogin}`,
+            {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "text/plain"
+                }
+            }
+        )
         setShoppingCarts(() => res.data)
     }
     const editQuantity = async (operator, productId) => {
@@ -60,16 +67,16 @@ export default function ShoppingCart() {
     }
 
     useEffect(() => {
-        if(token){
-            setIsLogin(()=>true)
+        if (token) {
+            setIsLogin(() => true)
         }
-        getAllCart()
+        getAllCart(true)
         window.scrollTo(0, 0)
         console.log("mount")
         return () => {
             // shoppingCarts
-            const save =  async ()=>{
-                await axios.post("http://localhost:8080/api/shopping-cart/save","",{withCredentials:true})
+            const save = async () => {
+                await axios.post("http://localhost:8080/api/shopping-cart/save", "", {withCredentials: true})
             }
             save()
         }
@@ -175,10 +182,10 @@ export default function ShoppingCart() {
                                                 id: ""
                                             }}
                                             onSubmit={async (values) => {
-                                                if(isLogin){
+                                                if (isLogin) {
                                                     toast.success("Thanh toán thành công")
-                                                }else {
-                                                   await navigate("/login")
+                                                } else {
+                                                    await navigate("/login")
                                                     await toast.warning("Cần phải đăng nhập để thanh toán")
                                                 }
                                                 console.log("sdfds")
@@ -260,7 +267,9 @@ export default function ShoppingCart() {
                                                     </div>
                                                     <div className="row mt-2">
                                                         <div>
-                                                            <button type="submit" className="btn login-button">Đặt hàng</button>
+                                                            <button type="submit" className="btn login-button">Đặt
+                                                                hàng
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,7 +277,7 @@ export default function ShoppingCart() {
                                         </Formik>
                                     </div>
                                 </div>
-                                <BackUp />
+                                <BackUp/>
                             </>
                             :
                             <div className="col-md-12" align="center">

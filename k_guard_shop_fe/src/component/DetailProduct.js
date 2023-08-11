@@ -19,7 +19,9 @@ export default function DetailProduct() {
     const [imageMain, setImageMain] = useState();
     const [des, setDes] = useState()
     const [sizes, setSize] = useState()
+    const [isLogin, setIsLogin] = useState(false)
     const param = useParams();
+    const token = localStorage.getItem("token")
     const selectImage = (url) => {
         setImageMain(() => url)
     }
@@ -45,6 +47,9 @@ export default function DetailProduct() {
         getProductById(param)
     }, [param])
     useEffect(() => {
+        if (token) {
+            setIsLogin(() => true)
+        }
         getSize()
     }, [])
     if (!images || !imageMain || !product) {
@@ -120,10 +125,21 @@ export default function DetailProduct() {
                                                 quantity: quantity,
                                                 image: imageMain
                                             }
-                                            const res = await axios.post("http://localhost:8080/api/shopping-cart", newValue,
-                                                {withCredentials: true})
+                                            if (isLogin) {
+                                                const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", newValue,
+                                                    {
+                                                        withCredentials: true,
+                                                        headers:{
+                                                        "Authorization": "Bearer " + token
+                                                        }
+                                                    })
+                                                await dispatch(updateCart(res.data.length))
+                                            } else {
+                                                const res = await axios.post("http://localhost:8080/api/shopping-cart", newValue,
+                                                    {withCredentials: true})
+                                                await dispatch(updateCart(res.data.length))
+                                            }
                                             toast.success("Thêm vào giỏ hàng thành công.")
-                                            await dispatch(updateCart(res.data.length))
                                             resetForm(
                                                 setQuantity(() => 1)
                                             )
@@ -173,18 +189,19 @@ export default function DetailProduct() {
                                                 onClick={() => setQuantity(prevState => prevState + 1)}><span
                                             style={{fontWeight: "bold"}}>+</span></button>
                                     </div>
-                                    <div className="col-md-7 input-group flex-nowrap">
-                                          <span className="input-group-text" id="addon-wrapping">
+                                    <div className="col-md-7 input-group flex-nowrap" style={{maxHeight: "2.4rem"}}>
+                                          <span className="input-group-text" id="addon-wrapping"
+                                                style={{borderRadius: ".25rem 0 0 .25rem", borderRight: "none"}}>
                                             Tổng tiền
                                           </span>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                readOnly
-                                                aria-label="Username"
-                                                aria-describedby="addon-wrapping"
-                                                value={(quantity * product?.price)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')+"đ"}
-                                            />
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            readOnly
+                                            aria-label="Username"
+                                            aria-describedby="addon-wrapping"
+                                            value={(quantity * product?.price)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + "đ"}
+                                        />
                                     </div>
 
                                 </div>

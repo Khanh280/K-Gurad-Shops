@@ -165,8 +165,8 @@ export default function ProductHome() {
 
             }else {
                 const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
+                dispatch(updateCart(res.data.length))
             }
-            dispatch(updateCart(res.data.length))
             toast.success("Thêm vào giỏ hàng thành công.")
         }
     }
