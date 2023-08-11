@@ -32,6 +32,7 @@ export default function Header() {
         localStorage.removeItem("role");
         setIsLogin(false);
         toast.success("Đăng xuất thành công !!");
+        dispatch(updateCart(0))
         navigate("/login")
     };
     useEffect(() => {
@@ -191,7 +192,7 @@ export default function Header() {
                                                      }
                                                  }}
                                         >
-                                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct}</sup></i>
+                                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct > 0 ? quantityProduct : 0}</sup></i>
                                         </NavLink>
                                     </li>
                                 </>
@@ -221,7 +222,7 @@ export default function Header() {
                                                  }
                                              }}
                                     >
-                                        <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct}</sup></i>
+                                        <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct > 0 ? quantityProduct : 0}</sup></i>
                                     </NavLink>
                                 </li>
                             </>

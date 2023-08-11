@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,9 +61,8 @@ public class ShoppingCartRestController {
 
     @PostMapping("/save-product")
     public ResponseEntity<?> saveProductToCart(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
-        String header = httpServletRequest.getHeader("Authorization");
-        if (!header.equals("") && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+        String token = getToken(httpServletRequest);
+        if (!token.equals("")) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
             Users users = iUsersService.findByUsername(username);
             Customer customer = iCustomerService.getCustomerByUserId(users.getId());
@@ -129,11 +129,66 @@ public class ShoppingCartRestController {
         session.setAttribute("cart", shoppingCartList);
         return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
     }
-
+//     if (!token.equals("null")) {
+//        username = jwtTokenUtil.getUsernameFromToken(token);
+//        Users users = iUsersService.findByUsername(username);
+//        customer = iCustomerService.getCustomerByUserId(users.getId());
+//        if(session.getAttribute("cart")!= null){
+//            List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
+//            for (ShoppingCart cart: cartSession){
+//                cart.setCustomer(customer);
+//                shoppingCartList.add(cart);
+//            }
+//            iShoppingCartService.saveAllShoppingCart(shoppingCartList);
+//            session.removeAttribute("cart");
+//        }
+//    }
     @PostMapping("/session")
-    public ResponseEntity<?> showCart(@RequestBody String isLogin,HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> showCart(@RequestBody String isLogin, HttpServletRequest httpServletRequest) {
         System.out.println(isLogin);
         HttpSession session = httpServletRequest.getSession();
-        return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
+        List<ShoppingCart> shoppingCartList = new ArrayList<>();
+        switch (isLogin) {
+            case "true":
+                String token = getToken(httpServletRequest);
+                String username;
+                Customer customer = new Customer();
+                if (!token.equals("null")) {
+                    username = jwtTokenUtil.getUsernameFromToken(token);
+                    Users users = iUsersService.findByUsername(username);
+                    customer = iCustomerService.getCustomerByUserId(users.getId());
+                    if(session.getAttribute("cart")!= null){
+                        List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
+                        for (ShoppingCart cart: cartSession){
+                            ShoppingCart newCart =new ShoppingCart();
+                            newCart.setCustomer(customer);
+                            newCart.setProduct(cart.getProduct());
+                            newCart.setQuantity(cart.getQuantity());
+                            newCart.setImage(cart.getImage());
+                            shoppingCartList.add(newCart);
+                            //fix loi
+                        }
+                        iShoppingCartService.saveAllShoppingCart(shoppingCartList);
+                        session.removeAttribute("cart");
+                    }
+                }
+                shoppingCartList = iShoppingCartService.getAll(customer.getId());
+                return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+            case "false":
+                if(session.getAttribute("cart") == null){
+                    session.setAttribute("cart",shoppingCartList);
+                }
+                return new ResponseEntity<>((List<ShoppingCart>)session.getAttribute("cart"), HttpStatus.OK);
+            default:
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public String getToken(HttpServletRequest httpServletRequest) {
+        String header = httpServletRequest.getHeader("Authorization");
+        if (!header.equals("") && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        return "";
     }
 }

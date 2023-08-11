@@ -5,6 +5,8 @@ import com.example.k_guard_shop_be.repository.IShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ShoppingCartService implements IShoppingCartService{
     @Autowired
@@ -12,5 +14,15 @@ public class ShoppingCartService implements IShoppingCartService{
     @Override
     public void saveShoppingCart(ShoppingCart shoppingCart) {
         iShoppingCartRepository.save(shoppingCart);
+    }
+
+    @Override
+    public List<ShoppingCart> getAll(Long customerId) {
+        return iShoppingCartRepository.getAll(customerId);
+    }
+
+    @Override
+    public void saveAllShoppingCart(List<ShoppingCart> shoppingCartList) {
+        iShoppingCartRepository.saveAll(shoppingCartList);
     }
 }

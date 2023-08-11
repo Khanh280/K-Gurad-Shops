@@ -23,12 +23,24 @@ export default function ShoppingCart() {
             {
                 withCredentials: true,
                 headers: {
-                    "Content-Type": "text/plain"
+                    "Content-Type": "text/plain",
+                    "Authorization": "Bearer " + token
                 }
             }
         )
         setShoppingCarts(() => res.data)
     }
+    // const saveSessionToDB = async (isLogin)=>{
+    //     const res = await axios.post("http://localhost:8080/api/shopping-cart/save-session-to-db", `${isLogin}`,
+    //         {
+    //             withCredentials: true,
+    //             headers: {
+    //                 "Content-Type": "text/plain",
+    //                 "Authorization": "Bearer " + token
+    //             }
+    //         }
+    //     )
+    // }
     const editQuantity = async (operator, productId) => {
         const res = await axios.post("http://localhost:8080/api/shopping-cart/edit-cart/" + operator + "/" + (+productId), "", {withCredentials: true})
         setShoppingCarts(() => res.data)
@@ -67,11 +79,13 @@ export default function ShoppingCart() {
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         if (token) {
             setIsLogin(() => true)
+            getAllCart(true)
+        }else {
+            getAllCart(false)
         }
-        getAllCart(true)
-        window.scrollTo(0, 0)
         console.log("mount")
         return () => {
             // shoppingCarts
@@ -96,7 +110,7 @@ export default function ShoppingCart() {
                 <div className="row d-flex">
 
                     {
-                        shoppingCarts.length > 0 ?
+                        shoppingCarts.length > 0  ?
                             <>
                                 <div className="col-md-9 ">
                                     <table className="col-md-12">

@@ -197,9 +197,10 @@ export default function DetailProduct() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            readOnly
+                                            disabled
                                             aria-label="Username"
                                             aria-describedby="addon-wrapping"
+                                            style={{backgroundColor: "white"}}
                                             value={(quantity * product?.price)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + "đ"}
                                         />
                                     </div>
