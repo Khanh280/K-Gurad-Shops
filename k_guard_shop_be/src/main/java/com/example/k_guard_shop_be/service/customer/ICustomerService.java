@@ -8,4 +8,5 @@ public interface ICustomerService {
     Page<Customer> getAll(Pageable pageable);
     void saveCustomer(Customer customer);
     void deleteCustomer(Long id);
+    Customer getCustomerByUserId(Long userId);
 }

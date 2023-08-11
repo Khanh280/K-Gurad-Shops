@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface ICustomerRepository extends JpaRepository<Customer,Long> {
@@ -16,4 +17,6 @@ public interface ICustomerRepository extends JpaRepository<Customer,Long> {
     @Transactional
     @Query(value = "update customer c set c.is_delete = true where c.id=:id",nativeQuery = true)
     void deleteCustomer(@Param("id")Long id);
+    @Query(value = "select c.* from customer c where c.users_id = :userId",nativeQuery = true)
+    Customer getCustomerByUserId(@Param("userId")Long userId);
 }

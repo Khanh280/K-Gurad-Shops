@@ -22,7 +22,7 @@ public class Customer {
     @Column(name = "gender", nullable = false)
     private Integer gender;
     @ManyToOne
-    @JoinColumn(name = "users")
+    @JoinColumn(name = "users_id")
     private Users users;
     @Column(name = "email", nullable = false,unique = true)
     private String email;

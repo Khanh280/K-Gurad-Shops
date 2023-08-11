@@ -1,14 +1,23 @@
 package com.example.k_guard_shop_be.controller;
 
+import com.example.k_guard_shop_be.config.JwtTokenUtil;
+import com.example.k_guard_shop_be.config.JwtUserDetails;
+import com.example.k_guard_shop_be.model.Customer;
 import com.example.k_guard_shop_be.model.ShoppingCart;
+import com.example.k_guard_shop_be.model.Users;
+import com.example.k_guard_shop_be.service.IUsersService;
 import com.example.k_guard_shop_be.service.cart.IShoppingCartService;
+import com.example.k_guard_shop_be.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +27,12 @@ import java.util.List;
 public class ShoppingCartRestController {
     @Autowired
     private IShoppingCartService iShoppingCartService;
+    @Autowired
+    private IUsersService iUsersService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private ICustomerService iCustomerService;
 
     @PostMapping("")
     public ResponseEntity<?> saveCartSession(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
@@ -44,8 +59,18 @@ public class ShoppingCartRestController {
     }
 
     @PostMapping("/save-product")
-    public ResponseEntity<?> saveProductToCart(@RequestBody ShoppingCart shoppingCart) {
+    public ResponseEntity<?> saveProductToCart(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
+        String header = httpServletRequest.getHeader("Authorization");
+        if (!header.equals("") && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Users users = iUsersService.findByUsername(username);
+            Customer customer = iCustomerService.getCustomerByUserId(users.getId());
+            shoppingCart.setCustomer(customer);
             iShoppingCartService.saveShoppingCart(shoppingCart);
+        } else {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -105,8 +130,9 @@ public class ShoppingCartRestController {
         return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> showCart(HttpServletRequest httpServletRequest) {
+    @PostMapping("/session")
+    public ResponseEntity<?> showCart(@RequestBody String isLogin,HttpServletRequest httpServletRequest) {
+        System.out.println(isLogin);
         HttpSession session = httpServletRequest.getSession();
         return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
     }

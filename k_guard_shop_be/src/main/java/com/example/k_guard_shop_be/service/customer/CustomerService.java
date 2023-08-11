@@ -26,4 +26,9 @@ public class CustomerService implements ICustomerService {
     public void deleteCustomer(Long id) {
         iCustomerRepository.deleteCustomer(id);
     }
+
+    @Override
+    public Customer getCustomerByUserId(Long userId) {
+        return iCustomerRepository.getCustomerByUserId(userId);
+    }
 }
