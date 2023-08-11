@@ -23,6 +23,8 @@ public class ShoppingCartService implements IShoppingCartService{
 
     @Override
     public void saveAllShoppingCart(List<ShoppingCart> shoppingCartList) {
-        iShoppingCartRepository.saveAll(shoppingCartList);
+        for (int i = 0; i < shoppingCartList.size(); i++) {
+            iShoppingCartRepository.save(shoppingCartList.get(i));
+        }
     }
 }

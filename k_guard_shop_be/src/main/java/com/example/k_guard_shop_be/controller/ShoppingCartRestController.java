@@ -129,7 +129,8 @@ public class ShoppingCartRestController {
         session.setAttribute("cart", shoppingCartList);
         return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
     }
-//     if (!token.equals("null")) {
+
+    //     if (!token.equals("null")) {
 //        username = jwtTokenUtil.getUsernameFromToken(token);
 //        Users users = iUsersService.findByUsername(username);
 //        customer = iCustomerService.getCustomerByUserId(users.getId());
@@ -157,16 +158,15 @@ public class ShoppingCartRestController {
                     username = jwtTokenUtil.getUsernameFromToken(token);
                     Users users = iUsersService.findByUsername(username);
                     customer = iCustomerService.getCustomerByUserId(users.getId());
-                    if(session.getAttribute("cart")!= null){
+                    if (session.getAttribute("cart") != null) {
                         List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
-                        for (ShoppingCart cart: cartSession){
-                            ShoppingCart newCart =new ShoppingCart();
+                        for (int i = 0; i < cartSession.size(); i++) {
+                            ShoppingCart newCart = new ShoppingCart();
                             newCart.setCustomer(customer);
-                            newCart.setProduct(cart.getProduct());
-                            newCart.setQuantity(cart.getQuantity());
-                            newCart.setImage(cart.getImage());
+                            newCart.setProduct(cartSession.get(i).getProduct());
+                            newCart.setQuantity(cartSession.get(i).getQuantity());
+                            newCart.setImage(cartSession.get(i).getImage());
                             shoppingCartList.add(newCart);
-                            //fix loi
                         }
                         iShoppingCartService.saveAllShoppingCart(shoppingCartList);
                         session.removeAttribute("cart");
@@ -175,10 +175,10 @@ public class ShoppingCartRestController {
                 shoppingCartList = iShoppingCartService.getAll(customer.getId());
                 return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
             case "false":
-                if(session.getAttribute("cart") == null){
-                    session.setAttribute("cart",shoppingCartList);
+                if (session.getAttribute("cart") == null) {
+                    session.setAttribute("cart", shoppingCartList);
                 }
-                return new ResponseEntity<>((List<ShoppingCart>)session.getAttribute("cart"), HttpStatus.OK);
+                return new ResponseEntity<>((List<ShoppingCart>) session.getAttribute("cart"), HttpStatus.OK);
             default:
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
