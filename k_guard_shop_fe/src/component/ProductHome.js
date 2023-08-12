@@ -162,7 +162,14 @@ export default function ProductHome() {
             }
             const productCart = {product: product, quantity: quantity, image: product.linkImage}
             if(isLogin){
-
+                const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", productCart,
+                    {
+                        withCredentials: true,
+                        headers:{
+                            "Authorization": "Bearer " + token
+                        }
+                    })
+                await dispatch(updateCart(res.data.length))
             }else {
                 const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
                 dispatch(updateCart(res.data.length))

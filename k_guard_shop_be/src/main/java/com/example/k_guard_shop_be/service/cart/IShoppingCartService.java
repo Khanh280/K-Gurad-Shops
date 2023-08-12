@@ -7,5 +7,7 @@ import java.util.List;
 public interface IShoppingCartService {
     void saveShoppingCart(ShoppingCart shoppingCart);
     List<ShoppingCart> getAll(Long customerId);
-    void saveAllShoppingCart(List<ShoppingCart> shoppingCartList);
+    void saveAllShoppingCart(ShoppingCart shoppingCartList);
+    void deleteCartByCustomerId(Long cartId,Long customerId);
+    ShoppingCart getShoppingCartById(Long cartId);
 }

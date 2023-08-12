@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ShoppingCartService implements IShoppingCartService{
+public class ShoppingCartService implements IShoppingCartService {
     @Autowired
     private IShoppingCartRepository iShoppingCartRepository;
+
     @Override
     public void saveShoppingCart(ShoppingCart shoppingCart) {
         iShoppingCartRepository.save(shoppingCart);
@@ -22,9 +23,19 @@ public class ShoppingCartService implements IShoppingCartService{
     }
 
     @Override
-    public void saveAllShoppingCart(List<ShoppingCart> shoppingCartList) {
-        for (int i = 0; i < shoppingCartList.size(); i++) {
-            iShoppingCartRepository.save(shoppingCartList.get(i));
-        }
+    public void saveAllShoppingCart(ShoppingCart shoppingCart) {
+
+        iShoppingCartRepository.save(shoppingCart);
+
+    }
+
+    @Override
+    public void deleteCartByCustomerId(Long cartId,Long customerId) {
+        iShoppingCartRepository.deleteCart(cartId,customerId);
+    }
+
+    @Override
+    public ShoppingCart getShoppingCartById(Long cartId) {
+        return iShoppingCartRepository.getCartById(cartId);
     }
 }

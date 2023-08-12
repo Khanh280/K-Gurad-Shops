@@ -41,8 +41,15 @@ export default function ShoppingCart() {
     //         }
     //     )
     // }
-    const editQuantity = async (operator, productId) => {
-        const res = await axios.post("http://localhost:8080/api/shopping-cart/edit-cart/" + operator + "/" + (+productId), "", {withCredentials: true})
+    const editQuantity = async (operator, id) => {
+        const res = await axios.post("http://localhost:8080/api/shopping-cart/edit-cart/" + operator + "/" + (+id),
+            isLogin,
+            {withCredentials: true,
+                headers: {
+                "Content-Type": "text/plain",
+                    "Authorization": "Bearer " + token
+                }
+            })
         setShoppingCarts(() => res.data)
         dispatch(updateCart(res.data.length))
     }
@@ -57,12 +64,23 @@ export default function ShoppingCart() {
             reverseButtons: true
         }).then(async (res) => {
             if (res.isConfirmed) {
-                const res = await axios.post("http://localhost:8080/api/shopping-cart/delete-product-cart", id, {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "text/plain"
-                    }
-                })
+                let res;
+                if (isLogin) {
+                    res = await axios.post("http://localhost:8080/api/shopping-cart/delete-cart-login", id, {
+                        withCredentials: true,
+                        headers: {
+                            "Content-Type": "text/plain",
+                            "Authorization": "Bearer " + token
+                        }
+                    })
+                } else {
+                    res = await axios.post("http://localhost:8080/api/shopping-cart/delete-cart-session", id, {
+                        withCredentials: true,
+                        headers: {
+                            "Content-Type": "text/plain"
+                        }
+                    })
+                }
                 await setShoppingCarts(() => res.data)
                 await dispatch(updateCart(res.data.length))
             }
@@ -83,7 +101,7 @@ export default function ShoppingCart() {
         if (token) {
             setIsLogin(() => true)
             getAllCart(true)
-        }else {
+        } else {
             getAllCart(false)
         }
         console.log("mount")
@@ -110,7 +128,7 @@ export default function ShoppingCart() {
                 <div className="row d-flex">
 
                     {
-                        shoppingCarts.length > 0  ?
+                        shoppingCarts.length > 0 ?
                             <>
                                 <div className="col-md-9 ">
                                     <table className="col-md-12">
@@ -148,7 +166,7 @@ export default function ShoppingCart() {
                                                         <div className="row-table d-flex">
                                                             <button className="btn btn-dark btn-operator-plus"
                                                                     style={{backgroundColor: "white", border: "none",}}
-                                                                    onClick={() => editQuantity("minus", shoppingCart.product.id)}><span
+                                                                    onClick={() => isLogin ? editQuantity("minus", shoppingCart.id) : editQuantity("minus", shoppingCart.product.id)}><span
                                                                 style={{
                                                                     fontWeight: "bold",
                                                                     color: "black"
@@ -160,7 +178,7 @@ export default function ShoppingCart() {
                                                                    value={shoppingCart.quantity}/>
                                                             <button className="btn btn-dark btn-operator-subs"
                                                                     style={{backgroundColor: "white", border: "none",}}
-                                                                    onClick={() => editQuantity("plus", shoppingCart.product.id)}><span
+                                                                    onClick={() => isLogin ? editQuantity("plus", shoppingCart.id) : editQuantity("plus", shoppingCart.product.id)}><span
                                                                 style={{
                                                                     fontWeight: "bold",
                                                                     color: "black"
@@ -171,9 +189,16 @@ export default function ShoppingCart() {
                                                         <div className="row-table">
                                                             {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
                                                             {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
-                                                            <i className="bi bi-x" style={{cursor: "pointer"}}
-                                                               title="Xóa"
-                                                               onClick={() => modals(shoppingCart.product.name, shoppingCart.product.id)}></i>
+                                                            {
+                                                                isLogin ?
+                                                                    <i className="bi bi-x" style={{cursor: "pointer"}}
+                                                                       title="Xóa"
+                                                                       onClick={() => modals(shoppingCart.product.name, shoppingCart.id)}></i>
+                                                                    :
+                                                                    <i className="bi bi-x" style={{cursor: "pointer"}}
+                                                                       title="Xóa"
+                                                                       onClick={() => modals(shoppingCart.product.name, shoppingCart.product.id)}></i>
+                                                            }
                                                         </div>
                                                     </td>
                                                 </tr>

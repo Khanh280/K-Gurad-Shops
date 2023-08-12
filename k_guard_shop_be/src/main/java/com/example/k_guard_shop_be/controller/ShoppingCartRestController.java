@@ -61,13 +61,25 @@ public class ShoppingCartRestController {
 
     @PostMapping("/save-product")
     public ResponseEntity<?> saveProductToCart(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
-        String token = getToken(httpServletRequest);
-        if (!token.equals("")) {
-            String username = jwtTokenUtil.getUsernameFromToken(token);
-            Users users = iUsersService.findByUsername(username);
-            Customer customer = iCustomerService.getCustomerByUserId(users.getId());
-            shoppingCart.setCustomer(customer);
-            iShoppingCartService.saveShoppingCart(shoppingCart);
+        Customer customer = getCustomerFromToken(httpServletRequest);
+        if (customer != null) {
+            List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
+            ShoppingCart newShoppingCart = new ShoppingCart();
+            int count = 0;
+            for (int i = 0; i < shoppingCartList.size(); i++) {
+                if (shoppingCartList.get(i).getProduct().getId() == shoppingCart.getProduct().getId()) {
+                    newShoppingCart = shoppingCartList.get(i);
+                    newShoppingCart.setQuantity(newShoppingCart.getQuantity() + shoppingCart.getQuantity());
+                    count++;
+                    break;
+                }
+            }
+            if (count == 0) {
+                shoppingCart.setCustomer(customer);
+                iShoppingCartService.saveShoppingCart(shoppingCart);
+            } else {
+                iShoppingCartService.saveShoppingCart(newShoppingCart);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -83,9 +95,11 @@ public class ShoppingCartRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/edit-cart/{operator}/{productId}")
-    public ResponseEntity<?> updateCart(@PathVariable("operator") String operator, @PathVariable("productId") Long productId, HttpServletRequest httpServletRequest) {
+    @PostMapping("/edit-cart/{operator}/{id}")
+    public ResponseEntity<?> updateCart(@PathVariable("operator") String operator, @PathVariable("id") Long id,@RequestBody String isLogin, HttpServletRequest httpServletRequest) {
+        System.out.println(isLogin);
         HttpSession session = httpServletRequest.getSession();
+        Customer customer = getCustomerFromToken(httpServletRequest);
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
         Integer sign = 0;
         switch (operator) {
@@ -98,22 +112,29 @@ public class ShoppingCartRestController {
             default:
                 sign = 0;
         }
-        if (shoppingCartList != null) {
-            for (int i = 0; i < shoppingCartList.size(); i++) {
-                if (shoppingCartList.get(i).getProduct().getId() == productId) {
-                    shoppingCartList.get(i).setQuantity(shoppingCartList.get(i).getQuantity() + sign);
-                    if (shoppingCartList.get(i).getQuantity() == 0) {
-                        shoppingCartList.remove(shoppingCartList.get(i));
+        if(isLogin.equals("true")){
+            ShoppingCart shoppingCart = iShoppingCartService.getShoppingCartById(id);
+            shoppingCart.setQuantity(shoppingCart.getQuantity()+sign);
+            iShoppingCartService.saveShoppingCart(shoppingCart);
+        }else {
+            if (shoppingCartList != null) {
+                for (int i = 0; i < shoppingCartList.size(); i++) {
+                    if (shoppingCartList.get(i).getProduct().getId() == id) {
+                        shoppingCartList.get(i).setQuantity(shoppingCartList.get(i).getQuantity() + sign);
+                        if (shoppingCartList.get(i).getQuantity() == 0) {
+                            shoppingCartList.remove(shoppingCartList.get(i));
+                        }
                     }
                 }
             }
+            session.setAttribute("cart", shoppingCartList);
+            return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
         }
-        session.setAttribute("cart", shoppingCartList);
-        return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
+        return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
     }
 
-    @PostMapping("/delete-product-cart")
-    public ResponseEntity<?> deleteProductCart(@RequestBody String productId, HttpServletRequest httpServletRequest) {
+    @PostMapping("/delete-cart-session")
+    public ResponseEntity<?> deleteProductCartSession(@RequestBody String productId, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
         if (shoppingCartList != null) {
@@ -128,6 +149,14 @@ public class ShoppingCartRestController {
         }
         session.setAttribute("cart", shoppingCartList);
         return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
+    }
+
+    @PostMapping("/delete-cart-login")
+    public ResponseEntity<?> deleteProductCartLogin(@RequestBody String cartId, HttpServletRequest httpServletRequest) {
+        Customer customer = getCustomerFromToken(httpServletRequest);
+        iShoppingCartService.deleteCartByCustomerId(Long.parseLong(cartId), customer.getId());
+
+        return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
     }
 
     //     if (!token.equals("null")) {
@@ -151,13 +180,8 @@ public class ShoppingCartRestController {
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         switch (isLogin) {
             case "true":
-                String token = getToken(httpServletRequest);
-                String username;
-                Customer customer = new Customer();
-                if (!token.equals("null")) {
-                    username = jwtTokenUtil.getUsernameFromToken(token);
-                    Users users = iUsersService.findByUsername(username);
-                    customer = iCustomerService.getCustomerByUserId(users.getId());
+                Customer customer = getCustomerFromToken(httpServletRequest);
+                if (customer!=null) {
                     if (session.getAttribute("cart") != null) {
                         List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
                         for (int i = 0; i < cartSession.size(); i++) {
@@ -166,13 +190,13 @@ public class ShoppingCartRestController {
                             newCart.setProduct(cartSession.get(i).getProduct());
                             newCart.setQuantity(cartSession.get(i).getQuantity());
                             newCart.setImage(cartSession.get(i).getImage());
-                            shoppingCartList.add(newCart);
+//                            shoppingCartList.add(newCart);
+                            iShoppingCartService.saveShoppingCart(newCart);
                         }
-                        iShoppingCartService.saveAllShoppingCart(shoppingCartList);
                         session.removeAttribute("cart");
                     }
+                    shoppingCartList = iShoppingCartService.getAll(customer.getId());
                 }
-                shoppingCartList = iShoppingCartService.getAll(customer.getId());
                 return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
             case "false":
                 if (session.getAttribute("cart") == null) {
@@ -184,11 +208,14 @@ public class ShoppingCartRestController {
         }
     }
 
-    public String getToken(HttpServletRequest httpServletRequest) {
+    public Customer getCustomerFromToken(HttpServletRequest httpServletRequest) {
         String header = httpServletRequest.getHeader("Authorization");
         if (!header.equals("") && header.startsWith("Bearer ")) {
-            return header.substring(7);
+            String token = header.substring(7);
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Users users = iUsersService.findByUsername(username);
+            return iCustomerService.getCustomerByUserId(users.getId());
         }
-        return "";
+        return null;
     }
 }
