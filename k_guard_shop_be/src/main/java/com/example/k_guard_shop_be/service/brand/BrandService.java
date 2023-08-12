@@ -16,4 +16,9 @@ public class BrandService implements IBrandService{
     public List<Brand> getAll() {
         return iBrandRepository.findAll();
     }
+
+    @Override
+    public Brand getBrandByProductId(Long productId) {
+        return iBrandRepository.getBrandByProductId(productId);
+    }
 }

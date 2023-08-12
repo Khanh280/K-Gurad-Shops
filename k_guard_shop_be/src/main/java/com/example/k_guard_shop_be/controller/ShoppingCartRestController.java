@@ -2,12 +2,12 @@ package com.example.k_guard_shop_be.controller;
 
 import com.example.k_guard_shop_be.config.JwtTokenUtil;
 import com.example.k_guard_shop_be.config.JwtUserDetails;
-import com.example.k_guard_shop_be.model.Customer;
-import com.example.k_guard_shop_be.model.ShoppingCart;
-import com.example.k_guard_shop_be.model.Users;
+import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.service.IUsersService;
+import com.example.k_guard_shop_be.service.brand.IBrandService;
 import com.example.k_guard_shop_be.service.cart.IShoppingCartService;
 import com.example.k_guard_shop_be.service.customer.ICustomerService;
+import com.example.k_guard_shop_be.service.product_type.IProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +34,19 @@ public class ShoppingCartRestController {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private ICustomerService iCustomerService;
+    @Autowired
+    private IBrandService iBrandService;
+    @Autowired
+    private IProductTypeService iProductTypeService;
 
     @PostMapping("")
     public ResponseEntity<?> saveCartSession(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         HttpSession session = httpServletRequest.getSession();
+        Brand brand = iBrandService.getBrandByProductId(shoppingCart.getProduct().getId());
+        ProductType productType = iProductTypeService.getProductTypeByProductId(shoppingCart.getProduct().getId());
+        shoppingCart.getProduct().setBrand(brand);
+        shoppingCart.getProduct().setProductType(productType);
         if (session.getAttribute("cart") != null) {
             shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
             int count = 0;
@@ -83,7 +91,8 @@ public class ShoppingCartRestController {
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
+        return new ResponseEntity<>(shoppingCartList,HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -99,7 +108,6 @@ public class ShoppingCartRestController {
     public ResponseEntity<?> updateCart(@PathVariable("operator") String operator, @PathVariable("id") Long id,@RequestBody String isLogin, HttpServletRequest httpServletRequest) {
         System.out.println(isLogin);
         HttpSession session = httpServletRequest.getSession();
-        Customer customer = getCustomerFromToken(httpServletRequest);
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
         Integer sign = 0;
         switch (operator) {
@@ -113,9 +121,15 @@ public class ShoppingCartRestController {
                 sign = 0;
         }
         if(isLogin.equals("true")){
+            Customer customer = getCustomerFromToken(httpServletRequest);
             ShoppingCart shoppingCart = iShoppingCartService.getShoppingCartById(id);
             shoppingCart.setQuantity(shoppingCart.getQuantity()+sign);
-            iShoppingCartService.saveShoppingCart(shoppingCart);
+            if(shoppingCart.getQuantity() ==0){
+                iShoppingCartService.deleteCartByCustomerId(shoppingCart.getId(), customer.getId());
+            }else {
+                iShoppingCartService.saveShoppingCart(shoppingCart);
+            }
+            return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
         }else {
             if (shoppingCartList != null) {
                 for (int i = 0; i < shoppingCartList.size(); i++) {
@@ -130,7 +144,6 @@ public class ShoppingCartRestController {
             session.setAttribute("cart", shoppingCartList);
             return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
         }
-        return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
     }
 
     @PostMapping("/delete-cart-session")
@@ -173,7 +186,7 @@ public class ShoppingCartRestController {
 //            session.removeAttribute("cart");
 //        }
 //    }
-    @PostMapping("/session")
+    @PostMapping("/showCart")
     public ResponseEntity<?> showCart(@RequestBody String isLogin, HttpServletRequest httpServletRequest) {
         System.out.println(isLogin);
         HttpSession session = httpServletRequest.getSession();
@@ -182,19 +195,19 @@ public class ShoppingCartRestController {
             case "true":
                 Customer customer = getCustomerFromToken(httpServletRequest);
                 if (customer!=null) {
-                    if (session.getAttribute("cart") != null) {
-                        List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
-                        for (int i = 0; i < cartSession.size(); i++) {
-                            ShoppingCart newCart = new ShoppingCart();
-                            newCart.setCustomer(customer);
-                            newCart.setProduct(cartSession.get(i).getProduct());
-                            newCart.setQuantity(cartSession.get(i).getQuantity());
-                            newCart.setImage(cartSession.get(i).getImage());
-//                            shoppingCartList.add(newCart);
-                            iShoppingCartService.saveShoppingCart(newCart);
-                        }
-                        session.removeAttribute("cart");
-                    }
+//                    if (session.getAttribute("cart") != null) {
+//                        List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
+//                        for (int i = 0; i < cartSession.size(); i++) {
+//                            ShoppingCart newCart = new ShoppingCart();
+//                            newCart.setCustomer(customer);
+//                            newCart.setProduct(cartSession.get(i).getProduct());
+//                            newCart.setQuantity(cartSession.get(i).getQuantity());
+//                            newCart.setImage(cartSession.get(i).getImage());
+////                            shoppingCartList.add(newCart);
+//                            iShoppingCartService.saveShoppingCart(newCart);
+//                        }
+//                        session.removeAttribute("cart");
+//                    }
                     shoppingCartList = iShoppingCartService.getAll(customer.getId());
                 }
                 return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);

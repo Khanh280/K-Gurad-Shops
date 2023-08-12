@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IBrandService {
     List<Brand> getAll();
+    Brand getBrandByProductId(Long productId);
 }
