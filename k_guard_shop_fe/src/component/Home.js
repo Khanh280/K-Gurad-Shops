@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "bootstrap/dist/css/bootstrap-grid.css"
 import "bootstrap/dist/js/bootstrap"
 import "../css/home.css"
@@ -11,13 +11,23 @@ import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
 import {useDispatch} from "react-redux";
 import {getAllCart} from "../redux/actions/cart";
+import axios from "axios";
 
 export default function Home() {
+    const [news, setNews] = useState()
+    const getAllNews =  async ()=>{
+        const res = await  axios.get("http://localhost:8080/api/news")
+        setNews(res.data.content)
+    }
 
 
     useEffect(() => {
+        getAllNews()
         window.scrollTo(0, 0)
     }, [])
+    if(!news){
+        return null;
+    }
     return (
         <>
             <div id="demo" className="carousel slide slides d-flex container" data-bs-ride="carousel"
@@ -213,15 +223,16 @@ export default function Home() {
                             </div>
                             <div className="col-md-3 guard-items">
                                 <Link to={`/product/barrel`}>
-                                <div className="guard-items-home">
-                                    <img src="http://www.phukienphuot.com/uploads/images/medium/thung_xe_k1300r_11.JPG"
-                                         alt="" style={{height: "100%"}}/>
-                                    <div className="guard-items-content">
-                                        <b>Baga - Thùng Givi</b>
-                                        <hr className="hr-guard"/>
-                                        <p>Lắp đặt baga Givi chính hãng, tiện lợi hơn trong các chuyến đi.</p>
+                                    <div className="guard-items-home">
+                                        <img
+                                            src="http://www.phukienphuot.com/uploads/images/medium/thung_xe_k1300r_11.JPG"
+                                            alt="" style={{height: "100%"}}/>
+                                        <div className="guard-items-content">
+                                            <b>Baga - Thùng Givi</b>
+                                            <hr className="hr-guard"/>
+                                            <p>Lắp đặt baga Givi chính hãng, tiện lợi hơn trong các chuyến đi.</p>
+                                        </div>
                                     </div>
-                                </div>
                                 </Link>
                             </div>
                         </div>
@@ -299,71 +310,53 @@ export default function Home() {
                         </div>
                     </div>
                     <marquee behavior="scroll" direction="right" scrollamount="20"></marquee>
-                    {/*<Carousel interval={1000}>*/}
-                    {/*    <Carousel.Item>*/}
-                    {/*        <div*/}
-                    {/*            className="row portfolio-container"*/}
-                    {/*            data-aos="fade-up"*/}
-                    {/*            data-aos-delay={400}*/}
-                    {/*        >*/}
-                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
-                    {/*                <div className="card-post-home">*/}
-                    {/*                    <span className="sale">HOT</span>*/}
-                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
-                    {/*                        <img style={{maxHeight: "11rem"}}*/}
-                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/05/li-nen-chon-ao-mua-bo-kyt-cho-mua-mua-bao-1-600x420.jpg"/>*/}
-                    {/*                    </div>*/}
-                    {/*                    <div className="details">*/}
-                    {/*                        <p>Lí do nên chọn áo mưa bộ KYT cho mùa mưa bão</p>*/}
-                    {/*                    </div>*/}
-                    {/*                </div>*/}
-                    {/*            </Link>*/}
-                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
-                    {/*                <div className="card-post-home">*/}
-                    {/*                    <span className="sale">HOT</span>*/}
-                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
-                    {/*                        <img style={{maxHeight: "11rem"}}*/}
-                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/05/mu-bao-hiem-yohe-851-1.jpg"/>*/}
-                    {/*                    </div>*/}
-                    {/*                    <div className="details">*/}
-                    {/*                        <p>3 lý do khiến cả nam lẫn nữ đều thích mũ Yohe 851</p>*/}
-                    {/*                    </div>*/}
-                    {/*                </div>*/}
-                    {/*            </Link>*/}
-                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
-                    {/*                <div className="card-post-home">*/}
-                    {/*                    <span className="sale">HOT</span>*/}
-                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
-                    {/*                        <img style={{maxHeight: "11rem"}}*/}
-                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/04/chia-se-kinh-nghiem-chay-xe-duong-dai-10-600x525.jpg"/>*/}
-                    {/*                    </div>*/}
-                    {/*                    <div className="details">*/}
-                    {/*                        <p>Chia sẻ kinh nghiệm chạy xe đường dài</p>*/}
-                    {/*                    </div>*/}
-                    {/*                </div>*/}
-                    {/*            </Link>*/}
-                    {/*            <Link to={`/post`} className="col-md-3 product-link py-2">*/}
-                    {/*                <div className="card-post-home">*/}
-                    {/*                    <span className="sale">HOT</span>*/}
-                    {/*                    <div className="image" style={{minHeight: "10rem"}}>*/}
-                    {/*                        <img style={{maxHeight: "11rem"}}*/}
-                    {/*                            src="https://taidat.vn/wp-content/uploads/2021/05/vi-sao-kyt-venom-chiem-tron-trai-tim-gioi-tre-21-600x426.jpg"/>*/}
-                    {/*                    </div>*/}
-                    {/*                    <div className="details">*/}
-                    {/*                        <p>KYT Helmet – Thương hiệu nón bảo hiểm chất lượng, độc đáo cho biker</p>*/}
-                    {/*                    </div>*/}
-                    {/*                </div>*/}
-                    {/*            </Link>*/}
-                    {/*        </div>*/}
-                    {/*    </Carousel.Item>*/}
-                    {/*</Carousel>*/}
                     <Carousel interval={1000}>
                         <Carousel.Item>
                             <div
                                 className="row portfolio-container"
                                 data-aos="fade-up"
-                                data-aos-delay={400}
+                                data-aos-delay={1000}
                             >
+                                {
+                                    news && news.map((item,index)=>
+                                        <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
+                                            <div className="card-post-home">
+                                                <span className="sale">HOT</span>
+                                                <div className="image" style={{minHeight: "10rem"}}>
+                                                    <img style={{maxHeight: "10rem"}}
+                                                         src={item.image}/>
+                                                </div>
+                                                <div className="details" style={{minHeight:"7rem"}}>
+                                                    <p>{item.title}</p>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    )
+                                }
+                            </div>
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <div
+                                className="row portfolio-container"
+                                data-aos="fade-up"
+                                data-aos-delay={1000}
+                            >
+                                {
+                                    news && news.map((item,index)=>
+                                        <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
+                                            <div className="card-post-home">
+                                                <span className="sale">HOT</span>
+                                                <div className="image" style={{minHeight: "10rem"}}>
+                                                    <img style={{maxHeight: "10rem"}}
+                                                         src={item.image}/>
+                                                </div>
+                                                <div className="details" style={{minHeight:"7rem"}}>
+                                                    <p>{item.title}</p>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    )
+                                }
                             </div>
                         </Carousel.Item>
                     </Carousel>

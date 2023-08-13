@@ -11,7 +11,8 @@ import ProductHome from "./component/ProductHome";
 import RegisterForm from "./component/RegisterForm";
 import {Provider} from "react-redux";
 import store from "./redux/store";
-import Option from "./component/info_store/Option";
+import InfoStore from "./component/info_store/InfoStore";
+import ProductList from "./component/info_store/ProductList";
 
 function App() {
     return (
@@ -21,7 +22,9 @@ function App() {
                 <div style={{minHeight: "97.5vh", marginTop: "10vh"}}>
                     <Routes>
                         <Route path="/" element={<Home/>}/>
-                        <Route path="/info-store" element={<Option/>}/>
+                        <Route path="/info-store" element={<InfoStore/>}>
+                            <Route path="/info-store/product-list" element={<ProductList/>}/>
+                        </Route>
                         <Route path="/product" element={<ProductHome/>}/>
                         <Route path="/product-brand" element={<ProductHome/>}/>
                         <Route path="/product/:type" element={<ProductHome/>}/>
