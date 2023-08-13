@@ -93,6 +93,7 @@ public class ProductRestController {
 
     @PostMapping("")
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> saveProduct(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -110,13 +111,13 @@ public class ProductRestController {
     }
 
     @DeleteMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteProduct(@RequestBody String id) {
         iProductService.deleteProduct(Long.parseLong(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/detail")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getProductById(@RequestBody String id) {
         Product product = iProductService.getProductById(Long.parseLong(id));
         if (product == null) {

@@ -216,6 +216,9 @@ export default function DetailProduct() {
                                     <div className="col-md-12 mt-2">
                                         <img src="/anh/size-fullface.jpg" alt="" style={{width: "100%"}}/>
                                     </div>
+                                    <div className="col-md-12 mt-2">
+                                        <img src="/anh/size-ao.png" alt="" style={{width: "100%"}}/>
+                                    </div>
                                 </div>
                             </Form>
                         </Formik>

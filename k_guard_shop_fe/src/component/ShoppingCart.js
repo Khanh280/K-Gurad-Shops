@@ -140,10 +140,10 @@ export default function ShoppingCart() {
                                             // style={{border: "2px solid #f4882fc7",height: "3rem"}}
                                         >
                                             <th>Sản phẩm</th>
-                                            <th></th>
                                             <th>Brand</th>
                                             <th>Loại</th>
                                             <th>Số lượng</th>
+                                            <th>Giá</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -151,12 +151,12 @@ export default function ShoppingCart() {
                                         {
                                             shoppingCarts.map((shoppingCart, index) =>
                                                 <tr key={index} className="row-table-height">
-                                                    <td className="row-table-height">
+                                                    <td className="row-table-height d-flex">
                                                         <img
                                                             src={shoppingCart?.image}
                                                             style={{width: "5rem"}}/>
-                                                    </td>
-                                                    <td className="row-table-height">
+                                                    {/*</td>*/}
+                                                    {/*<td className="row-table-height">*/}
                                                         <p className="row-table">{shoppingCart?.product?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
@@ -166,7 +166,7 @@ export default function ShoppingCart() {
                                                         <p className="row-table">{shoppingCart?.product?.productType?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <div className="row-table d-flex">
+                                                        <div className="row-table d-flex" style={{marginBottom: "1rem"}}>
                                                             <button className="btn btn-dark btn-operator-plus"
                                                                     style={{backgroundColor: "white", border: "none",}}
                                                                     onClick={() => isLogin ? editQuantity("minus", shoppingCart.id) : editQuantity("minus", shoppingCart.product.id)}><span
@@ -189,7 +189,10 @@ export default function ShoppingCart() {
                                                         </div>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <div className="row-table">
+                                                        <p className="row-table">{shoppingCart?.product?.price?.toString().replace( /\B(?=(\d{3})+(?!\d))/g,'.')}đ</p>
+                                                    </td>
+                                                    <td className="row-table-height">
+                                                        <div className="row-table" style={{marginBottom: "1rem"}}>
                                                             {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
                                                             {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
                                                             <i className="bi bi-x" style={{cursor: "pointer"}}

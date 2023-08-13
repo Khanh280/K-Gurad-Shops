@@ -147,7 +147,7 @@ export default function LoginForm() {
                     </div>
                 </div>
             </div>
-            <ToastContainer/>
+            <ToastContainer style={{top: "5.6rem"}}/>
         </>
     )
 }

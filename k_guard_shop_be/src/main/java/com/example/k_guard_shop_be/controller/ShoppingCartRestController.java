@@ -91,7 +91,7 @@ public class ShoppingCartRestController {
                 iShoppingCartService.saveShoppingCart(newShoppingCart);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
         return new ResponseEntity<>(shoppingCartList,HttpStatus.OK);
@@ -218,6 +218,9 @@ public class ShoppingCartRestController {
                     session.setAttribute("cart", shoppingCartList);
                 }
                 return new ResponseEntity<>((List<ShoppingCart>) session.getAttribute("cart"), HttpStatus.OK);
+            case "logout":
+                session.removeAttribute("cart");
+                return new ResponseEntity<>(null,HttpStatus.OK);
             default:
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

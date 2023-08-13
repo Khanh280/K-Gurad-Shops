@@ -14,7 +14,8 @@ export const updateCart = (quantity) => async (dispatch) => {
 export const getAllCart = (isLogin) => async (dispatch) => {
     try {
         const res = await axios.post("http://localhost:8080/api/shopping-cart/showCart", `${isLogin}`,
-            {withCredentials: true,
+            {
+                withCredentials: true,
                 headers:{
                     "Content-Type": "text/plain",
                     "Authorization": "Bearer " + token

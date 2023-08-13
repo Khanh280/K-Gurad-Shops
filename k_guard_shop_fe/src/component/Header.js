@@ -32,7 +32,7 @@ export default function Header() {
         localStorage.removeItem("role");
         setIsLogin(false);
         toast.success("Đăng xuất thành công !!");
-        dispatch(updateCart(0))
+        dispatch(getAllCart("logout"))
         navigate("/login")
     };
     useEffect(() => {
@@ -68,15 +68,29 @@ export default function Header() {
                         >Trang chủ</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/b"
-                                 style={({isActive}) => {
-                                     return {
-                                         backgroundColor: isActive ? "#F4882F" : "   ",
-                                         color: isActive ? "black" : "",
-                                         borderRadius: "10px",
-                                     }
-                                 }}
-                        >Giới thiệu</NavLink>
+                        {
+                            isLogin ?
+                                <NavLink to="/info-store"
+                                         style={({isActive}) => {
+                                             return {
+                                                 backgroundColor: isActive ? "#F4882F" : "   ",
+                                                 color: isActive ? "black" : "",
+                                                 borderRadius: "10px",
+                                             }
+                                         }}
+                                >Thông tin cửa hàng</NavLink>
+                                :
+                                <NavLink to="/b"
+                                         style={({isActive}) => {
+                                             return {
+                                                 backgroundColor: isActive ? "#F4882F" : "   ",
+                                                 color: isActive ? "black" : "",
+                                                 borderRadius: "10px",
+                                             }
+                                         }}
+                                >Giới thiệu</NavLink>
+                        }
+
                     </li>
                     <li className="nav-product nav-sub">
                         <NavLink to="/product"
