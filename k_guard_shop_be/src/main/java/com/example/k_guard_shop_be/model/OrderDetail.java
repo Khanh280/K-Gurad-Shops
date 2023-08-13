@@ -20,15 +20,15 @@ public class OrderDetail {
     private Product product;
     @Column(name = "price", nullable = false)
     private Long price;
-    @JoinColumn(name = "quantity",nullable = false)
+    @Column(name = "quantity",nullable = false)
     private Integer quantity;
     @CreationTimestamp
-    @JoinColumn(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
     @UpdateTimestamp
-    @JoinColumn(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
-    @Column(name = "is_delete",columnDefinition = "DEFAULT BIT(0)")
+    @Column(name = "is_delete",columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isDelete;
 
     public OrderDetail() {

@@ -14,7 +14,7 @@ public class Orders {
     @ManyToOne
     private Customer customer;
     @CreationTimestamp
-    @JoinColumn(nullable = false,updatable = false,columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false,updatable = false,columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
 
     public Orders() {

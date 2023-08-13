@@ -7,10 +7,11 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username", nullable = false,unique = true)
+    @Column(name = "username", nullable = false,unique = true,columnDefinition = "VARCHAR(100)")
     private String username;
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false,columnDefinition = "TEXT")
     private String password;
+    @Column(name = "verify_code", nullable = false,columnDefinition = "VARCHAR(5)")
     private String verifyCode;
     @ManyToOne
     @JoinColumn(name = "roles_id")

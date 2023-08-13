@@ -10,7 +10,7 @@ public class Images {
     @JoinColumn(name = "product_id")
     @ManyToOne
     private Product product;
-    @Column(name = "link", nullable = false)
+    @Column(name = "link", nullable = false,columnDefinition = "TEXT")
     private String link;
 
     public Images() {

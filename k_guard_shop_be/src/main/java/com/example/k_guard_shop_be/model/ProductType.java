@@ -7,7 +7,7 @@ public class ProductType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name",nullable = false)
+    @Column(name = "name",nullable = false,columnDefinition = "VARCHAR(50)")
     private String name;
 
     public ProductType() {

@@ -36,14 +36,15 @@ export default function Header() {
         navigate("/login")
     };
     useEffect(() => {
-        dispatch(getAllCart())
-        getAllProductType()
-        getAllBrand()
+
         if (token) {
             setIsLogin(() => true);
+            dispatch(getAllCart(true))
         } else {
-
+            dispatch(getAllCart(false))
         }
+        getAllProductType()
+        getAllBrand()
     }, [token])
     if (!productTypes || !brands) {
         return null;
@@ -192,7 +193,8 @@ export default function Header() {
                                                      }
                                                  }}
                                         >
-                                            <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct > 0 ? quantityProduct : 0}</sup></i>
+                                            <i className="bi bi-cart-dash"><sup
+                                                style={{fontWeight: 600}}>{quantityProduct > 0 ? quantityProduct : 0}</sup></i>
                                         </NavLink>
                                     </li>
                                 </>
@@ -222,7 +224,8 @@ export default function Header() {
                                                  }
                                              }}
                                     >
-                                        <i className="bi bi-cart-dash"><sup style={{fontWeight: 600}}>{quantityProduct > 0 ? quantityProduct : 0}</sup></i>
+                                        <i className="bi bi-cart-dash"><sup
+                                            style={{fontWeight: 600}}>{quantityProduct > 0 ? quantityProduct : 0}</sup></i>
                                     </NavLink>
                                 </li>
                             </>

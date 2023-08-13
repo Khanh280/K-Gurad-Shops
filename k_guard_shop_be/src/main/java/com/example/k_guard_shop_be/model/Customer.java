@@ -4,8 +4,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,26 +11,26 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false,columnDefinition = "VARCHAR(100)")
     private String name;
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", nullable = false,columnDefinition = "VARCHAR(250)")
     private String address;
-    @Column(name = "phone_number", nullable = false,unique = true)
+    @Column(name = "phone_number", nullable = false,unique = true,columnDefinition = "VARCHAR(15)")
     private String phoneNumber;
     @Column(name = "gender", nullable = false)
     private Integer gender;
     @ManyToOne
     @JoinColumn(name = "users_id")
     private Users users;
-    @Column(name = "email", nullable = false,unique = true)
+    @Column(name = "email", nullable = false,unique = true,columnDefinition = "VARCHAR(250)")
     private String email;
     @CreationTimestamp
-    @JoinColumn(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
     @UpdateTimestamp
-    @JoinColumn(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
-    @JoinColumn(columnDefinition = "DEFAULT BIT(0)")
+    @Column(name = "is_delete",columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isDelete;
 
     public Customer() {

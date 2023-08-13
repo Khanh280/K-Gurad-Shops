@@ -11,11 +11,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name",nullable = false)
+    @Column(name = "name",nullable = false,columnDefinition = "VARCHAR(150)")
     private String name;
     @Column(name = "price",nullable = false)
     private Long price;
-    @Column(name = "description",nullable = false)
+    @Column(name = "description",nullable = false,columnDefinition = "TEXT")
     private String description;
     @JoinColumn(name = "sizes_id")
     @ManyToOne
@@ -27,14 +27,14 @@ public class Product {
     @ManyToOne
     private ProductType productType;
     @CreationTimestamp
-    @JoinColumn(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
     @UpdateTimestamp
-    @JoinColumn(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
     @Column(name = "quantity",nullable = false)
     private Integer quantity;
-    @JoinColumn(columnDefinition = "DEFAULT BIT(0)")
+    @Column(name = "is_delete",columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isDelete;
 
     public Product() {

@@ -1,5 +1,6 @@
 package com.example.k_guard_shop_be.controller;
 
+import com.example.k_guard_shop_be.config.JwtTokenUtil;
 import com.example.k_guard_shop_be.dto.CustomerDTO;
 import com.example.k_guard_shop_be.dto.UserDTO;
 import com.example.k_guard_shop_be.model.Customer;
@@ -21,6 +22,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,8 @@ public class CustomerRestController {
     private ICustomerService iCustomerService;
     @Autowired
     private IUsersService iUsersService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("")
     public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page) {
@@ -86,5 +90,20 @@ public class CustomerRestController {
     public ResponseEntity<?> deleteCustomer(@RequestBody String id) {
         iCustomerService.deleteCustomer(Long.parseLong(id));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> getCustomer(HttpServletRequest httpServletRequest){
+        return new ResponseEntity<>(getCustomerFromToken(httpServletRequest),HttpStatus.OK);
+    }
+    public Customer getCustomerFromToken(HttpServletRequest httpServletRequest) {
+        String header = httpServletRequest.getHeader("Authorization");
+        if (!header.equals("") && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Users users = iUsersService.findByUsername(username);
+            return iCustomerService.getCustomerByUserId(users.getId());
+        }
+        return null;
     }
 }

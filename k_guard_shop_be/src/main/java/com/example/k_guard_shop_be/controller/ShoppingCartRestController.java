@@ -38,6 +38,8 @@ public class ShoppingCartRestController {
     private IBrandService iBrandService;
     @Autowired
     private IProductTypeService iProductTypeService;
+    @Autowired
+    private CustomerRestController customerRestController;
 
     @PostMapping("")
     public ResponseEntity<?> saveCartSession(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
@@ -69,7 +71,7 @@ public class ShoppingCartRestController {
 
     @PostMapping("/save-product")
     public ResponseEntity<?> saveProductToCart(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
-        Customer customer = getCustomerFromToken(httpServletRequest);
+        Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         if (customer != null) {
             List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
             ShoppingCart newShoppingCart = new ShoppingCart();
@@ -121,7 +123,7 @@ public class ShoppingCartRestController {
                 sign = 0;
         }
         if(isLogin.equals("true")){
-            Customer customer = getCustomerFromToken(httpServletRequest);
+            Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
             ShoppingCart shoppingCart = iShoppingCartService.getShoppingCartById(id);
             shoppingCart.setQuantity(shoppingCart.getQuantity()+sign);
             if(shoppingCart.getQuantity() ==0){
@@ -166,7 +168,7 @@ public class ShoppingCartRestController {
 
     @PostMapping("/delete-cart-login")
     public ResponseEntity<?> deleteProductCartLogin(@RequestBody String cartId, HttpServletRequest httpServletRequest) {
-        Customer customer = getCustomerFromToken(httpServletRequest);
+        Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         iShoppingCartService.deleteCartByCustomerId(Long.parseLong(cartId), customer.getId());
 
         return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
@@ -193,7 +195,7 @@ public class ShoppingCartRestController {
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         switch (isLogin) {
             case "true":
-                Customer customer = getCustomerFromToken(httpServletRequest);
+                Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
                 if (customer!=null) {
 //                    if (session.getAttribute("cart") != null) {
 //                        List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
@@ -221,14 +223,5 @@ public class ShoppingCartRestController {
         }
     }
 
-    public Customer getCustomerFromToken(HttpServletRequest httpServletRequest) {
-        String header = httpServletRequest.getHeader("Authorization");
-        if (!header.equals("") && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            String username = jwtTokenUtil.getUsernameFromToken(token);
-            Users users = iUsersService.findByUsername(username);
-            return iCustomerService.getCustomerByUserId(users.getId());
-        }
-        return null;
-    }
+
 }

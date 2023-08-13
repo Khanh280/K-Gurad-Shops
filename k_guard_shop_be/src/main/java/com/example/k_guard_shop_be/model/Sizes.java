@@ -7,7 +7,7 @@ public class Sizes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name",nullable = false)
+    @Column(name = "name",nullable = false,columnDefinition = "VARCHAR(5)")
     private String name;
 
     public Sizes() {

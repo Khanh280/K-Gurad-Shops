@@ -15,9 +15,9 @@ public class ShoppingCart {
     private Product product;
     @Column(name = "quantity",nullable = false)
     private Integer quantity;
-    @Column(name = "image",nullable = false)
+    @Column(name = "image",nullable = false,columnDefinition = "TEXT")
     private String image;
-    @Column(name = "is_delete",columnDefinition = "DEFAULT BIT(0)")
+    @Column(name = "is_delete",columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isDelete;
 
     public ShoppingCart() {

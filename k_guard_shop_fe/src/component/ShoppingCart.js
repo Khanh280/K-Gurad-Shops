@@ -16,10 +16,19 @@ export default function ShoppingCart() {
     const [shoppingCarts, setShoppingCarts] = useState()
     const [quantity, setQuantity] = useState();
     const [isLogin, setIsLogin] = useState(false)
+    const [customer, setCustomer] = useState()
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
+    const getCustomer = async () => {
+        const res = await axios.get("http://localhost:8080/api/customer/detail", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        setCustomer(() => res.data)
+    }
     const getAllCart = async (isLogin) => {
-        const res = await axios.post("http://localhost:8080/api/shopping-cart/session", `${isLogin}`,
+        const res = await axios.post("http://localhost:8080/api/shopping-cart/showCart", `${isLogin}`,
             {
                 withCredentials: true,
                 headers: {
@@ -30,23 +39,13 @@ export default function ShoppingCart() {
         )
         setShoppingCarts(() => res.data)
     }
-    // const saveSessionToDB = async (isLogin)=>{
-    //     const res = await axios.post("http://localhost:8080/api/shopping-cart/save-session-to-db", `${isLogin}`,
-    //         {
-    //             withCredentials: true,
-    //             headers: {
-    //                 "Content-Type": "text/plain",
-    //                 "Authorization": "Bearer " + token
-    //             }
-    //         }
-    //     )
-    // }
     const editQuantity = async (operator, id) => {
         const res = await axios.post("http://localhost:8080/api/shopping-cart/edit-cart/" + operator + "/" + (+id),
-            isLogin,
-            {withCredentials: true,
+            `${isLogin}`,
+            {
+                withCredentials: true,
                 headers: {
-                "Content-Type": "text/plain",
+                    "Content-Type": "text/plain",
                     "Authorization": "Bearer " + token
                 }
             })
@@ -101,6 +100,7 @@ export default function ShoppingCart() {
         if (token) {
             setIsLogin(() => true)
             getAllCart(true)
+            getCustomer()
         } else {
             getAllCart(false)
         }
@@ -119,18 +119,21 @@ export default function ShoppingCart() {
     return (
         <>
             <div className="px-5" style={{marginTop: "12vh"}}>
-                <div className="row bg-dark align-items-center d-flex mb-3" align="" style={{height: "3rem"}}>
-                    <div className=" col-md-4">
-                        <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard Shop | Giỏ
-                            hàng</h4>
-                    </div>
-                </div>
+
                 <div className="row d-flex">
 
                     {
                         shoppingCarts.length > 0 ?
                             <>
                                 <div className="col-md-9 ">
+                                    <div className="row bg-dark col-md-12 align-items-center d-flex mb-3" align=""
+                                         style={{height: "3rem"}}>
+                                        <div className=" col-md-12">
+                                            <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard
+                                                Shop | Giỏ
+                                                hàng</h4>
+                                        </div>
+                                    </div>
                                     <table className="col-md-12">
                                         <thead>
                                         <tr
@@ -141,7 +144,7 @@ export default function ShoppingCart() {
                                             <th>Brand</th>
                                             <th>Loại</th>
                                             <th>Số lượng</th>
-                                            <th>Chức năng</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -150,17 +153,17 @@ export default function ShoppingCart() {
                                                 <tr key={index} className="row-table-height">
                                                     <td className="row-table-height">
                                                         <img
-                                                            src={shoppingCart.image}
+                                                            src={shoppingCart?.image}
                                                             style={{width: "5rem"}}/>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">{shoppingCart.product.name}</p>
+                                                        <p className="row-table">{shoppingCart?.product?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">SP-{shoppingCart.product.id}</p>
+                                                        <p className="row-table">{shoppingCart?.product?.brand?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">{shoppingCart.product.productType.name}</p>
+                                                        <p className="row-table">{shoppingCart?.product?.productType?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
                                                         <div className="row-table d-flex">
@@ -189,16 +192,10 @@ export default function ShoppingCart() {
                                                         <div className="row-table">
                                                             {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
                                                             {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
-                                                            {
-                                                                isLogin ?
-                                                                    <i className="bi bi-x" style={{cursor: "pointer"}}
-                                                                       title="Xóa"
-                                                                       onClick={() => modals(shoppingCart.product.name, shoppingCart.id)}></i>
-                                                                    :
-                                                                    <i className="bi bi-x" style={{cursor: "pointer"}}
-                                                                       title="Xóa"
-                                                                       onClick={() => modals(shoppingCart.product.name, shoppingCart.product.id)}></i>
-                                                            }
+                                                            <i className="bi bi-x" style={{cursor: "pointer"}}
+                                                               title="Xóa sản phẩm"
+                                                               onClick={() => isLogin ? modals(shoppingCart.product.name, shoppingCart.id) :
+                                                                   modals(shoppingCart.product.name, shoppingCart.product.id)}></i>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -218,7 +215,8 @@ export default function ShoppingCart() {
 
                                         <Formik
                                             initialValues={{
-                                                id: ""
+                                                nameCard: "",
+                                                numberCard: "",
                                             }}
                                             onSubmit={async (values) => {
                                                 if (isLogin) {
@@ -232,7 +230,7 @@ export default function ShoppingCart() {
                                             <Form className="mb-2">
                                                 <div className="d-flex">
                                                     <label className="radio col-md-3">
-                                                        <input type="radio" name="card" defaultValue="payment"
+                                                        <Field type="radio" name="card" defaultValue="payment"
                                                                defaultChecked=""/>
                                                         <span>
                                                 <img width={30}
@@ -241,14 +239,14 @@ export default function ShoppingCart() {
                                             </span>
                                                     </label>
                                                     <label className="radio col-md-3">
-                                                        <input type="radio" name="card" defaultValue="payment"/>
+                                                        <Field type="radio" name="card" defaultValue="payment"/>
                                                         <span>
                                                 <img width={30} src="https://img.icons8.com/officel/48/000000/visa.png"
                                                      alt=""/>
                                             </span>
                                                     </label>
                                                     <label className="radio col-md-3">
-                                                        <input type="radio" name="card" defaultValue="payment"/>
+                                                        <Field type="radio" name="card" defaultValue="payment"/>
                                                         <span>
                                                 <img width={30}
                                                      src="https://img.icons8.com/ultraviolet/48/000000/amex.png"
@@ -256,7 +254,7 @@ export default function ShoppingCart() {
                                             </span>
                                                     </label>
                                                     <label className="radio col-md-3">
-                                                        <input type="radio" name="card" defaultValue="payment"/>
+                                                        <Field type="radio" name="card" defaultValue="payment"/>
                                                         <span>
                                                 <img width={30}
                                                      src="https://img.icons8.com/officel/48/000000/paypal.png" alt=""/>
@@ -265,7 +263,7 @@ export default function ShoppingCart() {
                                                 </div>
                                                 <div className="d-flex">
                                                     <label className="radio col-md-12">
-                                                        <input type="radio" name="card" defaultValue="payment"/>
+                                                        <Field type="radio" name="card" defaultValue="payment"/>
                                                         <span id="buy-here">
                                                 Thanh toán khi nhận hàng
                                             </span>
@@ -275,22 +273,22 @@ export default function ShoppingCart() {
                                                 <div className="row">
                                                     <label htmlFor="" className="mt-2">Tên thẻ</label>
                                                     <div className="col-md-12">
-                                                        <input className="form-control" type="text"/>
+                                                        <Field className="form-control" name="nameCard" type="text"/>
                                                     </div>
                                                     <label htmlFor="" className="mt-2">Số thẻ</label>
                                                     <div className="col-md-12">
-                                                        <input className="form-control" type="text"/>
+                                                        <Field className="form-control" name="numberCard" type="text"/>
                                                     </div>
                                                     <label htmlFor="" className="mt-2">Số điện thoại</label>
                                                     <div className="col-md-12">
-                                                        <input className="form-control" type="text"/>
+                                                        <Field className="form-control" type="text" value={customer?.phoneNumber}/>
                                                     </div>
                                                     <label htmlFor="" className="mt-2">Địa chỉ nhận hàng</label>
                                                     <div className="col-md-12">
-                                                        <textarea className="form-control"></textarea>
+                                                        <Field as="textarea" className="form-control" value={customer?.address}/>
                                                     </div>
                                                 </div>
-                                                <hr/>
+                                                {/*<hr/>*/}
                                                 <div className="">
                                                     <div className="d-flex justify-content-between mt-2">
                                                         <b>Tổng tiền hàng</b>
@@ -298,11 +296,12 @@ export default function ShoppingCart() {
                                                     </div>
                                                     <div className="d-flex justify-content-between mt-2">
                                                         <b>Phí vận chuyển</b>
-                                                        <span>3000đ</span>
+                                                        <span>{(30000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                     </div>
-                                                    <div className="d-flex justify-content-between mt-2">
+                                                    <hr className="my-1"/>
+                                                    <div className="d-flex justify-content-between ">
                                                         <b>Tổng thanh toán:</b>
-                                                        <span>3000đ</span>
+                                                        <span>{(totalPrice() + 30000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                     </div>
                                                     <div className="row mt-2">
                                                         <div>
