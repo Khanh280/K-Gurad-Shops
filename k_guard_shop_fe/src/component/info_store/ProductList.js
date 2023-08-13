@@ -1,11 +1,26 @@
-import React, { useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import * as ProductService from "../../service/ProductService"
 import "../../css/cart.css"
+import Swal from "sweetalert2";
+
 export default function ProductList() {
     const [products, setProduct] = useState()
     const getAllProduct = async () => {
         const res = await ProductService.getAllProduct();
         setProduct(() => res.data.content)
+    }
+    const detail = async (product)=>{
+        Swal.fire({
+            icon: "info",
+            title: "Chi tiết sản phẩm",
+            html:  `
+            <input/>
+            `,
+            showCancelButton: true,
+            showConfirmButton: false,
+            cancelButtonText: 'Quay lại',
+            reverseButtons: true,
+        })
     }
     useEffect(() => {
         getAllProduct()
@@ -30,20 +45,32 @@ export default function ProductList() {
                     {
                         products.map((product, index) =>
                             <tr className="row-table-height" key={index}>
-                                <td className="row-table-height"><img src={product?.linkImage} alt="" style={{width: "5rem"}}/>
+                                <td className="row-table-height"><img src={product?.linkImage} alt=""
+                                                                      style={{width: "5rem"}}/>
                                     {" "}
                                     {product?.name}
                                 </td>
                                 <td className="row-table-height"><p className="row-table">{product?.brand}</p></td>
-                                <td className="row-table-height"><p className="row-table">{product?.productType}</p></td>
+                                <td className="row-table-height"><p className="row-table">{product?.productType}</p>
+                                </td>
                                 <td className="row-table-height"><p className="row-table">{product?.quantity}</p></td>
                                 <td className="row-table-height"><p
                                     className="row-table">{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}đ</p>
                                 </td>
-                                <td >
+                                <td>
                                     <div style={{height: "5rem"}} className="align-items-center d-flex">
-                                        <button className="btn btn-warning d-flex align-items-center justify-content-center" style={{width: "2rem",height:"2rem"}}><i className="bi bi-pencil-square"></i></button>
-                                        <button className="btn btn-danger ms-1 d-flex align-items-center justify-content-center" style={{width: "2rem",height:"2rem"}}><i className="bi bi-trash"></i></button>
+                                        <button
+                                            className="btn btn-info d-flex align-items-center justify-content-center"
+                                            style={{width: "2rem", height: "2rem"}} onClick={()=> detail()}>
+                                            <i className="bi bi-info-square" title="Chi tiết"></i></button>
+                                        <button
+                                            className="btn btn-warning ms-1 d-flex align-items-center justify-content-center"
+                                            style={{width: "2rem", height: "2rem"}}><i
+                                            className="bi bi-pencil-square" title="Chỉnh sửa" ></i></button>
+                                        <button
+                                            className="btn btn-danger ms-1 d-flex align-items-center justify-content-center"
+                                            style={{width: "2rem", height: "2rem"}}><i className="bi bi-trash" title="Xóa"></i>
+                                        </button>
                                     </div>
                                     {/*<div className="">*/}
                                     {/*    <button>*/}
