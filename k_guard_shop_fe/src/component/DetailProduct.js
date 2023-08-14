@@ -11,6 +11,8 @@ import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
 import {useDispatch} from "react-redux";
 import {updateCart} from "../redux/actions/cart";
+import * as ProductService from "../service/ProductService"
+import * as ShoppingCartService from "../service/ShoppingCartService"
 
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
@@ -28,19 +30,14 @@ export default function DetailProduct() {
     }
     const dispatch = useDispatch()
     const getProductById = async () => {
-
-        const res = await axios.post("http://localhost:8080/api/product/detail", param.id, {
-            headers: {
-                'Content-Type': 'text/plain', // Set the Content-Type header to indicate the raw data format
-            }
-        })
+        const res = await ProductService.getProductById(param.id)
         setProduct(res.data[0].product)
         setImageMain(res.data[0].link)
         setImages(res.data)
         setDes(res.data[0].product.description.split("- " || "."))
     }
     const getSize = async () => {
-        const res = await axios.get("http://localhost:8080/api/product/size")
+        const res = await ProductService.getSize()
         setSize(() => res.data)
     }
     useEffect(() => {
@@ -69,9 +66,9 @@ export default function DetailProduct() {
                     <div className="col-md-4 p-0 ">
                         <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px", overflow: "hidden"}}>
                             <div className="row">
-                                    <img
-                                        src={imageMain}
-                                        style={{width: "100%", objectFit: "cover"}} alt=""/>
+                                <img
+                                    src={imageMain}
+                                    style={{width: "100%", objectFit: "cover"}} alt=""/>
                             </div>
 
                             <div className="row m-0 align-items-center" style={{borderTop: "1px solid #b3b3b33b"}}>
@@ -129,17 +126,10 @@ export default function DetailProduct() {
                                                         image: imageMain
                                                     }
                                                     if (isLogin) {
-                                                        const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", newValue,
-                                                            {
-                                                                withCredentials: true,
-                                                                headers: {
-                                                                    "Authorization": "Bearer " + token
-                                                                }
-                                                            })
+                                                        const res = await ShoppingCartService.saveShoppingCartCustomer(newValue)
                                                         await dispatch(updateCart(res.data.length))
                                                     } else {
-                                                        const res = await axios.post("http://localhost:8080/api/shopping-cart", newValue,
-                                                            {withCredentials: true})
+                                                        const res = await ShoppingCartService.saveShoppingCartSession(newValue)
                                                         await dispatch(updateCart(res.data.length))
                                                     }
                                                     toast.success("Thêm vào giỏ hàng thành công.")
@@ -232,11 +222,11 @@ export default function DetailProduct() {
                                 <div>
                                     <b>Loại sản phẩm: </b> <span>{product?.productType?.name}</span>
                                     <br/>
-                                   <b>Ngày tạo: </b> <span>{product?.createDate}</span>
+                                    <b>Ngày tạo: </b> <span>{product?.createDate}</span>
                                     <br/>
-                                   <b>Ngày chỉnh sửa: </b> <span>{product?.createDate}</span>
+                                    <b>Ngày chỉnh sửa: </b> <span>{product?.createDate}</span>
                                     <br/>
-                                   <b>Số lượng trong kho: </b> <span>{product?.quantity}</span>
+                                    <b>Số lượng trong kho: </b> <span>{product?.quantity}</span>
                                 </div>
 
                         }

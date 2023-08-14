@@ -141,7 +141,7 @@ body {
     align-items: center;
     display: flex;
     padding: 0px 10px;
-    background-color: #F4882F;
+    /*background-color: #F4882F;*/
 }
 
 .nav-sub:hover {

@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import axios from "axios";
 import {getAllCart, updateCart} from "../redux/actions/cart";
 import {useDispatch, useSelector} from "react-redux";
+import * as ProductService from "../service/ProductService"
 
 export default function Header() {
     const quantityProduct = useSelector(state => state.cart)
@@ -18,11 +19,11 @@ export default function Header() {
     const dispatch = useDispatch()
 
     const getAllProductType = async () => {
-        const res = await axios.get("http://localhost:8080/api/product/product-type")
+        const res = await ProductService.getAllProductType()
         setProductType(() => res.data)
     }
     const getAllBrand = async () => {
-        const res = await axios.get("http://localhost:8080/api/product/brand")
+        const res = await ProductService.getAllBrand()
         setBrand(() => res.data)
     }
 
@@ -78,7 +79,7 @@ export default function Header() {
                                                  borderRadius: "10px",
                                              }
                                          }}
-                                >Thông tin cửa hàng</NavLink>
+                                >Quản lý cửa hàng</NavLink>
                                 :
                                 <NavLink to="/b"
                                          style={({isActive}) => {
@@ -150,7 +151,7 @@ export default function Header() {
                         isLogin ?
                             role && role === "ROLE_ADMIN" ?
                                 <>
-                                    <li className="nav-product nav-sub me-3">
+                                    <li className="nav-product nav-sub me-4">
                                         <Link to="" className=""
                                               style={{
                                                   color: "black",
@@ -161,12 +162,14 @@ export default function Header() {
                                                className="fa-regular fa-user"></i>
                                         </Link>
                                         <ul id="sub-nav-product" style={{maxWidth: "12rem"}}>
-
-                                            <li className="d-flex justify-content-between align-items-center">Quản
-                                                lý cửa hàng
-                                                <i className="bi bi-person-lines-fill pe-2"
-                                                   style={{fontSize: "1.5rem"}}></i>
-                                            </li>
+                                            <NavLink className="p-0" to="/info-store">
+                                                <li className="d-flex justify-content-between align-items-center"
+                                                    style={{width: "100%"}}>
+                                                    Quản lý cửa hàng
+                                                    <i className="bi bi-person-lines-fill pe-2"
+                                                       style={{fontSize: "1.5rem"}}></i>
+                                                </li>
+                                            </NavLink>
                                             <li onClick={() => handlerLogout()}
                                                 className="d-flex justify-content-between align-items-center">Đăng xuất
                                                 <i className="bi bi-box-arrow-right  pe-2"

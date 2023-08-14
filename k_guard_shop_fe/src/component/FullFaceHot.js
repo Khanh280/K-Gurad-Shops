@@ -1,11 +1,11 @@
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-
+import * as ProductService from "../service/ProductService"
 export default function FullFaceHot() {
     const [products, setProducts] = useState();
     const getTop4Product = async () => {
-        const res = await axios.get("http://localhost:8080/api/product/top-product/4")
+        const res = await ProductService.getTop4Product()
         setProducts(()=> res.data)
     }
     useEffect(() => {

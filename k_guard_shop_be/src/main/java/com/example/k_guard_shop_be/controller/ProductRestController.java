@@ -51,24 +51,25 @@ public class ProductRestController {
         Sort sort = checkOrderBy(orderBy);
         Pageable pageable = PageRequest.of(page, 8, sort);
         Page<IProductDTO> productPage;
-        productPage = iProductService.getAll(pageable, productType, brand,nameSearch);
+        productPage = iProductService.getAll(pageable, productType, brand, nameSearch);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
+
     @GetMapping("/product-manager")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<IProductDTO>> getAllProductManager(@RequestParam(value = "nameSearch", defaultValue = "") String nameSearch,
-                                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                           @RequestParam(value = "productType", defaultValue = "") String productType,
-                                                           @RequestParam(value = "brand", defaultValue = "") Long brand,
-                                                           @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
+                                                                  @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                                  @RequestParam(value = "productType", defaultValue = "") String productType,
+                                                                  @RequestParam(value = "brand", defaultValue = "") Long brand,
+                                                                  @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
     ) {
         Sort sort = checkOrderBy(orderBy);
-        Pageable pageable = PageRequest.of(page, 2, sort);
+        Pageable pageable = PageRequest.of(page, 4, sort);
         Page<IProductDTO> productPage;
-        productPage = iProductService.getAll(pageable, productType, brand,nameSearch);
+        productPage = iProductService.getAll(pageable, productType, brand, nameSearch);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -143,10 +144,12 @@ public class ProductRestController {
         List<Images> imagesList = iImageService.getAllByProductId(Long.parseLong(id));
         return new ResponseEntity<>(imagesList, HttpStatus.OK);
     }
+
     @GetMapping("/size")
-    public ResponseEntity<?> getSize(){
-        return new ResponseEntity<>(iProductService.getAllSize(),HttpStatus.OK);
+    public ResponseEntity<?> getSize() {
+        return new ResponseEntity<>(iProductService.getAllSize(), HttpStatus.OK);
     }
+
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<String> error(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NOT FOUND");

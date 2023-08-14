@@ -8,6 +8,8 @@ import {useDispatch} from "react-redux";
 import Swal from "sweetalert2";
 import {updateCart} from "../redux/actions/cart";
 import {toast, ToastContainer} from "react-toastify";
+import * as ProductService from "../service/ProductService"
+import * as ShoppingCartService from "../service/ShoppingCartService"
 
 export default function ProductHome() {
     const [products, setProducts] = useState()
@@ -50,7 +52,7 @@ export default function ProductHome() {
         }
     }
     const getAllProduct = async (nameType, orderBy, brand, nameSearch) => {
-        const res = await axios.get("http://localhost:8080/api/product?productType=" + (nameType || "") + "&orderBy=" + (orderBy || "") + "&brand=" + (brand || "") + "&nameSearch=" + (nameSearch || ""))
+        const res = await ProductService.getAllProduct(nameType,orderBy,brand,nameSearch)
         await setProducts(() => res.data.content)
         await setTotalPage(() => res.data.totalPages)
         await setType(() => nameType)
@@ -59,20 +61,20 @@ export default function ProductHome() {
         await setNameSearch(() => nameSearch)
     }
     const getAllProductByType = async (type) => {
-        const res = await axios.get("http://localhost:8080/api/product?productType=" + type)
+        const res = await ProductService.getAllProductByType(type)
         await setProducts(() => res.data.content)
         await setTotalPage(() => res.data.totalPages)
         await setType(() => type)
         setPage(() => 0)
     }
     const getAllProductByBrand = async (brand) => {
-        const res = await axios.get("http://localhost:8080/api/product?brand=" + brand)
+        const res = await ProductService.getAllProductByBrand(brand)
         await setProducts(() => res.data.content)
         await setTotalPage(() => res.data.totalPages)
         setPage(() => 0)
     }
     const getSize = async () => {
-        const res = await axios.get("http://localhost:8080/api/product/size")
+        const res = await ProductService.getSize()
         setSize(() => res.data)
     }
 
@@ -80,7 +82,7 @@ export default function ProductHome() {
     const loadMore = async (page, type, brand, orderBy, nameSearch) => {
         if (page + 1 < totalPage) {
             console.log(page)
-            const res = await axios.get("http://localhost:8080/api/product?page=" + (page + 1) + "&productType=" + (type || "") + "&brand=" + (brand || "") + "&orderBy=" + (orderBy || "") + "&nameSearch=" + (nameSearch || ""))
+            const res = await ProductService.loadMore(page,type,brand,orderBy,nameSearch,totalPage)
             await setProducts(prevState => [...prevState, ...res.data.content])
             await setPage(prevState => prevState + 1)
         }
@@ -162,16 +164,10 @@ export default function ProductHome() {
             }
             const productCart = {product: product, quantity: quantity, image: product.linkImage}
             if (isLogin) {
-                const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", productCart,
-                    {
-                        withCredentials: true,
-                        headers: {
-                            "Authorization": "Bearer " + token
-                        }
-                    })
+                const res = await  ShoppingCartService.saveShoppingCartCustomer(productCart)
                 await dispatch(updateCart(res.data.length))
             } else {
-                const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
+                const res = await ShoppingCartService.saveShoppingCartSession(productCart)
                 dispatch(updateCart(res.data.length))
             }
             toast.success("Thêm vào giỏ hàng thành công.")

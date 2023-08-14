@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface IShoppingCartRepository extends JpaRepository<ShoppingCart,Long> {
-    @Query(value = "select sc.* from shopping_cart sc where sc.is_delete = false and sc.customer_id = :customerId",nativeQuery = true)
+    @Query(value = "select sc.* from shopping_cart sc where sc.is_delete = false and sc.customer_id = :customerId ORDER BY sc.id DESC",nativeQuery = true)
     List<ShoppingCart> getAll(@Param("customerId")Long customerId);
     @Modifying
     @Transactional

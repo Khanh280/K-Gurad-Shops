@@ -61,30 +61,6 @@ public class UsersController {
             JwtUserDetails principal = (JwtUserDetails) authentication.getPrincipal();
             GrantedAuthority grantedAuthority = principal.getAuthorities().stream().findFirst().orElse(null);
             final String token = jwtTokenUtil.generateToken(principal.getUsername());
-            HttpSession session = httpServletRequest.getSession();
-            if (session.getAttribute("cart") != null) {
-                String username = jwtTokenUtil.getUsernameFromToken(token);
-                Users users = iUsersService.findByUsername(username);
-                Customer customer = iCustomerService.getCustomerByUserId(users.getId());
-                List<ShoppingCart> shoppingCartList = new ArrayList<>();
-                List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
-                for (int i = 0; i < cartSession.size(); i++) {
-                    ShoppingCart newCart = new ShoppingCart();
-                    ShoppingCart cartDuplicate = iShoppingCartService.getShoppingCartByCustomerIdAndProductId(customer.getId(),cartSession.get(i).getProduct().getId());
-                    newCart.setCustomer(customer);
-                    newCart.setProduct(cartSession.get(i).getProduct());
-                    newCart.setQuantity(cartSession.get(i).getQuantity());
-                    newCart.setImage(cartSession.get(i).getImage());
-                    if(cartDuplicate!= null){
-                        cartDuplicate.setQuantity(newCart.getQuantity()+cartDuplicate.getQuantity());
-                        iShoppingCartService.saveShoppingCart(cartDuplicate);
-                    }else {
-                        shoppingCartList.add(newCart);
-                        iShoppingCartService.saveShoppingCart(newCart);
-                    }
-                }
-                session.removeAttribute("cart");
-            }
             return ResponseEntity.ok(new JwtResponse(token, principal.getUsername(), grantedAuthority != null ? grantedAuthority.getAuthority() : null));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đăng nhập thất bại");

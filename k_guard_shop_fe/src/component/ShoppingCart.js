@@ -9,7 +9,8 @@ import {NavLink, useNavigate} from "react-router-dom";
 import {updateCart} from "../redux/actions/cart";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
-import {cleanup} from "@testing-library/react";
+import * as CustomerService from "../service/CustomerService"
+import * as ShoppingCartService from "../service/ShoppingCartService"
 
 export default function ShoppingCart() {
     const dispatch = useDispatch()
@@ -20,35 +21,15 @@ export default function ShoppingCart() {
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
     const getCustomer = async () => {
-        const res = await axios.get("http://localhost:8080/api/customer/detail", {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        })
+        const res = await CustomerService.getCustomer()
         setCustomer(() => res.data)
     }
     const getAllCart = async (isLogin) => {
-        const res = await axios.post("http://localhost:8080/api/shopping-cart/showCart", `${isLogin}`,
-            {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "text/plain",
-                    "Authorization": "Bearer " + token
-                }
-            }
-        )
+        const res = await ShoppingCartService.getAllCart(isLogin)
         setShoppingCarts(() => res.data)
     }
     const editQuantity = async (operator, id) => {
-        const res = await axios.post("http://localhost:8080/api/shopping-cart/edit-cart/" + operator + "/" + (+id),
-            `${isLogin}`,
-            {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "text/plain",
-                    "Authorization": "Bearer " + token
-                }
-            })
+        const res = await ShoppingCartService.editQuantity(operator, id,isLogin)
         setShoppingCarts(() => res.data)
         dispatch(updateCart(res.data.length))
     }
@@ -65,20 +46,9 @@ export default function ShoppingCart() {
             if (res.isConfirmed) {
                 let res;
                 if (isLogin) {
-                    res = await axios.post("http://localhost:8080/api/shopping-cart/delete-cart-login", id, {
-                        withCredentials: true,
-                        headers: {
-                            "Content-Type": "text/plain",
-                            "Authorization": "Bearer " + token
-                        }
-                    })
+                    res = await ShoppingCartService.deleteCartLogin(id)
                 } else {
-                    res = await axios.post("http://localhost:8080/api/shopping-cart/delete-cart-session", id, {
-                        withCredentials: true,
-                        headers: {
-                            "Content-Type": "text/plain"
-                        }
-                    })
+                    res = await ShoppingCartService.saveShoppingCartSession(id)
                 }
                 await setShoppingCarts(() => res.data)
                 await dispatch(updateCart(res.data.length))
@@ -104,13 +74,12 @@ export default function ShoppingCart() {
         } else {
             getAllCart(false)
         }
-        console.log("mount")
         return () => {
             // shoppingCarts
-            const save = async () => {
-                await axios.post("http://localhost:8080/api/shopping-cart/save", "", {withCredentials: true})
-            }
-            save()
+            // const save = async () => {
+            //     await axios.post("http://localhost:8080/api/shopping-cart/save", "", {withCredentials: true})
+            // }
+            // save()
         }
     }, [])
     if (!shoppingCarts) {
@@ -155,8 +124,8 @@ export default function ShoppingCart() {
                                                         <img
                                                             src={shoppingCart?.image}
                                                             style={{width: "5rem"}}/>
-                                                    {/*</td>*/}
-                                                    {/*<td className="row-table-height">*/}
+                                                        {/*</td>*/}
+                                                        {/*<td className="row-table-height">*/}
                                                         <p className="row-table">{shoppingCart?.product?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
@@ -166,7 +135,8 @@ export default function ShoppingCart() {
                                                         <p className="row-table">{shoppingCart?.product?.productType?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <div className="row-table d-flex" style={{marginBottom: "1rem"}}>
+                                                        <div className="row-table d-flex"
+                                                             style={{marginBottom: "1rem"}}>
                                                             <button className="btn btn-dark btn-operator-plus"
                                                                     style={{backgroundColor: "white", border: "none",}}
                                                                     onClick={() => isLogin ? editQuantity("minus", shoppingCart.id) : editQuantity("minus", shoppingCart.product.id)}><span
@@ -189,7 +159,7 @@ export default function ShoppingCart() {
                                                         </div>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">{shoppingCart?.product?.price?.toString().replace( /\B(?=(\d{3})+(?!\d))/g,'.')}đ</p>
+                                                        <p className="row-table">{shoppingCart?.product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</p>
                                                     </td>
                                                     <td className="row-table-height">
                                                         <div className="row-table" style={{marginBottom: "1rem"}}>
@@ -283,11 +253,13 @@ export default function ShoppingCart() {
                                                     </div>
                                                     <label htmlFor="" className="mt-2">Số điện thoại</label>
                                                     <div className="col-md-12">
-                                                        <Field className="form-control" type="text" value={customer?.phoneNumber}/>
+                                                        <Field className="form-control" type="text"
+                                                               value={customer?.phoneNumber}/>
                                                     </div>
                                                     <label htmlFor="" className="mt-2">Địa chỉ nhận hàng</label>
                                                     <div className="col-md-12">
-                                                        <Field as="textarea" className="form-control" value={customer?.address}/>
+                                                        <Field as="textarea" className="form-control"
+                                                               value={customer?.address}/>
                                                     </div>
                                                 </div>
                                                 {/*<hr/>*/}

@@ -12,12 +12,13 @@ import "react-toastify/dist/ReactToastify.css"
 import {useDispatch} from "react-redux";
 import {getAllCart} from "../redux/actions/cart";
 import axios from "axios";
+import * as NewsService from "../service/NewsService"
 
 export default function Home() {
     const [news, setNews] = useState()
     const getAllNews =  async ()=>{
-        const res = await  axios.get("http://localhost:8080/api/news")
-        setNews(res.data.content)
+        const res = await  NewsService.getAllNews()
+        await setNews(res.data.content)
     }
 
 

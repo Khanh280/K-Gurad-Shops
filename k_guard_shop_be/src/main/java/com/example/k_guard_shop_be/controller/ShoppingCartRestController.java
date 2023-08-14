@@ -94,7 +94,7 @@ public class ShoppingCartRestController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
-        return new ResponseEntity<>(shoppingCartList,HttpStatus.OK);
+        return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -107,7 +107,7 @@ public class ShoppingCartRestController {
     }
 
     @PostMapping("/edit-cart/{operator}/{id}")
-    public ResponseEntity<?> updateCart(@PathVariable("operator") String operator, @PathVariable("id") Long id,@RequestBody String isLogin, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> updateCart(@PathVariable("operator") String operator, @PathVariable("id") Long id, @RequestBody String isLogin, HttpServletRequest httpServletRequest) {
         System.out.println(isLogin);
         HttpSession session = httpServletRequest.getSession();
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
@@ -122,17 +122,17 @@ public class ShoppingCartRestController {
             default:
                 sign = 0;
         }
-        if(isLogin.equals("true")){
+        if (isLogin.equals("true")) {
             Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
             ShoppingCart shoppingCart = iShoppingCartService.getShoppingCartById(id);
-            shoppingCart.setQuantity(shoppingCart.getQuantity()+sign);
-            if(shoppingCart.getQuantity() ==0){
+            shoppingCart.setQuantity(shoppingCart.getQuantity() + sign);
+            if (shoppingCart.getQuantity() == 0) {
                 iShoppingCartService.deleteCartByCustomerId(shoppingCart.getId(), customer.getId());
-            }else {
+            } else {
                 iShoppingCartService.saveShoppingCart(shoppingCart);
             }
-            return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
-        }else {
+            return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()), HttpStatus.OK);
+        } else {
             if (shoppingCartList != null) {
                 for (int i = 0; i < shoppingCartList.size(); i++) {
                     if (shoppingCartList.get(i).getProduct().getId() == id) {
@@ -171,7 +171,7 @@ public class ShoppingCartRestController {
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         iShoppingCartService.deleteCartByCustomerId(Long.parseLong(cartId), customer.getId());
 
-        return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()),HttpStatus.OK);
+        return new ResponseEntity<>(iShoppingCartService.getAll(customer.getId()), HttpStatus.OK);
     }
 
     //     if (!token.equals("null")) {
@@ -196,7 +196,26 @@ public class ShoppingCartRestController {
         switch (isLogin) {
             case "true":
                 Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-                if (customer!=null) {
+                if (session.getAttribute("cart") != null) {
+                    List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
+                    for (int i = 0; i < cartSession.size(); i++) {
+                        ShoppingCart newCart = new ShoppingCart();
+                        ShoppingCart cartDuplicate = iShoppingCartService.getShoppingCartByCustomerIdAndProductId(customer.getId(), cartSession.get(i).getProduct().getId());
+                        if (cartDuplicate != null) {
+                            cartDuplicate.setQuantity(cartSession.get(i).getQuantity() + cartDuplicate.getQuantity());
+                            iShoppingCartService.saveShoppingCart(cartDuplicate);
+                        } else {
+                            newCart.setCustomer(customer);
+                            newCart.setProduct(cartSession.get(i).getProduct());
+                            newCart.setQuantity(cartSession.get(i).getQuantity());
+                            newCart.setImage(cartSession.get(i).getImage());
+                            shoppingCartList.add(newCart);
+                            iShoppingCartService.saveShoppingCart(newCart);
+                        }
+                    }
+                    session.removeAttribute("cart");
+                }
+                if (customer != null) {
                     shoppingCartList = iShoppingCartService.getAll(customer.getId());
                 }
                 return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
@@ -207,7 +226,7 @@ public class ShoppingCartRestController {
                 return new ResponseEntity<>((List<ShoppingCart>) session.getAttribute("cart"), HttpStatus.OK);
             case "logout":
                 session.removeAttribute("cart");
-                return new ResponseEntity<>(null,HttpStatus.OK);
+                return new ResponseEntity<>(null, HttpStatus.OK);
             default:
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
