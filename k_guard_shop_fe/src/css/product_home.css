@@ -77,3 +77,29 @@
     opacity: 100%;
     cursor: pointer;
 }
+.activePagination{
+    /*border: 1px solid #F4882F;*/
+    width: 2rem;
+    color: #ffffff;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 5px;
+    background-color: #F4882F;
+    margin: 0 1px;
+}
+.pagination{
+    border: 1px solid #F4882F;
+    width: 2rem;
+    color: black;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 5px;
+    margin: 0 1px;
+}
+.pagination:hover{
+    color: #ffffff;
+    background-color: #F4882F;
+
+}

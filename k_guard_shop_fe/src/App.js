@@ -13,6 +13,7 @@ import {Provider} from "react-redux";
 import store from "./redux/store";
 import InfoStore from "./component/info_store/InfoStore";
 import ProductList from "./component/info_store/ProductList";
+import CreateProduct from "./component/info_store/CreateProduct";
 
 function App() {
     return (
@@ -23,6 +24,8 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/info-store" element={<InfoStore/>}>
+                            <Route path="/info-store" element={<ProductList/>}/>
+                            <Route path="/info-store/create-product" element={<CreateProduct/>}/>
                             <Route path="/info-store/product-list" element={<ProductList/>}/>
                         </Route>
                         <Route path="/product" element={<ProductHome/>}/>

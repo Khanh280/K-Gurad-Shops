@@ -20,7 +20,7 @@ export default function ProductHome() {
     const [nameSearch, setNameSearch] = useState("");
     const [chooseOption, setChooseOption] = useState(0)
     const [sizes, setSize] = useState()
-    const [isLogin,setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(false)
     const token = localStorage.getItem("token")
     const dispatch = useDispatch()
     const dropDownOption = (options) => {
@@ -129,7 +129,7 @@ export default function ProductHome() {
                 quantityInput.oninput = function () {
                     const quantity = quantityInput.value
 
-                    if (quantity <= 0 || isNaN(quantity)) {
+                    if (quantity <= 0 || quantity > 10 || isNaN(quantity)) {
                         confirm.disabled = true;
                         document.getElementById('error').innerText = "Số lượng sản phẩm > 0 và <= 10"
                     } else {
@@ -161,16 +161,16 @@ export default function ProductHome() {
                 }
             }
             const productCart = {product: product, quantity: quantity, image: product.linkImage}
-            if(isLogin){
+            if (isLogin) {
                 const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", productCart,
                     {
                         withCredentials: true,
-                        headers:{
+                        headers: {
                             "Authorization": "Bearer " + token
                         }
                     })
                 await dispatch(updateCart(res.data.length))
-            }else {
+            } else {
                 const res = await axios.post("http://localhost:8080/api/shopping-cart", productCart, {withCredentials: true})
                 dispatch(updateCart(res.data.length))
             }
@@ -182,8 +182,8 @@ export default function ProductHome() {
         setNameSearch(() => "")
     };
     useEffect(() => {
-        if(token){
-            setIsLogin(()=>true)
+        if (token) {
+            setIsLogin(() => true)
         }
         if (type.type !== undefined) {
             getAllProductByType(type.type);

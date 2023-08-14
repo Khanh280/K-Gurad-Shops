@@ -49,7 +49,7 @@ export default function LoginForm() {
                                         onSubmit={async (values, {setSubmitting}) => {
 
                                             try {
-                                                const response = await axios.post("http://localhost:8080/api/user/authenticate", values)
+                                                const response = await axios.post("http://localhost:8080/api/user/authenticate", values, {withCredentials: true})
                                                 if (response.data.token) {
                                                     localStorage.setItem("token", response.data.token);
                                                     localStorage.setItem("username", response.data.username);
@@ -58,7 +58,7 @@ export default function LoginForm() {
                                                 await navigate("/");
                                             } catch (e) {
                                                 toast.error("Đăng nhập thất bại.")
-                                            }finally {
+                                            } finally {
                                                 setSubmitting(false)
                                             }
                                         }}
@@ -122,7 +122,9 @@ export default function LoginForm() {
                                                                             }}
                                                                             disabled={true}
                                                                             className="mt-4 login-button">
-                                                                        <PulseLoader className="d-flex align-items-center justify-content-center" color="#F4882F" size={10} margin={10} />
+                                                                        <PulseLoader
+                                                                            className="d-flex align-items-center justify-content-center"
+                                                                            color="#F4882F" size={10} margin={10}/>
                                                                     </button>
                                                                     :
                                                                     <button type="submit"

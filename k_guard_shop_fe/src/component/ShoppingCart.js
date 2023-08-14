@@ -228,7 +228,6 @@ export default function ShoppingCart() {
                                                     await navigate("/login")
                                                     await toast.warning("Cần phải đăng nhập để thanh toán")
                                                 }
-                                                console.log("sdfds")
                                             }}>
                                             <Form className="mb-2">
                                                 <div className="d-flex">

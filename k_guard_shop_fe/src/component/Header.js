@@ -69,7 +69,7 @@ export default function Header() {
                     </li>
                     <li>
                         {
-                            isLogin ?
+                            role === "ROLE_ADMIN" ?
                                 <NavLink to="/info-store"
                                          style={({isActive}) => {
                                              return {

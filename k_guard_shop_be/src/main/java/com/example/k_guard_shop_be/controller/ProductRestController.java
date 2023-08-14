@@ -66,7 +66,7 @@ public class ProductRestController {
                                                            @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
     ) {
         Sort sort = checkOrderBy(orderBy);
-        Pageable pageable = PageRequest.of(page, 8, sort);
+        Pageable pageable = PageRequest.of(page, 2, sort);
         Page<IProductDTO> productPage;
         productPage = iProductService.getAll(pageable, productType, brand,nameSearch);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
@@ -127,10 +127,10 @@ public class ProductRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> deleteProduct(@RequestBody String id) {
-        iProductService.deleteProduct(Long.parseLong(id));
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        iProductService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

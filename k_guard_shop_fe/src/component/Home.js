@@ -363,7 +363,7 @@ export default function Home() {
                 </div>
             </div>
             <BackUp/>
-            <ToastContainer/>
+            <ToastContainer style={{top: "5.6rem"}}/>
         </>
     )
 }
