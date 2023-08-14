@@ -43,9 +43,11 @@ export default function InfoStore() {
             if (role !== "ROLE_ADMIN") {
                 toast.warning("Bạn không có quyền truy cập.")
                 navigate("/")
+            }else {
+                dropDownOption("product-manager")
             }
         }
-        dropDownOption("product-manager")
+
         // setChooseOption(()=>2)
     }, [checkRender])
     return (
