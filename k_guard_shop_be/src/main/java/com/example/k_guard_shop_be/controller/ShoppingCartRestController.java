@@ -197,19 +197,6 @@ public class ShoppingCartRestController {
             case "true":
                 Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
                 if (customer!=null) {
-//                    if (session.getAttribute("cart") != null) {
-//                        List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
-//                        for (int i = 0; i < cartSession.size(); i++) {
-//                            ShoppingCart newCart = new ShoppingCart();
-//                            newCart.setCustomer(customer);
-//                            newCart.setProduct(cartSession.get(i).getProduct());
-//                            newCart.setQuantity(cartSession.get(i).getQuantity());
-//                            newCart.setImage(cartSession.get(i).getImage());
-////                            shoppingCartList.add(newCart);
-//                            iShoppingCartService.saveShoppingCart(newCart);
-//                        }
-//                        session.removeAttribute("cart");
-//                    }
                     shoppingCartList = iShoppingCartService.getAll(customer.getId());
                 }
                 return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);

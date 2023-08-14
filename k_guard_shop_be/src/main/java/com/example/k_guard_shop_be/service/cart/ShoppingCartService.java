@@ -38,4 +38,9 @@ public class ShoppingCartService implements IShoppingCartService {
     public ShoppingCart getShoppingCartById(Long cartId) {
         return iShoppingCartRepository.getCartById(cartId);
     }
+
+    @Override
+    public ShoppingCart getShoppingCartByCustomerIdAndProductId(Long customerId, Long productId) {
+        return iShoppingCartRepository.getCartByCustomerIdAndProductId(customerId,productId);
+    }
 }

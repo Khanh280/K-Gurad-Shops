@@ -10,4 +10,5 @@ public interface IShoppingCartService {
     void saveAllShoppingCart(ShoppingCart shoppingCartList);
     void deleteCartByCustomerId(Long cartId,Long customerId);
     ShoppingCart getShoppingCartById(Long cartId);
+    ShoppingCart getShoppingCartByCustomerIdAndProductId(Long customerId,Long productId);
 }

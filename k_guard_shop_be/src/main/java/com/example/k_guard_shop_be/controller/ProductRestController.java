@@ -57,6 +57,23 @@ public class ProductRestController {
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
+    @GetMapping("/product-manager")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Page<IProductDTO>> getAllProductManager(@RequestParam(value = "nameSearch", defaultValue = "") String nameSearch,
+                                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                           @RequestParam(value = "productType", defaultValue = "") String productType,
+                                                           @RequestParam(value = "brand", defaultValue = "") Long brand,
+                                                           @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
+    ) {
+        Sort sort = checkOrderBy(orderBy);
+        Pageable pageable = PageRequest.of(page, 8, sort);
+        Page<IProductDTO> productPage;
+        productPage = iProductService.getAll(pageable, productType, brand,nameSearch);
+        if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
+    }
 
     @GetMapping("/top-product/{quantity}")
     public ResponseEntity<List<IProductDTO>> getTopProduct(@PathVariable("quantity") Integer quantity) {

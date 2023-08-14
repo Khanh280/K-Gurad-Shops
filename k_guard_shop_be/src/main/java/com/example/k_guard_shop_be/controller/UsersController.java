@@ -4,11 +4,15 @@ package com.example.k_guard_shop_be.controller;
 import com.example.k_guard_shop_be.config.JwtTokenUtil;
 import com.example.k_guard_shop_be.config.JwtUserDetails;
 import com.example.k_guard_shop_be.model.Customer;
+import com.example.k_guard_shop_be.model.ShoppingCart;
 import com.example.k_guard_shop_be.model.Users;
 import com.example.k_guard_shop_be.reponse.JwtRequest;
 import com.example.k_guard_shop_be.reponse.JwtResponse;
 import com.example.k_guard_shop_be.service.EmailService;
+import com.example.k_guard_shop_be.service.IUsersService;
 import com.example.k_guard_shop_be.service.UsersService;
+import com.example.k_guard_shop_be.service.cart.IShoppingCartService;
+import com.example.k_guard_shop_be.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +24,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+
+@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*", allowCredentials = "true",maxAge = 3600)
 @RestController
 @RequestMapping("/api/user")
 public class UsersController {
@@ -30,13 +39,20 @@ public class UsersController {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UsersService usersService;
-//    @Autowired
+    //    @Autowired
 //    private EmailService emailService;
-//
 
+    @Autowired
+    private IUsersService iUsersService;
+    @Autowired
+    private ICustomerService iCustomerService;
+    @Autowired
+    private CustomerRestController customerRestController;
+    @Autowired
+    private IShoppingCartService iShoppingCartService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> loginAuthentication(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> loginAuthentication(@RequestBody JwtRequest authenticationRequest, HttpServletRequest httpServletRequest) throws Exception {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
@@ -45,6 +61,30 @@ public class UsersController {
             JwtUserDetails principal = (JwtUserDetails) authentication.getPrincipal();
             GrantedAuthority grantedAuthority = principal.getAuthorities().stream().findFirst().orElse(null);
             final String token = jwtTokenUtil.generateToken(principal.getUsername());
+            HttpSession session = httpServletRequest.getSession();
+            if (session.getAttribute("cart") != null) {
+                String username = jwtTokenUtil.getUsernameFromToken(token);
+                Users users = iUsersService.findByUsername(username);
+                Customer customer = iCustomerService.getCustomerByUserId(users.getId());
+                List<ShoppingCart> shoppingCartList = new ArrayList<>();
+                List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
+                for (int i = 0; i < cartSession.size(); i++) {
+                    ShoppingCart newCart = new ShoppingCart();
+                    ShoppingCart cartDuplicate = iShoppingCartService.getShoppingCartByCustomerIdAndProductId(customer.getId(),cartSession.get(i).getProduct().getId());
+                    newCart.setCustomer(customer);
+                    newCart.setProduct(cartSession.get(i).getProduct());
+                    newCart.setQuantity(cartSession.get(i).getQuantity());
+                    newCart.setImage(cartSession.get(i).getImage());
+                    if(cartDuplicate!= null){
+                        cartDuplicate.setQuantity(newCart.getQuantity()+cartDuplicate.getQuantity());
+                        iShoppingCartService.saveShoppingCart(cartDuplicate);
+                    }else {
+                        shoppingCartList.add(newCart);
+                        iShoppingCartService.saveShoppingCart(newCart);
+                    }
+                }
+                session.removeAttribute("cart");
+            }
             return ResponseEntity.ok(new JwtResponse(token, principal.getUsername(), grantedAuthority != null ? grantedAuthority.getAuthority() : null));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đăng nhập thất bại");
