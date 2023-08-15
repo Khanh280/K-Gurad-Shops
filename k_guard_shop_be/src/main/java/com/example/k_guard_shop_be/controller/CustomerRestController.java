@@ -49,40 +49,44 @@ public class CustomerRestController {
     @Transactional
     @PostMapping("")
     public ResponseEntity<?> saveCustomer(@Validated @RequestBody CustomerDTO customerDTO, BindingResult bindingResult) {
-        UserDTO userDTO = customerDTO.getUserDTO();
-        Map<String, String> errorMap = new HashMap<>();
-        if (bindingResult.hasErrors()) {
-            if(!userDTO.getConfirmPassword().equals(userDTO.getPassword())){
-                errorMap.put("password","Mật khẩu không trùng khớp");
-//                return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
-            }
-            String[] fieldToCheck = {"name", "address", "phoneNumber", "gender", "email", "userDTO.username", "userDTO.password"};
-            for (String field : fieldToCheck) {
-                FieldError fieldError = bindingResult.getFieldError(field);
-                if (fieldError != null) {
-                    if (field.equals("userDTO.username")) {
-                        field = "username";
-                    } else if (field.equals("userDTO.password")) {
-                        field = "password";
-                    }
-                    errorMap.put(field, fieldError.getDefaultMessage());
-                }
-            }
-            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
-        }
-
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerDTO, customer);
-        String salt = BCrypt.gensalt();
-        String test = BCrypt.hashpw(customerDTO.getUserDTO().getPassword(), salt);
-
-        Users users = new Users(null,userDTO.getUsername(), userDTO.getPassword(), null,null);
+//        UserDTO userDTO = customerDTO.getUserDTO();
+//        Map<String, String> errorMap = new HashMap<>();
+//        if (bindingResult.hasErrors()) {
+//            if(!userDTO.getConfirmPassword().equals(userDTO.getPassword())){
+//                errorMap.put("password","Mật khẩu không trùng khớp");
+////                return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+//            }
+//            String[] fieldToCheck = {"name", "address", "phoneNumber", "gender", "email", "userDTO.username", "userDTO.password"};
+//            for (String field : fieldToCheck) {
+//                FieldError fieldError = bindingResult.getFieldError(field);
+//                if (fieldError != null) {
+//                    if (field.equals("userDTO.username")) {
+//                        field = "username";
+//                    } else if (field.equals("userDTO.password")) {
+//                        field = "password";
+//                    }
+//                    errorMap.put(field, fieldError.getDefaultMessage());
+//                }
+//            }
+//            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+//        }
+//        Customer customer = new Customer();
+//        BeanUtils.copyProperties(customerDTO, customer);
+//        String salt = BCrypt.gensalt();
+//        String test = BCrypt.hashpw(customerDTO.getUserDTO().getPassword(), salt);
+//
+//        Users users = new Users(null, userDTO.getUsername(), userDTO.getPassword(), null, null);
 //        BeanUtils.copyProperties(customerDTO.getUserDTO(),users);
-        users.setPassword(test);
-        users.setRoles(new Roles(2L, "ROLE_CUSTOMER"));
-        customer.setUsers(users);
+//        users.setPassword(test);
+//        users.setRoles(new Roles(2L, "ROLE_CUSTOMER"));
+//        customer.setUsers(users);
 //        iUsersService.createUser(users);
 //        iCustomerService.saveCustomer(customer);
+        Map<String, String> errorMap = iCustomerService.validateCustomer(customerDTO, bindingResult);
+        if (errorMap != null) {
+            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+        }
+        iCustomerService.saveCustomer(customerDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -93,9 +97,10 @@ public class CustomerRestController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<?> getCustomer(HttpServletRequest httpServletRequest){
-        return new ResponseEntity<>(getCustomerFromToken(httpServletRequest),HttpStatus.OK);
+    public ResponseEntity<?> getCustomer(HttpServletRequest httpServletRequest) {
+        return new ResponseEntity<>(getCustomerFromToken(httpServletRequest), HttpStatus.OK);
     }
+
     public Customer getCustomerFromToken(HttpServletRequest httpServletRequest) {
         String header = httpServletRequest.getHeader("Authorization");
         if (!header.equals("") && header.startsWith("Bearer ")) {

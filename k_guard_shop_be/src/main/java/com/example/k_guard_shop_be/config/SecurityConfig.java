@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 //                        "/api/user/newPassword","/api/posts", "/api/posts/detailPosts/**",
 //                        "/api/employee/type/contract/productType").permitAll()
                 .antMatchers("/**").permitAll()
+//                .antMatchers("/**").hasRole("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

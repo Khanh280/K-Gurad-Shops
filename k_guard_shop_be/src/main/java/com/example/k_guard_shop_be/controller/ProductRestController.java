@@ -113,13 +113,14 @@ public class ProductRestController {
     @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> saveProduct(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Map<String, String> errorMap = iProductService.validateProduct(bindingResult);
+        if(errorMap != null){
+            return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
         }
-        Product product = new Product();
-        BeanUtils.copyProperties(productDTO, product);
+        iProductService.saveProduct(productDTO);
+//        Product product = new Product();
+//        BeanUtils.copyProperties(productDTO, product);
 //        iProductService.saveProduct(product);
-
 //        List<Images> imagesList = new ArrayList<>();
 //        for (Images i : productDTO.getImage()) {
 //            imagesList.add(new Images(i.getId(), product, i.getLink()));

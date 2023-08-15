@@ -1,6 +1,7 @@
 import axios from "axios";
 import {GET_ALL_CART, UPDATE_CART} from "./type";
-const  token = localStorage.getItem("token")
+import * as ProductService from "../../service/ProductService"
+
 export const updateCart = (quantity) => async (dispatch) => {
     try {
         dispatch({
@@ -16,9 +17,9 @@ export const getAllCart = (isLogin) => async (dispatch) => {
         const res = await axios.post("http://localhost:8080/api/shopping-cart/showCart", `${isLogin}`,
             {
                 withCredentials: true,
-                headers:{
+                headers: {
                     "Content-Type": "text/plain",
-                    "Authorization": "Bearer " + token
+                    "Authorization": "Bearer " + await ProductService.getToken()
                 }
             })
         dispatch({

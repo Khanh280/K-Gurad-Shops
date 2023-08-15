@@ -1,7 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import * as ProductService from "../service/ProductService";
+import * as CustomerService from "../service/CustomerService";
 import * as yup from "yup";
 import PulseLoader from "react-spinners/PulseLoader";
 import {toast} from "react-toastify";
@@ -64,7 +64,7 @@ export default function RegisterForm() {
                                 }
                                 console.log(newValue)
                                 try {
-                                    await ProductService.saveCustomer(newValue);
+                                    await CustomerService.saveCustomer(newValue);
                                     navigate("/login")
                                     toast.success("Đăng ký tài khoản thành công.")
                                 } catch (e) {

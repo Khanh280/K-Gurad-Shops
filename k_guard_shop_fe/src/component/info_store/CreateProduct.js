@@ -41,7 +41,7 @@ export default function CreateProduct() {
         getSize()
         console.log(customer)
     }, [customer])
-    if(!productTypes || !brands||!setSize){
+    if (!productTypes || !brands || !setSize) {
         return null;
     }
     return (
@@ -55,9 +55,9 @@ export default function CreateProduct() {
                         description: "",
                         price: "",
                         quantity: 0,
-                        brand: "",
-                        productType: "",
-                        sizes: "",
+                        brand: brands[0].id,
+                        productType: productTypes[0].id,
+                        sizes: sizes[0].id,
                         images: []
                     }}
                     validationSchema={yup.object({
@@ -73,35 +73,39 @@ export default function CreateProduct() {
                         // email: yup.string().required("Email không được để trống")
                     })}
                     onSubmit={async (values, {setSubmitting, resetForm}) => {
-                        console.log(values)
-                        // const newValue = {
-                        //     ...values,
-                        //     userDTO: {
-                        //         id: "",
-                        //         username: values.username,
-                        //         password: values.password,
-                        //         confirmPassword: values.confirmPassword
-                        //     }
-                        // }
-                        // console.log(newValue)
-                        // try {
-                        //     await ProductService.saveCustomer(newValue);
-                        //     navigate("/login")
-                        //     toast.success("Đăng ký tài khoản thành công.")
-                        // } catch (e) {
-                        //     await setCustomer({
-                        //         ...customer,
-                        //         name: e.response.data.name || "",
-                        //         address: e.response.data.address || "",
-                        //         phoneNumber: e.response.data.phoneNumber || "",
-                        //         gender: e.response.data.gender || "",
-                        //         username: e.response.data.username || "",
-                        //         password: e.response.data.password || "",
-                        //         email: e.response.data.email || ""
-                        //     })
-                        // } finally {
-                        //     setSubmitting(false)
-                        // }
+                        const newValue = {
+                            ...values,
+                            brand: brands.find((brand)=> brand.id === values.brand),
+                            productType: productTypes.find((productType)=> productType.id === values.productType),
+                            sizes: sizes.find((size)=> size.id === values.sizes),
+                            image: [{
+                                id: "",
+                                product: {
+                                    id:""
+                                },
+                                link: values.images
+                            }]
+
+                        }
+
+                        try {
+                            await ProductService.saveProduct(newValue);
+                            navigate("/info-store/product-list")
+                            toast.success("Thêm sản phẩm thành công.")
+                        } catch (e) {
+                            // await setCustomer({
+                            //     ...customer,
+                            //     name: e.response.data.name || "",
+                            //     address: e.response.data.address || "",
+                            //     phoneNumber: e.response.data.phoneNumber || "",
+                            //     gender: e.response.data.gender || "",
+                            //     username: e.response.data.username || "",
+                            //     password: e.response.data.password || "",
+                            //     email: e.response.data.email || ""
+                            // })
+                        } finally {
+                            setSubmitting(false)
+                        }
                     }}
                 >
                     {
@@ -124,7 +128,7 @@ export default function CreateProduct() {
                                             <div className="col-md-4">
                                                 <label className="mt-1 mb-0" htmlFor="name"><b>Tên sản phẩm</b></label>
                                                 <Field className="form-control " id="name" name="name"
-                                                       // style={{height: "4vh"}}
+                                                    // style={{height: "4vh"}}
                                                        placeholder=" "/>
                                                 <ErrorMessage name="name" component="p"
                                                               className="text-danger"/>
@@ -139,7 +143,7 @@ export default function CreateProduct() {
                                                 <label className=" mt-1 mb-0" htmlFor="price"><b>Giá</b></label>
                                                 <Field className="form-control " id="price" name="price"
                                                        type="number"
-                                                       // style={{height: "4vh"}}
+                                                    // style={{height: "4vh"}}
                                                        placeholder=" "/>
                                                 <ErrorMessage name="price" component="p"
                                                               className="text-danger"/>
@@ -154,8 +158,8 @@ export default function CreateProduct() {
                                                 <label className="mt-1 mb-0" htmlFor="quantity"><b>Số lượng</b></label>
                                                 <Field className="form-control " id="quantity"
                                                        name="quantity"
-                                                       type="text"
-                                                       // style={{height: "4vh"}}
+                                                       type="number"
+                                                    // style={{height: "4vh"}}
                                                        placeholder=" "/>
                                                 <ErrorMessage name="quantity" component="p"
                                                               className="text-danger"/>
@@ -172,7 +176,7 @@ export default function CreateProduct() {
                                                 <label className="mt-1 mb-0" htmlFor="productType"><b>Loại sản phẩm</b></label>
                                                 <Field as="select" className="form-control " id="productType"
                                                        name="productType"
-                                                       // style={{height: "4vh"}}
+                                                    // style={{height: "4vh"}}
                                                        placeholder=" ">
                                                     {
                                                         productTypes.map((productType) =>
@@ -193,7 +197,7 @@ export default function CreateProduct() {
                                                 <label className=" mt-1 mb-0"
                                                        htmlFor="brand"><b>Thương hiệu</b></label>
                                                 <Field as="select" className="form-control " id="brand" name="brand"
-                                                       // style={{height: "4vh"}}
+                                                    // style={{height: "4vh"}}
                                                        placeholder=" ">
                                                     {
                                                         brands.map((brand) =>
@@ -214,7 +218,7 @@ export default function CreateProduct() {
                                                 <label className=" mt-1 mb-0" htmlFor="sizes"><b>Sizes</b></label>
                                                 <Field as="select" className="form-control " id="sizes"
                                                        name="sizes"
-                                                       // style={{height: "4vh"}}
+                                                    // style={{height: "4vh"}}
                                                        placeholder=" ">
                                                     {
                                                         sizes.map((size) =>
@@ -248,14 +252,11 @@ export default function CreateProduct() {
                                             </div>
                                             <div className="col-md-4">
                                                 <label className="mt-1 mb-0" htmlFor="images"><b>Hình ảnh</b></label>
-                                                <Field as="select" className="form-control " id="images"
-                                                       name="image"
-                                                       placeholder="">
-                                                    <option value={0}>Nam</option>
-                                                    <option value={1}>Nữ</option>
-                                                    <option value={2}>Khác</option>
-                                                </Field>
-                                                <ErrorMessage name="image" component="p"
+                                                <Field className="form-control " id="images"
+                                                       name="images"
+                                                       placeholder=""/>
+
+                                                <ErrorMessage name="images" component="p"
                                                               className="text-danger"/>
                                                 {
                                                     customer.image !== "" ?

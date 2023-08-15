@@ -34,6 +34,13 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
+    public OrderDetail(Orders orders, Product product, Long price, Integer quantity) {
+        this.orders = orders;
+        this.product = product;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
     public OrderDetail(Long id, Orders orders, Product product, Long price, Integer quantity, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
         this.id = id;
         this.orders = orders;

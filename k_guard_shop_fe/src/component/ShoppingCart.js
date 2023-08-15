@@ -11,6 +11,7 @@ import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
 import * as CustomerService from "../service/CustomerService"
 import * as ShoppingCartService from "../service/ShoppingCartService"
+import * as OrdersService from "../service/OrdersService"
 
 export default function ShoppingCart() {
     const dispatch = useDispatch()
@@ -29,7 +30,7 @@ export default function ShoppingCart() {
         setShoppingCarts(() => res.data)
     }
     const editQuantity = async (operator, id) => {
-        const res = await ShoppingCartService.editQuantity(operator, id,isLogin)
+        const res = await ShoppingCartService.editQuantity(operator, id, isLogin)
         setShoppingCarts(() => res.data)
         dispatch(updateCart(res.data.length))
     }
@@ -48,7 +49,7 @@ export default function ShoppingCart() {
                 if (isLogin) {
                     res = await ShoppingCartService.deleteCartLogin(id)
                 } else {
-                    res = await ShoppingCartService.saveShoppingCartSession(id)
+                    res = await ShoppingCartService.deleteCartSession(id)
                 }
                 await setShoppingCarts(() => res.data)
                 await dispatch(updateCart(res.data.length))
@@ -193,7 +194,12 @@ export default function ShoppingCart() {
                                             }}
                                             onSubmit={async (values) => {
                                                 if (isLogin) {
-                                                    toast.success("Thanh toán thành công")
+                                                    const saveOrder = async () => {
+                                                        const res = await OrdersService.saveOrders()
+                                                        console.log(res)
+                                                    }
+                                                    await saveOrder()
+                                                    await toast.success("Thanh toán thành công")
                                                 } else {
                                                     await navigate("/login")
                                                     await toast.warning("Cần phải đăng nhập để thanh toán")

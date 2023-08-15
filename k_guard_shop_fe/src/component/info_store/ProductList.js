@@ -15,15 +15,15 @@ export default function ProductList() {
     const [nameSearch, setNameSearch] = useState("")
     const [orderBy, setOrderBy] = useState("")
     const navigate = useNavigate();
-    const getAllProduct = async (page,nameSearch,orderBy) => {
-        const res = await ProductService.getAllProductManager(page,nameSearch,orderBy);
+    const getAllProduct = async (page, nameSearch, orderBy) => {
+        const res = await ProductService.getAllProductManager(page, nameSearch, orderBy);
         if (res !== null) {
             setProduct(() => res.data.content)
             setTotalPage(res.data.totalPages)
         }
         setCurrentPage(() => page)
-        setNameSearch(()=>nameSearch)
-        setOrderBy(()=>orderBy)
+        setNameSearch(() => nameSearch)
+        setOrderBy(() => orderBy)
     }
     const detail = async (product) => {
         Swal.fire({
@@ -44,7 +44,7 @@ export default function ProductList() {
             const isCurrentPage = currentPage === i;
             const className = isCurrentPage ? "activePagination" : "pagination"
             page.push(
-                <li className={className} onClick={() => getAllProduct(i,nameSearch,orderBy)}><span
+                <li className={className} onClick={() => getAllProduct(i, nameSearch, orderBy)}><span
                     className="d-flex align-items-center">{i + 1}</span></li>
             )
         }
@@ -71,8 +71,8 @@ export default function ProductList() {
                             "Authorization": "Bearer " + token
                         }
                     })
-                    toast.success("Xóa sản phẩm thành công")
-                    getAllProduct()
+                    await toast.success("Xóa sản phẩm thành công")
+                    await getAllProduct(currentPage,nameSearch,orderBy)
                 } catch (e) {
                     toast.error("Xóa sản phẩm thất bại")
                 }
@@ -83,7 +83,7 @@ export default function ProductList() {
         resetForm(); // Reset the form
     };
     useEffect(() => {
-        getAllProduct(currentPage,nameSearch,orderBy)
+        getAllProduct(currentPage, nameSearch, orderBy)
     }, [])
     if (!products) {
         return null;
@@ -98,7 +98,7 @@ export default function ProductList() {
                         }}
                         onSubmit={(values) => {
                             const search = async () => {
-                              getAllProduct(0,values.nameSearch.trim(),orderBy)
+                                getAllProduct(0, values.nameSearch.trim(), orderBy)
                             }
                             search()
 
@@ -120,7 +120,7 @@ export default function ProductList() {
                             </Form>
                         )}
                     </Formik>
-                    <select className="form-control w-25" style={{height:"2.7rem"}} name="" id=""
+                    <select className="form-control w-25" style={{height: "2.7rem"}} name="" id=""
                             onChange={(event) => getAllProduct(0, nameSearch, event.target.value)}
                     >
                         <option value="new">Sản phẩm mới nhất</option>

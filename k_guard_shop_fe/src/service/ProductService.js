@@ -101,8 +101,8 @@ export const getTop4Product = async () => {
     return res;
 }
 
-export const saveCustomer = async (customer) => {
-    await axios.post("http://localhost:8080/api/customer", customer,{
+export const saveProduct = async (product) => {
+    await axios.post("http://localhost:8080/api/product", product,{
         headers: {
             "Authorization": "Bearer " + await getToken()
         }

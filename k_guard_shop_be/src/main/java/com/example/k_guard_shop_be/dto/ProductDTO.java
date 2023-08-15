@@ -1,9 +1,12 @@
 package com.example.k_guard_shop_be.dto;
 
+import com.example.k_guard_shop_be.model.Brand;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.ProductType;
 import com.example.k_guard_shop_be.model.Sizes;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -11,7 +14,7 @@ import java.util.List;
 
 public class ProductDTO {
     private Long id;
-
+    @NotBlank(message = "Không được để trống")
     private String name;
     private Long price;
     private String description;
@@ -19,6 +22,7 @@ public class ProductDTO {
     private Sizes sizes;
 
     private ProductType productType;
+    private Brand brand;
 
     private LocalDateTime createDate;
 
@@ -26,19 +30,20 @@ public class ProductDTO {
     private Integer quantity;
     private boolean isDelete;
     @NotNull(message = "Khong duoc de trong")
-    @Size(min = 1,message = "It nhat 1 anh")
+    @Size(min = 1, message = "It nhat 1 anh")
     private List<Images> image;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, Long price, String description, Sizes sizes, ProductType productType, LocalDateTime createDate, LocalDateTime updateDate, Integer quantity, boolean isDelete, List<Images> image) {
+    public ProductDTO(Long id, String name, Long price, String description, Sizes sizes, ProductType productType, Brand brand, LocalDateTime createDate, LocalDateTime updateDate, Integer quantity, boolean isDelete, List<Images> image) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
         this.sizes = sizes;
         this.productType = productType;
+        this.brand = brand;
         this.createDate = createDate;
         this.updateDate = updateDate;
         this.quantity = quantity;
@@ -92,6 +97,14 @@ public class ProductDTO {
 
     public void setProductType(ProductType productType) {
         this.productType = productType;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public LocalDateTime getCreateDate() {
