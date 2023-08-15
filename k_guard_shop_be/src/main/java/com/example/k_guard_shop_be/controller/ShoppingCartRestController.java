@@ -143,11 +143,11 @@ public class ShoppingCartRestController {
 //            session.setAttribute("cart", shoppingCartList);
 //            return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
 //        }
-        List<ShoppingCart> shoppingCartList = iShoppingCartService.updateShoppingCart(operator, id, isLogin, httpServletRequest);
-        if (shoppingCartList != null) {
-            return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+        ResponseEntity<?> shoppingCartList = iShoppingCartService.updateShoppingCart(operator, id, isLogin, httpServletRequest);
+        if (shoppingCartList.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(shoppingCartList, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
     }
 
     @PostMapping("/delete-cart-session")

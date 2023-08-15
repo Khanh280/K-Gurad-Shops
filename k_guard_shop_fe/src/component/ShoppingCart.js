@@ -13,6 +13,7 @@ import * as CustomerService from "../service/CustomerService"
 import * as ShoppingCartService from "../service/ShoppingCartService"
 import * as OrdersService from "../service/OrdersService"
 
+
 export default function ShoppingCart() {
     const dispatch = useDispatch()
     const [shoppingCarts, setShoppingCarts] = useState()
@@ -30,9 +31,15 @@ export default function ShoppingCart() {
         setShoppingCarts(() => res.data)
     }
     const editQuantity = async (operator, id) => {
-        const res = await ShoppingCartService.editQuantity(operator, id, isLogin)
-        setShoppingCarts(() => res.data)
-        dispatch(updateCart(res.data.length))
+        try{
+            const res = await ShoppingCartService.editQuantity(operator, id, isLogin)
+            setShoppingCarts(() => res.data)
+            dispatch(updateCart(res.data.length))
+        }catch (e) {
+            setShoppingCarts(() => e.response.data)
+            dispatch(updateCart(e.response.data.length))
+        }
+
     }
     const modals = async (name, id) => {
         Swal.fire({

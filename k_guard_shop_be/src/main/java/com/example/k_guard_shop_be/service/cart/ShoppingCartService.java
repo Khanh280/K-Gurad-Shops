@@ -1,17 +1,16 @@
 package com.example.k_guard_shop_be.service.cart;
 
 import com.example.k_guard_shop_be.controller.CustomerRestController;
-import com.example.k_guard_shop_be.model.Brand;
-import com.example.k_guard_shop_be.model.Customer;
-import com.example.k_guard_shop_be.model.ProductType;
-import com.example.k_guard_shop_be.model.ShoppingCart;
+import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.repository.IShoppingCartRepository;
 import com.example.k_guard_shop_be.service.brand.IBrandService;
+import com.example.k_guard_shop_be.service.product.IProductService;
 import com.example.k_guard_shop_be.service.product_type.IProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +27,8 @@ public class ShoppingCartService implements IShoppingCartService {
     private IProductTypeService iProductTypeService;
     @Autowired
     private CustomerRestController customerRestController;
+    @Autowired
+    private IProductService iProductService;
 
     @Override
     public List<ShoppingCart> saveShoppingCartSession(ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
@@ -86,7 +87,9 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     @Override
-    public List<ShoppingCart> updateShoppingCart(String operator, Long id, String isLogin, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> updateShoppingCart(String operator, Long id, String isLogin, HttpServletRequest httpServletRequest) {
+        ShoppingCart shoppingCart = iShoppingCartRepository.getCartById(id);
+        Product product = iProductService.getProductById(shoppingCart.getProduct().getId());
         HttpSession session = httpServletRequest.getSession();
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
         Integer sign = 0;
@@ -102,14 +105,18 @@ public class ShoppingCartService implements IShoppingCartService {
         }
         if (isLogin.equals("true")) {
             Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-            ShoppingCart shoppingCart = iShoppingCartRepository.getCartById(id);
             shoppingCart.setQuantity(shoppingCart.getQuantity() + sign);
+//            if (shoppingCart.getQuantity() > product.getQuantity()) {
+//                List<ShoppingCart> shoppingCartList1 = iShoppingCartRepository.getAll(customer.getId());
+//                return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.BAD_REQUEST);
+//
+//            }
             if (shoppingCart.getQuantity() == 0) {
                 iShoppingCartRepository.deleteCart(shoppingCart.getId(), customer.getId());
             } else {
-                iShoppingCartRepository.save(shoppingCart);
+//                iShoppingCartRepository.save(shoppingCart);
             }
-            return iShoppingCartRepository.getAll(customer.getId());
+            return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.OK);
         } else {
             if (shoppingCartList != null) {
                 for (int i = 0; i < shoppingCartList.size(); i++) {
@@ -122,7 +129,7 @@ public class ShoppingCartService implements IShoppingCartService {
                 }
             }
             session.setAttribute("cart", shoppingCartList);
-            return (List<ShoppingCart>) session.getAttribute("cart");
+            return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.OK);
         }
     }
 
@@ -161,7 +168,7 @@ public class ShoppingCartService implements IShoppingCartService {
                 ShoppingCart cartDuplicate = iShoppingCartRepository.getCartByCustomerIdAndProductId(customer.getId(), cartSession.get(i).getProduct().getId());
                 if (cartDuplicate != null) {
                     cartDuplicate.setQuantity(cartSession.get(i).getQuantity() + cartDuplicate.getQuantity());
-                            iShoppingCartRepository.save(cartDuplicate);
+                    iShoppingCartRepository.save(cartDuplicate);
                 } else {
                     newCart.setCustomer(customer);
                     newCart.setProduct(cartSession.get(i).getProduct());
