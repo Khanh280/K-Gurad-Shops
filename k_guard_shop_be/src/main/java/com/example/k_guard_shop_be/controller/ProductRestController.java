@@ -118,13 +118,13 @@ public class ProductRestController {
         }
         Product product = new Product();
         BeanUtils.copyProperties(productDTO, product);
-        iProductService.saveProduct(product);
+//        iProductService.saveProduct(product);
 
-        List<Images> imagesList = new ArrayList<>();
-        for (Images i : productDTO.getImage()) {
-            imagesList.add(new Images(i.getId(), product, i.getLink()));
-        }
-        iImageService.saveImage(imagesList);
+//        List<Images> imagesList = new ArrayList<>();
+//        for (Images i : productDTO.getImage()) {
+//            imagesList.add(new Images(i.getId(), product, i.getLink()));
+//        }
+//        iImageService.saveImage(imagesList);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
