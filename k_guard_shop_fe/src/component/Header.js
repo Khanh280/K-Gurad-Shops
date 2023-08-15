@@ -163,7 +163,7 @@ export default function Header() {
                                         </Link>
                                         <ul id="sub-nav-product" style={{maxWidth: "12rem"}}>
                                             <NavLink className="p-0" to="/info-store">
-                                                <li className="d-flex justify-content-between align-items-center"
+                                                <li className="d-flex justify-content-between align-items-center store-manager"
                                                     style={{width: "100%"}}>
                                                     Quản lý cửa hàng
                                                     <i className="bi bi-person-lines-fill pe-2"

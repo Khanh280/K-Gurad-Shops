@@ -7,6 +7,9 @@ import {toast} from "react-toastify";
 import PulseLoader from "react-spinners/PulseLoader";
 
 export default function CreateProduct() {
+    const [productTypes, setProductType] = useState()
+    const [brands, setBrand] = useState()
+    const [sizes, setSize] = useState()
     const [customer, setCustomer] = useState({
         name: "",
         address: "",
@@ -17,11 +20,30 @@ export default function CreateProduct() {
         email: ""
     })
 
+    const getProductType = async () => {
+        const res = await ProductService.getAllProductType()
+        setProductType(() => res.data)
+    }
+    const getBrand = async () => {
+        const res = await ProductService.getAllBrand()
+        setBrand(() => res.data)
+    }
+    const getSize = async () => {
+        const res = await ProductService.getSize()
+        setSize(() => res.data)
+    }
+
     const navigate = useNavigate();
 
     useEffect(() => {
+        getProductType()
+        getBrand()
+        getSize()
         console.log(customer)
     }, [customer])
+    if(!productTypes || !brands||!setSize){
+        return null;
+    }
     return (
         <div className="row mt-4" style={{height: "100vh", display: "flex"}}>
             <div className="col-md-1"></div>
@@ -102,7 +124,7 @@ export default function CreateProduct() {
                                             <div className="col-md-4">
                                                 <label className="mt-1 mb-0" htmlFor="name"><b>Tên sản phẩm</b></label>
                                                 <Field className="form-control " id="name" name="name"
-                                                       style={{height: "4vh"}}
+                                                       // style={{height: "4vh"}}
                                                        placeholder=" "/>
                                                 <ErrorMessage name="name" component="p"
                                                               className="text-danger"/>
@@ -117,7 +139,7 @@ export default function CreateProduct() {
                                                 <label className=" mt-1 mb-0" htmlFor="price"><b>Giá</b></label>
                                                 <Field className="form-control " id="price" name="price"
                                                        type="number"
-                                                       style={{height: "4vh"}}
+                                                       // style={{height: "4vh"}}
                                                        placeholder=" "/>
                                                 <ErrorMessage name="price" component="p"
                                                               className="text-danger"/>
@@ -133,7 +155,7 @@ export default function CreateProduct() {
                                                 <Field className="form-control " id="quantity"
                                                        name="quantity"
                                                        type="text"
-                                                       style={{height: "4vh"}}
+                                                       // style={{height: "4vh"}}
                                                        placeholder=" "/>
                                                 <ErrorMessage name="quantity" component="p"
                                                               className="text-danger"/>
@@ -148,9 +170,16 @@ export default function CreateProduct() {
                                         <div className="row d-flex height-row">
                                             <div className="col-md-4">
                                                 <label className="mt-1 mb-0" htmlFor="productType"><b>Loại sản phẩm</b></label>
-                                                <Field className="form-control " id="productType" name="productType"
-                                                       style={{height: "4vh"}}
-                                                       placeholder=" "/>
+                                                <Field as="select" className="form-control " id="productType"
+                                                       name="productType"
+                                                       // style={{height: "4vh"}}
+                                                       placeholder=" ">
+                                                    {
+                                                        productTypes.map((productType) =>
+                                                            <option value={productType.id}>{productType.name}</option>
+                                                        )
+                                                    }
+                                                </Field>
                                                 <ErrorMessage name="productType" component="p"
                                                               className="text-danger"/>
                                                 {
@@ -163,9 +192,15 @@ export default function CreateProduct() {
                                             <div className="col-md-4">
                                                 <label className=" mt-1 mb-0"
                                                        htmlFor="brand"><b>Thương hiệu</b></label>
-                                                <Field className="form-control " id="brand" name="brand"
-                                                       style={{height: "4vh"}}
-                                                       placeholder=" "/>
+                                                <Field as="select" className="form-control " id="brand" name="brand"
+                                                       // style={{height: "4vh"}}
+                                                       placeholder=" ">
+                                                    {
+                                                        brands.map((brand) =>
+                                                            <option value={brand.id}>{brand.name}</option>
+                                                        )
+                                                    }
+                                                </Field>
                                                 <ErrorMessage name="brand" component="p"
                                                               className="text-danger"/>
                                                 {
@@ -176,12 +211,18 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                             <div className="col-md-4">
-                                                <label className=" mt-1 mb-0" htmlFor="size"><b>Sizes</b></label>
-                                                <Field className="form-control " id="size"
-                                                       name="size"
-                                                       style={{height: "4vh"}}
-                                                       placeholder=" "/>
-                                                <ErrorMessage name="size" component="p"
+                                                <label className=" mt-1 mb-0" htmlFor="sizes"><b>Sizes</b></label>
+                                                <Field as="select" className="form-control " id="sizes"
+                                                       name="sizes"
+                                                       // style={{height: "4vh"}}
+                                                       placeholder=" ">
+                                                    {
+                                                        sizes.map((size) =>
+                                                            <option value={size.id}>{size.name}</option>
+                                                        )
+                                                    }
+                                                </Field>
+                                                <ErrorMessage name="sizes" component="p"
                                                               className="text-danger"/>
                                                 {
                                                     customer.size !== "" ?
@@ -206,8 +247,8 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                             <div className="col-md-4">
-                                                <label className="mt-1 mb-0" htmlFor="image"><b>Hình ảnh</b></label>
-                                                <Field as="select" className="form-control " id="image"
+                                                <label className="mt-1 mb-0" htmlFor="images"><b>Hình ảnh</b></label>
+                                                <Field as="select" className="form-control " id="images"
                                                        name="image"
                                                        placeholder="">
                                                     <option value={0}>Nam</option>
@@ -246,7 +287,7 @@ export default function CreateProduct() {
                                                 <button
                                                     style={{cursor: "pointer", borderRadius: "5px"}}
                                                     className=" login-button"
-                                                type="submit">
+                                                    type="submit">
                                                     {
                                                         isSubmitting ?
                                                             <PulseLoader

@@ -1,12 +1,12 @@
 import axios from "axios";
+import * as ProductService from "../service/ProductService"
 
-const token = localStorage.getItem("token")
 export const saveShoppingCartCustomer = async (productCart) => {
     const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", productCart,
         {
             withCredentials: true,
             headers: {
-                "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + await ProductService.getToken()
             }
         })
     return res;
@@ -21,7 +21,7 @@ export const getAllCart = async (isLogin) => {
             withCredentials: true,
             headers: {
                 "Content-Type": "text/plain",
-                "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + await ProductService.getToken()
             }
         }
     )
@@ -34,7 +34,7 @@ export const editQuantity = async (operator, id, isLogin) => {
             withCredentials: true,
             headers: {
                 "Content-Type": "text/plain",
-                "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + await ProductService.getToken()
             }
         })
     return res;
@@ -44,7 +44,7 @@ export const deleteCartLogin = async (id) => {
         withCredentials: true,
         headers: {
             "Content-Type": "text/plain",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + await ProductService.getToken()
         }
     })
     return res;
@@ -53,7 +53,8 @@ export const deleteCartSession = async (id) => {
     const res = await axios.post("http://localhost:8080/api/shopping-cart/delete-cart-session", id, {
         withCredentials: true,
         headers: {
-            "Content-Type": "text/plain"
+            "Content-Type": "text/plain",
+            "Authorization": "Bearer " + await ProductService.getToken()
         }
     })
     return res;
