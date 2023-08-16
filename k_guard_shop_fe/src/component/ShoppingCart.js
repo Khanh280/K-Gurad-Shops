@@ -309,7 +309,7 @@ export default function ShoppingCart() {
                                                                 });
                                                             }}
                                                             onError={(e) => {
-                                                                alert(e)
+                                                                alert("ụdgfhdshfjhbn")
                                                             }}
                                                         />
                                                         <div>

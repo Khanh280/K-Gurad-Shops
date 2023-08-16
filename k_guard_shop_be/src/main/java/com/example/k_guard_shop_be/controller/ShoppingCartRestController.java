@@ -207,6 +207,7 @@ public class ShoppingCartRestController {
                 ResponseEntity<?> shoppingCartList1 = iShoppingCartService.showShoppingCart(httpServletRequest);
                 if (shoppingCartList1 != null) {
                     return new ResponseEntity<>(shoppingCartList1.getBody(), HttpStatus.OK);
+
                 }
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //                Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
