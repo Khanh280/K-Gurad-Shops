@@ -27,10 +27,11 @@ public class OrdersService implements IOrdersService {
     private IOrderDetailRepository iOrderDetailRepository;
     @Autowired
     private IProductRepository iProductRepository;
+
     @Transactional
     @Override
     public void saveOrder(HttpServletRequest httpServletRequest) {
-        Customer customer =customerRestController.getCustomerFromToken(httpServletRequest);
+        Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         Orders orders = new Orders(customer);
         iOrdersRepository.save(orders);
         List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
@@ -38,12 +39,14 @@ public class OrdersService implements IOrdersService {
         for (int i = 0; i < shoppingCartList.size(); i++) {
             Product product = shoppingCartList.get(i).getProduct();
             ShoppingCart shoppingCart = shoppingCartList.get(i);
-            product.setQuantity(product.getQuantity() - shoppingCartList.get(i).getQuantity());
-            OrderDetail orderDetail = new OrderDetail(orders,shoppingCartList.get(i).getProduct(),shoppingCartList.get(i).getProduct().getPrice(),shoppingCartList.get(i).getQuantity());
-            orderDetailList.add(orderDetail);
-            iProductRepository.save(product);
-            shoppingCart.setDelete(true);
-            iShoppingCartService.saveShoppingCart(shoppingCart,httpServletRequest);
+            if (shoppingCartList.get(i).getQuantity() <= product.getQuantity()) {
+                product.setQuantity(product.getQuantity() - shoppingCartList.get(i).getQuantity());
+                OrderDetail orderDetail = new OrderDetail(orders, shoppingCartList.get(i).getProduct(), shoppingCartList.get(i).getProduct().getPrice(), shoppingCartList.get(i).getQuantity());
+                orderDetailList.add(orderDetail);
+                iProductRepository.save(product);
+                shoppingCart.setDelete(true);
+                iShoppingCartService.saveShoppingCart(shoppingCart, httpServletRequest);
+            }
         }
         iOrderDetailRepository.saveAll(orderDetailList);
     }
