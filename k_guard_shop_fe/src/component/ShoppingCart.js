@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css"
 import * as CustomerService from "../service/CustomerService"
 import * as ShoppingCartService from "../service/ShoppingCartService"
 import * as OrdersService from "../service/OrdersService"
+import {PayPalButton} from "react-paypal-button-v2";
 
 
 export default function ShoppingCart() {
@@ -20,6 +21,7 @@ export default function ShoppingCart() {
     const [quantity, setQuantity] = useState();
     const [isLogin, setIsLogin] = useState(false)
     const [customer, setCustomer] = useState()
+    const [pricePaypal, setPricePaypal] = useState(0)
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
     const getCustomer = async () => {
@@ -31,13 +33,14 @@ export default function ShoppingCart() {
         setShoppingCarts(() => res.data)
     }
     const editQuantity = async (operator, id) => {
-        try{
+        try {
             const res = await ShoppingCartService.editQuantity(operator, id, isLogin)
             setShoppingCarts(() => res.data)
             dispatch(updateCart(res.data.length))
-        }catch (e) {
+        } catch (e) {
             setShoppingCarts(() => e.response.data)
             dispatch(updateCart(e.response.data.length))
+            toast.warning("Số lượng lớn hơn số lượng trong kho.")
         }
 
     }
@@ -291,6 +294,24 @@ export default function ShoppingCart() {
                                                         <span>{(totalPrice() + 30000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                     </div>
                                                     <div className="row mt-2">
+                                                        <PayPalButton
+                                                            amount={Math.ceil((totalPrice()+30000)/23000)}
+                                                            // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                                                            onSuccess={(details, data) => {
+                                                                alert("Transaction completed by " + details.payer.name.given_name);
+
+                                                                // OPTIONAL: Call your server to save the transaction
+                                                                return fetch("/paypal-transaction-complete", {
+                                                                    method: "post",
+                                                                    body: JSON.stringify({
+                                                                        orderID: data.orderID
+                                                                    })
+                                                                });
+                                                            }}
+                                                            onError={(e) => {
+                                                                alert(e)
+                                                            }}
+                                                        />
                                                         <div>
                                                             <button type="submit" className="btn login-button">Đặt
                                                                 hàng
@@ -311,7 +332,7 @@ export default function ShoppingCart() {
                             </div>
                     }
                 </div>
-                <ToastContainer/>
+                <ToastContainer style={{top: "5.6rem"}}/>
             </div>
         </>
     )

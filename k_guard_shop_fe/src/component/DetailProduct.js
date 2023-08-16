@@ -137,7 +137,7 @@ export default function DetailProduct() {
                                                         setQuantity(() => 1)
                                                     )
                                                 } catch (e) {
-                                                    toast.error("Thêm vào giỏ hàng thất bại.")
+                                                    toast.warning("Số lượng lớn hơn số lượng trong kho.")
                                                 }
                                             } else {
                                                 toast.error("Số lượng sản phẩm quá lớn.")

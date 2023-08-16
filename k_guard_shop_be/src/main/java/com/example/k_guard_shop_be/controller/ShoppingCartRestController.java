@@ -38,10 +38,11 @@ public class ShoppingCartRestController {
 
     @PostMapping("")
     public ResponseEntity<?> saveCartSession(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
-        List<ShoppingCart> shoppingCartList = iShoppingCartService.saveShoppingCartSession(shoppingCart, httpServletRequest);
-        if (shoppingCartList != null) {
-            return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+        ResponseEntity<?> shoppingCartList = iShoppingCartService.saveShoppingCartSession(shoppingCart, httpServletRequest);
+        if (shoppingCartList.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.OK);
 //        HttpSession session = httpServletRequest.getSession();
 //        Brand brand = iBrandService.getBrandByProductId(shoppingCart.getProduct().getId());
 //        ProductType productType = iProductTypeService.getProductTypeByProductId(shoppingCart.getProduct().getId());
@@ -64,7 +65,7 @@ public class ShoppingCartRestController {
 //            shoppingCartList.add(shoppingCart);
 //        }
 //        session.setAttribute("cart", shoppingCartList);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/save-product")
@@ -92,8 +93,11 @@ public class ShoppingCartRestController {
 //            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //        }
 //        List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
-        List<ShoppingCart> shoppingCartList = iShoppingCartService.saveShoppingCart(shoppingCart, httpServletRequest);
-        return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+        ResponseEntity<?> shoppingCartList = iShoppingCartService.saveShoppingCart(shoppingCart, httpServletRequest);
+        if (shoppingCartList.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -147,7 +151,7 @@ public class ShoppingCartRestController {
         if (shoppingCartList.getStatusCode() == HttpStatus.BAD_REQUEST) {
             return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+        return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.OK);
     }
 
     @PostMapping("/delete-cart-session")
@@ -200,10 +204,11 @@ public class ShoppingCartRestController {
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         switch (isLogin) {
             case "true":
-                shoppingCartList = iShoppingCartService.showShoppingCart(httpServletRequest);
-                if (shoppingCartList != null) {
-                    return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
+                ResponseEntity<?> shoppingCartList1 = iShoppingCartService.showShoppingCart(httpServletRequest);
+                if (shoppingCartList1 != null) {
+                    return new ResponseEntity<>(shoppingCartList1.getBody(), HttpStatus.OK);
                 }
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //                Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
 //                if (session.getAttribute("cart") != null) {
 //                    List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");

@@ -163,14 +163,20 @@ export default function ProductHome() {
                 }
             }
             const productCart = {product: product, quantity: quantity, image: product.linkImage}
-            if (isLogin) {
-                const res = await  ShoppingCartService.saveShoppingCartCustomer(productCart)
-                await dispatch(updateCart(res.data.length))
-            } else {
-                const res = await ShoppingCartService.saveShoppingCartSession(productCart)
-                dispatch(updateCart(res.data.length))
-            }
-            toast.success("Thêm vào giỏ hàng thành công.")
+            let res;
+           try{
+               if (isLogin) {
+                   res = await  ShoppingCartService.saveShoppingCartCustomer(productCart)
+                   await dispatch(updateCart(res.data.length))
+               } else {
+                   res = await ShoppingCartService.saveShoppingCartSession(productCart)
+                   dispatch(updateCart(res.data.length))
+               }
+               toast.success("Thêm vào giỏ hàng thành công.")
+           }catch (e) {
+               dispatch(updateCart(e.response.data.length))
+               toast.warning("Số lượng lớn hơn số lượng trong kho.")
+           }
         }
     }
     const resetFieldName = (resetForm) => {
