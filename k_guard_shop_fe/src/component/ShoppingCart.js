@@ -70,7 +70,9 @@ export default function ShoppingCart() {
         let totalPrice = 0;
         if (shoppingCarts) {
             for (let p of shoppingCarts) {
-                totalPrice += p.product.price * p.quantity
+                if (p.quantity <= p.product.quantity) {
+                    totalPrice += p.product.price * p.quantity
+                }
             }
         }
         return totalPrice;
@@ -120,7 +122,7 @@ export default function ShoppingCart() {
                                             // style={{border: "2px solid #f4882fc7",height: "3rem"}}
                                         >
                                             <th>Sản phẩm</th>
-                                            <th>Brand</th>
+                                            <th>Thương hiệu</th>
                                             <th>Loại</th>
                                             <th>Số lượng</th>
                                             <th>Giá</th>
@@ -130,14 +132,21 @@ export default function ShoppingCart() {
                                         <tbody>
                                         {
                                             shoppingCarts.map((shoppingCart, index) =>
-                                                <tr key={index} className="row-table-height">
+                                                <tr key={index} className="row-table-height" style={{
+                                                    // opacity: shoppingCart.quantity > shoppingCart.product.quantity ? "30%" : "",
+                                                    position: shoppingCart.quantity > shoppingCart.product.quantity ? "relative" : ""
+                                                }}>
                                                     <td className="row-table-height d-flex">
                                                         <img
                                                             src={shoppingCart?.image}
                                                             style={{width: "5rem"}}/>
-                                                        {/*</td>*/}
-                                                        {/*<td className="row-table-height">*/}
+
                                                         <p className="row-table">{shoppingCart?.product?.name}</p>
+                                                        {
+                                                            shoppingCart.quantity > shoppingCart.product.quantity ?
+                                                                <sup><i className="bi bi-exclamation-circle text-danger" style={{opacity: "none"}} title={"Chỉ còn "+ shoppingCart.product.quantity + " sản phẩm trong kho."}></i></sup>
+                                                                : ""
+                                                        }
                                                     </td>
                                                     <td className="row-table-height">
                                                         <p className="row-table">{shoppingCart?.product?.brand?.name}</p>
@@ -149,19 +158,26 @@ export default function ShoppingCart() {
                                                         <div className="row-table d-flex"
                                                              style={{marginBottom: "1rem"}}>
                                                             <button className="btn btn-dark btn-operator-plus"
-                                                                    style={{backgroundColor: "white", border: "none",}}
+                                                                    style={{
+                                                                        backgroundColor: "white",
+                                                                        border: "none",
+                                                                    }}
                                                                     onClick={() => isLogin ? editQuantity("minus", shoppingCart.id) : editQuantity("minus", shoppingCart.product.id)}><span
                                                                 style={{
                                                                     fontWeight: "bold",
                                                                     color: "black"
                                                                 }}>-</span></button>
-                                                            <input id="input-quantity-product" className="form-control"
+                                                            <input id="input-quantity-product"
+                                                                   className="form-control"
                                                                    type="text"
                                                                    readOnly
                                                                    style={{border: "none",}}
                                                                    value={shoppingCart.quantity}/>
                                                             <button className="btn btn-dark btn-operator-subs"
-                                                                    style={{backgroundColor: "white", border: "none",}}
+                                                                    style={{
+                                                                        backgroundColor: "white",
+                                                                        border: "none",
+                                                                    }}
                                                                     onClick={() => isLogin ? editQuantity("plus", shoppingCart.id) : editQuantity("plus", shoppingCart.product.id)}><span
                                                                 style={{
                                                                     fontWeight: "bold",
@@ -174,8 +190,6 @@ export default function ShoppingCart() {
                                                     </td>
                                                     <td className="row-table-height">
                                                         <div className="row-table" style={{marginBottom: "1rem"}}>
-                                                            {/*<button className="btn btn-sm btn-cart btn-warning" title="Chỉnh sửa"><i*/}
-                                                            {/*    className="bi bi-pencil" title="Chỉnh sửa"></i></button>*/}
                                                             <i className="bi bi-x" style={{cursor: "pointer"}}
                                                                title="Xóa sản phẩm"
                                                                onClick={() => isLogin ? modals(shoppingCart.product.name, shoppingCart.id) :
@@ -294,29 +308,49 @@ export default function ShoppingCart() {
                                                         <span>{(totalPrice() + 30000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                     </div>
                                                     <div className="row mt-2">
-                                                        <PayPalButton
-                                                            amount={Math.ceil((totalPrice()+30000)/23000)}
-                                                            // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                                                            onSuccess={(details, data) => {
-                                                                alert("Transaction completed by " + details.payer.name.given_name);
+                                                        {
+                                                            token ?
+                                                                <PayPalButton
+                                                                    amount={Math.ceil((totalPrice() + 30000) / 23000)}
+                                                                    // amount={1}
+                                                                    // onSuccess={async (details, data) => {
+                                                                    //     toast.success("Transaction completed by " + details.payer.name.given_name);
+                                                                    //     const res = await OrdersService.saveOrders()
+                                                                    //     console.log(res)
 
-                                                                // OPTIONAL: Call your server to save the transaction
-                                                                return fetch("/paypal-transaction-complete", {
-                                                                    method: "post",
-                                                                    body: JSON.stringify({
-                                                                        orderID: data.orderID
-                                                                    })
-                                                                });
-                                                            }}
-                                                            onError={(e) => {
-                                                                alert("ụdgfhdshfjhbn")
-                                                            }}
-                                                        />
-                                                        <div>
-                                                            <button type="submit" className="btn login-button">Đặt
-                                                                hàng
-                                                            </button>
-                                                        </div>
+                                                                    //     return fetch("/paypal-transaction-complete", {
+                                                                    //         method: "post",
+                                                                    //         body: JSON.stringify({
+                                                                    //             orderID: data.orderID
+                                                                    //         })
+                                                                    //     });
+                                                                    // }}
+                                                                    onApprove={async (data, actions) => {
+                                                                        // Gửi dữ liệu đơn hàng đến máy chủ của bạn và đợi phản hồi
+                                                                        const res = await OrdersService.saveOrders(); // Giả sử hàm này trả về một promise
+                                                                        if (res.status !== 400) {
+                                                                            // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
+                                                                            const captureResult = await actions.order.capture();
+                                                                            console.log(captureResult);
+                                                                            toast.success("Giao dịch hoàn thành");
+                                                                        } else {
+                                                                            // Xử lý trường hợp phản hồi từ máy chủ không thành công
+                                                                            alert("Không thể lưu đơn hàng trên máy chủ");
+                                                                        }
+                                                                    }}
+                                                                    onError={(e) => {
+                                                                        alert("Thanh toán thất bại")
+                                                                    }}
+                                                                />
+                                                                :
+                                                                <div>
+                                                                    <button type="submit"
+                                                                            className="btn login-button">Đặt
+                                                                        hàng
+                                                                    </button>
+                                                                </div>
+                                                        }
+
                                                     </div>
                                                 </div>
                                             </Form>
