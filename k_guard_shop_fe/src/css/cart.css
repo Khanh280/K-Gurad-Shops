@@ -61,4 +61,10 @@ label.radio input:checked + span {
 .row-table-height{
     height: 5rem;
 }
+.error-quantity{
+    color: red;
+}
+.error-quantity:hover{
+    color: #F4882F;
+}
 

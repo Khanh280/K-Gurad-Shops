@@ -52,7 +52,7 @@ export default function ProductHome() {
         }
     }
     const getAllProduct = async (nameType, orderBy, brand, nameSearch) => {
-        const res = await ProductService.getAllProduct(nameType,orderBy,brand,nameSearch)
+        const res = await ProductService.getAllProduct(nameType, orderBy, brand, nameSearch)
         await setProducts(() => res.data.content)
         await setTotalPage(() => res.data.totalPages)
         await setType(() => nameType)
@@ -82,7 +82,7 @@ export default function ProductHome() {
     const loadMore = async (page, type, brand, orderBy, nameSearch) => {
         if (page + 1 < totalPage) {
             console.log(page)
-            const res = await ProductService.loadMore(page,type,brand,orderBy,nameSearch,totalPage)
+            const res = await ProductService.loadMore(page, type, brand, orderBy, nameSearch, totalPage)
             await setProducts(prevState => [...prevState, ...res.data.content])
             await setPage(prevState => prevState + 1)
         }
@@ -113,6 +113,10 @@ export default function ProductHome() {
                 <select name="size" id="sizeSelect" style="width: 100%"></select>
                 </td>
                 </tr>
+<!--                <tr>-->
+<!--                <td>Số sản phẩm hiện tại:</td>-->
+<!--                <td id="quantity-store">Số sản phẩm hiện tại:</td>-->
+<!--                </tr>-->
                 </table>
             `,
             showCancelButton: true,
@@ -124,6 +128,7 @@ export default function ProductHome() {
                 // Focus on the first input when the modal is opened
                 document.getElementById('quantity').focus();
                 document.getElementById('name').innerHTML = product.name;
+                // document.getElementById('quantity-store').innerHTML = product.quantity;
                 const selectElement = document.getElementById("sizeSelect");
                 const quantityInput = document.getElementById("quantity")
                 const confirm = Swal.getConfirmButton()
@@ -164,19 +169,19 @@ export default function ProductHome() {
             }
             const productCart = {product: product, quantity: quantity, image: product.linkImage}
             let res;
-           try{
-               if (isLogin) {
-                   res = await  ShoppingCartService.saveShoppingCartCustomer(productCart)
-                   await dispatch(updateCart(res.data.length))
-               } else {
-                   res = await ShoppingCartService.saveShoppingCartSession(productCart)
-                   dispatch(updateCart(res.data.length))
-               }
-               toast.success("Thêm vào giỏ hàng thành công.")
-           }catch (e) {
-               dispatch(updateCart(e.response.data.length))
-               toast.warning("Số lượng lớn hơn số lượng trong kho.")
-           }
+            try {
+                if (isLogin) {
+                    res = await ShoppingCartService.saveShoppingCartCustomer(productCart)
+                    await dispatch(updateCart(res.data.length))
+                } else {
+                    res = await ShoppingCartService.saveShoppingCartSession(productCart)
+                    dispatch(updateCart(res.data.length))
+                }
+                toast.success("Thêm vào giỏ hàng thành công.")
+            } catch (e) {
+                dispatch(updateCart(e.response.data.length))
+                toast.warning("Số lượng lớn hơn số lượng trong kho.")
+            }
         }
     }
     const resetFieldName = (resetForm) => {

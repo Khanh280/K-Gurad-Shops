@@ -139,12 +139,27 @@ export default function ShoppingCart() {
                                                     <td className="row-table-height d-flex">
                                                         <img
                                                             src={shoppingCart?.image}
-                                                            style={{width: "5rem"}}/>
+                                                            style={{
+                                                                width: "5rem",
+                                                                opacity: shoppingCart.quantity > shoppingCart.product.quantity ? "30%" : "",
+                                                            }}/>
 
                                                         <p className="row-table">{shoppingCart?.product?.name}</p>
                                                         {
                                                             shoppingCart.quantity > shoppingCart.product.quantity ?
-                                                                <sup><i className="bi bi-exclamation-circle text-danger" style={{opacity: "none"}} title={"Chỉ còn "+ shoppingCart.product.quantity + " sản phẩm trong kho."}></i></sup>
+                                                                <>
+                                                                    <sup><i
+                                                                        className="bi bi-exclamation-circle  error-quantity"
+                                                                        title={"Chỉ còn " + shoppingCart.product.quantity + " sản phẩm trong kho."}
+                                                                    ></i>
+                                                                        {/*<ul>*/}
+                                                                        {/*    <li><p></p></li>*/}
+                                                                        {/*    <li><p>Chỉ*/}
+                                                                        {/*        còn {shoppingCart.product.quantity} sản*/}
+                                                                        {/*        phẩm trong kho.</p></li>*/}
+                                                                        {/*</ul>*/}
+                                                                    </sup>
+                                                                </>
                                                                 : ""
                                                         }
                                                     </td>
@@ -273,14 +288,14 @@ export default function ShoppingCart() {
                                                 </div>
 
                                                 <div className="row">
-                                                    <label htmlFor="" className="mt-2">Tên thẻ</label>
-                                                    <div className="col-md-12">
-                                                        <Field className="form-control" name="nameCard" type="text"/>
-                                                    </div>
-                                                    <label htmlFor="" className="mt-2">Số thẻ</label>
-                                                    <div className="col-md-12">
-                                                        <Field className="form-control" name="numberCard" type="text"/>
-                                                    </div>
+                                                    {/*<label htmlFor="" className="mt-2">Tên thẻ</label>*/}
+                                                    {/*<div className="col-md-12">*/}
+                                                    {/*    <Field className="form-control" name="nameCard" type="text"/>*/}
+                                                    {/*</div>*/}
+                                                    {/*<label htmlFor="" className="mt-2">Số thẻ</label>*/}
+                                                    {/*<div className="col-md-12">*/}
+                                                    {/*    <Field className="form-control" name="numberCard" type="text"/>*/}
+                                                    {/*</div>*/}
                                                     <label htmlFor="" className="mt-2">Số điện thoại</label>
                                                     <div className="col-md-12">
                                                         <Field className="form-control" type="text"
@@ -311,13 +326,14 @@ export default function ShoppingCart() {
                                                         {
                                                             token ?
                                                                 <PayPalButton
-                                                                    amount={Math.ceil((totalPrice() + 30000) / 23000)}
+                                                                    amount={totalPrice() > 0 ? Math.ceil((totalPrice() + 30000) / 23000) : 0}
                                                                     // amount={1}
                                                                     // onSuccess={async (details, data) => {
+                                                                    //
                                                                     //     toast.success("Transaction completed by " + details.payer.name.given_name);
                                                                     //     const res = await OrdersService.saveOrders()
                                                                     //     console.log(res)
-
+                                                                    //
                                                                     //     return fetch("/paypal-transaction-complete", {
                                                                     //         method: "post",
                                                                     //         body: JSON.stringify({
@@ -327,15 +343,17 @@ export default function ShoppingCart() {
                                                                     // }}
                                                                     onApprove={async (data, actions) => {
                                                                         // Gửi dữ liệu đơn hàng đến máy chủ của bạn và đợi phản hồi
-                                                                        const res = await OrdersService.saveOrders(); // Giả sử hàm này trả về một promise
-                                                                        if (res.status !== 400) {
+
+                                                                        try {
+                                                                            const res = await OrdersService.saveOrders();
                                                                             // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
+                                                                            setShoppingCarts(() => res.data)
                                                                             const captureResult = await actions.order.capture();
                                                                             console.log(captureResult);
-                                                                            toast.success("Giao dịch hoàn thành");
-                                                                        } else {
+                                                                            toast.success("Giao dịch thành công");
+                                                                        } catch (e) {
                                                                             // Xử lý trường hợp phản hồi từ máy chủ không thành công
-                                                                            alert("Không thể lưu đơn hàng trên máy chủ");
+                                                                            alert("Không thể thanh toán đơn hàng trên máy chủ");
                                                                         }
                                                                     }}
                                                                     onError={(e) => {

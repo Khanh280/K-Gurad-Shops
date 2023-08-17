@@ -30,7 +30,7 @@ public class OrdersService implements IOrdersService {
 
     @Transactional
     @Override
-    public void saveOrder(HttpServletRequest httpServletRequest) {
+    public void saveOrder(HttpServletRequest httpServletRequest) throws RuntimeException {
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         Orders orders = new Orders(customer);
         iOrdersRepository.save(orders);
