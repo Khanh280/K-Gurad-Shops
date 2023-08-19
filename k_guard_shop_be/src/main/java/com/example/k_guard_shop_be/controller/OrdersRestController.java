@@ -7,6 +7,7 @@ import com.example.k_guard_shop_be.service.orders.IOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public class OrdersRestController {
     private IShoppingCartService iShoppingCartService;
     @Autowired
     private CustomerRestController customerRestController;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @PostMapping("")
     public ResponseEntity<?> saveOrders(HttpServletRequest httpServletRequest) {

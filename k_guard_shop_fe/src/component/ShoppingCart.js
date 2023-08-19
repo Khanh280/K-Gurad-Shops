@@ -341,6 +341,7 @@ export default function ShoppingCart() {
                                                                     //         })
                                                                     //     });
                                                                     // }}
+
                                                                     onApprove={async (data, actions) => {
                                                                         // Gửi dữ liệu đơn hàng đến máy chủ của bạn và đợi phản hồi
 
@@ -353,11 +354,13 @@ export default function ShoppingCart() {
                                                                             toast.success("Giao dịch thành công");
                                                                         } catch (e) {
                                                                             // Xử lý trường hợp phản hồi từ máy chủ không thành công
-                                                                            alert("Không thể thanh toán đơn hàng trên máy chủ");
+                                                                            toast.error("Không thể thanh toán đơn hàng trên máy chủ");
                                                                         }
                                                                     }}
                                                                     onError={(e) => {
-                                                                        alert("Thanh toán thất bại")
+                                                                        totalPrice() <= 0
+                                                                            ? toast.error("Hiện không có sản phẩm nào.")
+                                                                            : toast.error("Thanh toán thất bại")
                                                                     }}
                                                                 />
                                                                 :
