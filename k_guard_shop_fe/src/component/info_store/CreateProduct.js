@@ -41,7 +41,7 @@ export default function CreateProduct() {
         getSize()
         console.log(customer)
     }, [customer])
-    if (!productTypes || !brands || !setSize) {
+    if (!productTypes || !brands || !sizes) {
         return null;
     }
     return (
