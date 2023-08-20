@@ -15,12 +15,15 @@ public class OrderDetail {
     @JoinColumn(name = "orders_id")
     @ManyToOne
     private Orders orders;
-    @JoinColumn(name="product_id")
+    //    @JoinColumn(name="product_id")
+//    @ManyToOne
+//    private Product product;
+    @JoinColumn(name = "product_size_id")
     @ManyToOne
-    private Product product;
+    private ProductSize productSize;
     @Column(name = "price", nullable = false)
     private Long price;
-    @Column(name = "quantity",nullable = false)
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
     @CreationTimestamp
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
@@ -28,23 +31,31 @@ public class OrderDetail {
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime updateDate;
-    @Column(name = "is_delete",columnDefinition = "BIT(1) DEFAULT 0")
+    @Column(name = "is_delete", columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isDelete;
 
     public OrderDetail() {
     }
 
-    public OrderDetail(Orders orders, Product product, Long price, Integer quantity) {
+//    public OrderDetail(Orders orders, Product product, Long price, Integer quantity) {
+//        this.orders = orders;
+//        this.product = product;
+//        this.price = price;
+//        this.quantity = quantity;
+//    }
+
+
+    public OrderDetail(Orders orders, ProductSize productSize, Long price, Integer quantity) {
         this.orders = orders;
-        this.product = product;
+        this.productSize = productSize;
         this.price = price;
         this.quantity = quantity;
     }
 
-    public OrderDetail(Long id, Orders orders, Product product, Long price, Integer quantity, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
+    public OrderDetail(Long id, Orders orders, ProductSize productSize, Long price, Integer quantity, LocalDateTime createDate, LocalDateTime updateDate, boolean isDelete) {
         this.id = id;
         this.orders = orders;
-        this.product = product;
+        this.productSize = productSize;
         this.price = price;
         this.quantity = quantity;
         this.createDate = createDate;
@@ -68,13 +79,13 @@ public class OrderDetail {
         this.orders = orders;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+//    public Product getProduct() {
+//        return product;
+//    }
+//
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
 
     public Long getPrice() {
         return price;
@@ -114,5 +125,13 @@ public class OrderDetail {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    public ProductSize getProductSize() {
+        return productSize;
+    }
+
+    public void setProductSize(ProductSize productSize) {
+        this.productSize = productSize;
     }
 }

@@ -13,6 +13,7 @@ import {useDispatch} from "react-redux";
 import {updateCart} from "../redux/actions/cart";
 import * as ProductService from "../service/ProductService"
 import * as ShoppingCartService from "../service/ShoppingCartService"
+import {log10} from "chart.js/helpers";
 
 export default function DetailProduct() {
     const [quantity, setQuantity] = useState(1);
@@ -50,7 +51,7 @@ export default function DetailProduct() {
         }
         getSize(param.id)
     }, [])
-    if (!images || !imageMain || !product) {
+    if (!images || !imageMain || !product|| !sizes) {
         return null;
     }
     return (
@@ -120,8 +121,13 @@ export default function DetailProduct() {
                                             if (quantity > 0 && quantity <= 10) {
                                                 try {
                                                     const newValue = {
-                                                        ...value,
-                                                        product: product,
+                                                        productSize: {
+                                                            id: value.size,
+                                                            product: product,
+                                                            sizes: {
+                                                                id: sizes.find((item)=> item.id === value.size).sizeId
+                                                            }
+                                                        },
                                                         quantity: quantity,
                                                         image: imageMain
                                                     }
@@ -155,7 +161,7 @@ export default function DetailProduct() {
                                                             <option value={0}>Chọn Size <sup>*</sup></option>
                                                             {
                                                                 sizes.map((size, index) =>
-                                                                    <option value={size.id}>{size.name}</option>
+                                                                    <option value={size.id}>{size.sizeName}</option>
                                                                 )
                                                             }
                                                         </Field>

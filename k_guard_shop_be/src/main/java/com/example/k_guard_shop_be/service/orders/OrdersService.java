@@ -6,6 +6,7 @@ import com.example.k_guard_shop_be.repository.IOrderDetailRepository;
 import com.example.k_guard_shop_be.repository.IOrdersRepository;
 import com.example.k_guard_shop_be.repository.IProductRepository;
 import com.example.k_guard_shop_be.repository.IProductTypeRepository;
+import com.example.k_guard_shop_be.service.IProductSizeService;
 import com.example.k_guard_shop_be.service.cart.IShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,12 @@ public class OrdersService implements IOrdersService {
     private IOrderDetailRepository iOrderDetailRepository;
     @Autowired
     private IProductRepository iProductRepository;
+    @Autowired
+    private IProductSizeService iProductSizeService;
 
     @Transactional
     @Override
-    public void saveOrder(HttpServletRequest httpServletRequest) throws RuntimeException {
+    public List<OrderDetail> saveOrder(HttpServletRequest httpServletRequest) throws RuntimeException {
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         Orders orders = new Orders(customer);
         iOrdersRepository.save(orders);
@@ -41,7 +44,8 @@ public class OrdersService implements IOrdersService {
             ShoppingCart shoppingCart = shoppingCartList.get(i);
             if (shoppingCartList.get(i).getQuantity() <= product.getQuantity()) {
                 product.setQuantity(product.getQuantity() - shoppingCartList.get(i).getQuantity());
-                OrderDetail orderDetail = new OrderDetail(orders, shoppingCartList.get(i).getProductSize().getProduct(), shoppingCartList.get(i).getProductSize().getProduct().getPrice(), shoppingCartList.get(i).getQuantity());
+                OrderDetail orderDetail = new OrderDetail(orders, shoppingCartList.get(i).getProductSize(),
+                        shoppingCartList.get(i).getProductSize().getProduct().getPrice(), shoppingCartList.get(i).getQuantity());
                 orderDetailList.add(orderDetail);
                 iProductRepository.save(product);
                 shoppingCart.setDelete(true);
@@ -49,5 +53,6 @@ public class OrdersService implements IOrdersService {
             }
         }
         iOrderDetailRepository.saveAll(orderDetailList);
+        return orderDetailList;
     }
 }
