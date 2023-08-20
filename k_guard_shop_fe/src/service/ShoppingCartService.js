@@ -1,8 +1,8 @@
 import axios from "axios";
 import * as ProductService from "../service/ProductService"
 
-export const saveShoppingCartCustomer = async (productCart) => {
-    const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", productCart,
+export const saveShoppingCartCustomer = async (shoppingCart) => {
+    const res = await axios.post("http://localhost:8080/api/shopping-cart/save-product", shoppingCart,
         {
             withCredentials: true,
             headers: {

@@ -16,9 +16,13 @@ import * as NewsService from "../service/NewsService"
 
 export default function Home() {
     const [news, setNews] = useState()
-    const getAllNews =  async ()=>{
-        const res = await  NewsService.getAllNews()
-        await setNews(res.data.content)
+    const getAllNews = async () => {
+        try {
+            const res = await NewsService.getAllNews()
+            await setNews(res.data.content)
+        } catch (e) {
+            setNews(() => [])
+        }
     }
 
 
@@ -26,9 +30,6 @@ export default function Home() {
         getAllNews()
         window.scrollTo(0, 0)
     }, [])
-    if(!news){
-        return null;
-    }
     return (
         <>
             <div id="demo" className="carousel slide slides d-flex container" data-bs-ride="carousel"
@@ -311,56 +312,63 @@ export default function Home() {
                         </div>
                     </div>
                     <marquee behavior="scroll" direction="right" scrollamount="20"></marquee>
-                    <Carousel interval={1000}>
-                        <Carousel.Item>
-                            <div
-                                className="row portfolio-container"
-                                data-aos="fade-up"
-                                data-aos-delay={1000}
-                            >
-                                {
-                                    news && news.map((item,index)=>
-                                        <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
-                                            <div className="card-post-home">
-                                                <span className="sale">HOT</span>
-                                                <div className="image" style={{minHeight: "10rem"}}>
-                                                    <img style={{maxHeight: "10rem"}}
-                                                         src={item.image}/>
-                                                </div>
-                                                <div className="details" style={{minHeight:"7rem"}}>
-                                                    <p>{item.title}</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    )
-                                }
+                    {
+                        news ?
+                            <Carousel interval={1000}>
+                                <Carousel.Item>
+                                    <div
+                                        className="row portfolio-container"
+                                        data-aos="fade-up"
+                                        data-aos-delay={1000}
+                                    >
+                                        {
+                                            news.map((item, index) =>
+                                                <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
+                                                    <div className="card-post-home">
+                                                        <span className="sale">HOT</span>
+                                                        <div className="image" style={{minHeight: "10rem"}}>
+                                                            <img style={{maxHeight: "10rem"}}
+                                                                 src={item.image}/>
+                                                        </div>
+                                                        <div className="details" style={{minHeight: "7rem"}}>
+                                                            <p>{item.title}</p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            )
+                                        }
+                                    </div>
+                                </Carousel.Item>
+                                <Carousel.Item>
+                                    <div
+                                        className="row portfolio-container"
+                                        data-aos="fade-up"
+                                        data-aos-delay={1000}
+                                    >
+                                        {
+                                            news && news.map((item, index) =>
+                                                <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
+                                                    <div className="card-post-home">
+                                                        <span className="sale">HOT</span>
+                                                        <div className="image" style={{minHeight: "10rem"}}>
+                                                            <img style={{maxHeight: "10rem"}}
+                                                                 src={item.image}/>
+                                                        </div>
+                                                        <div className="details" style={{minHeight: "7rem"}}>
+                                                            <p>{item.title}</p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            )
+                                        }
+                                    </div>
+                                </Carousel.Item>
+                            </Carousel>
+                            :
+                            <div align="center">
+                                <h5>Hiện tại không có tin tức liên quan</h5>
                             </div>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                            <div
-                                className="row portfolio-container"
-                                data-aos="fade-up"
-                                data-aos-delay={1000}
-                            >
-                                {
-                                    news && news.map((item,index)=>
-                                        <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
-                                            <div className="card-post-home">
-                                                <span className="sale">HOT</span>
-                                                <div className="image" style={{minHeight: "10rem"}}>
-                                                    <img style={{maxHeight: "10rem"}}
-                                                         src={item.image}/>
-                                                </div>
-                                                <div className="details" style={{minHeight:"7rem"}}>
-                                                    <p>{item.title}</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    )
-                                }
-                            </div>
-                        </Carousel.Item>
-                    </Carousel>
+                    }
                 </div>
             </div>
             <BackUp/>

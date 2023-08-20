@@ -1,6 +1,7 @@
 package com.example.k_guard_shop_be.controller;
 
 import com.example.k_guard_shop_be.config.JwtTokenUtil;
+import com.example.k_guard_shop_be.dto.ShoppingDTO;
 import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.service.IUsersService;
 import com.example.k_guard_shop_be.service.brand.IBrandService;
@@ -93,6 +94,11 @@ public class ShoppingCartRestController {
 //            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //        }
 //        List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
+//        System.out.println(shoppingDTO.getProductSize().getId());
+//        ShoppingCart shoppingCart = shoppingDTO.getShoppingCart();
+//        System.out.println(shoppingCart);
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         ResponseEntity<?> shoppingCartList = iShoppingCartService.saveShoppingCart(shoppingCart, httpServletRequest);
         if (shoppingCartList.getStatusCode() == HttpStatus.BAD_REQUEST) {
             return new ResponseEntity<>(shoppingCartList.getBody(), HttpStatus.BAD_REQUEST);

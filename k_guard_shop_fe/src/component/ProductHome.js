@@ -21,7 +21,7 @@ export default function ProductHome() {
     const [types, setType] = useState();
     const [nameSearch, setNameSearch] = useState("");
     const [chooseOption, setChooseOption] = useState(0)
-    const [sizes, setSize] = useState()
+    // const [sizes, setSize] = useState()
     const [isLogin, setIsLogin] = useState(false)
     const token = localStorage.getItem("token")
     const dispatch = useDispatch()
@@ -73,10 +73,6 @@ export default function ProductHome() {
         await setTotalPage(() => res.data.totalPages)
         setPage(() => 0)
     }
-    const getSize = async () => {
-        const res = await ProductService.getSize()
-        setSize(() => res.data)
-    }
 
 
     const loadMore = async (page, type, brand, orderBy, nameSearch) => {
@@ -88,6 +84,9 @@ export default function ProductHome() {
         }
     }
     const modals = async (product) => {
+        const res = await ProductService.getSize(product.id)
+        const productSizes = res.data;
+        // setSize(() => res.data)
         const {value: formValues} = await Swal.fire({
             // icon: "success",
             title: "Thêm vào giỏ hàng",
@@ -147,34 +146,41 @@ export default function ProductHome() {
                     }
                 }
 
-                sizes.forEach(size => {
+                productSizes.forEach(productSize => {
                     const option = document.createElement("option");
-                    option.value = size.id;
-                    option.textContent = size.name;
+                    option.value = productSize.id;
+                    option.textContent = productSize.sizeName;
                     selectElement.appendChild(option);
                 })
             }
         })
         if (formValues) {
             const quantity = document.getElementById('quantity').value;
-            const size = document.getElementById('sizeSelect').value;
+            const productSizeId = document.getElementById('sizeSelect').value;
             product = {
                 ...product,
                 productType: {
                     id: ""
-                },
-                sizes: {
-                    id: size
                 }
             }
-            const productCart = {product: product, quantity: quantity, image: product.linkImage}
+            const shoppingCart = {
+                id: "",
+                productSize: {
+                    id: productSizeId,
+                    product: product,
+                    sizes: {
+                        id: ""
+                    }
+                }, quantity: quantity, image: product.linkImage
+            }
+            const shoppingDTO = {shoppingCart}
             let res;
             try {
                 if (isLogin) {
-                    res = await ShoppingCartService.saveShoppingCartCustomer(productCart)
+                    res = await ShoppingCartService.saveShoppingCartCustomer(shoppingCart)
                     await dispatch(updateCart(res.data.length))
                 } else {
-                    res = await ShoppingCartService.saveShoppingCartSession(productCart)
+                    res = await ShoppingCartService.saveShoppingCartSession(shoppingCart)
                     dispatch(updateCart(res.data.length))
                 }
                 toast.success("Thêm vào giỏ hàng thành công.")
@@ -199,7 +205,6 @@ export default function ProductHome() {
         } else {
             getAllProduct()
         }
-        getSize()
         window.scrollTo(0, 0)
     }, [brand.brand, type.type])
     if (!products) {
@@ -396,7 +401,10 @@ export default function ProductHome() {
                                                             <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                         </div>
                                                         <div className="ratings">
-                                                            <i className="bi bi-cart-plus" onClick={() => modals(product)}
+                                                            <i className="bi bi-cart-plus" onClick={() => {
+
+                                                                modals(product)
+                                                            }}
                                                                style={{fontSize: "1.5rem"}}></i>
                                                         </div>
                                                     </div>

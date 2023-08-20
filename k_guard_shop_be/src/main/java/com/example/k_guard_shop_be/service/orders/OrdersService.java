@@ -37,11 +37,11 @@ public class OrdersService implements IOrdersService {
         List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
         List<OrderDetail> orderDetailList = new ArrayList<>();
         for (int i = 0; i < shoppingCartList.size(); i++) {
-            Product product = shoppingCartList.get(i).getProduct();
+            Product product = shoppingCartList.get(i).getProductSize().getProduct();
             ShoppingCart shoppingCart = shoppingCartList.get(i);
             if (shoppingCartList.get(i).getQuantity() <= product.getQuantity()) {
                 product.setQuantity(product.getQuantity() - shoppingCartList.get(i).getQuantity());
-                OrderDetail orderDetail = new OrderDetail(orders, shoppingCartList.get(i).getProduct(), shoppingCartList.get(i).getProduct().getPrice(), shoppingCartList.get(i).getQuantity());
+                OrderDetail orderDetail = new OrderDetail(orders, shoppingCartList.get(i).getProductSize().getProduct(), shoppingCartList.get(i).getProductSize().getProduct().getPrice(), shoppingCartList.get(i).getQuantity());
                 orderDetailList.add(orderDetail);
                 iProductRepository.save(product);
                 shoppingCart.setDelete(true);

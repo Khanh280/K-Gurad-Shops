@@ -146,9 +146,9 @@ public class ProductRestController {
         return new ResponseEntity<>(imagesList, HttpStatus.OK);
     }
 
-    @GetMapping("/size")
-    public ResponseEntity<?> getSize() {
-        return new ResponseEntity<>(iProductService.getAllSize(), HttpStatus.OK);
+    @GetMapping("/size/{productId}")
+    public ResponseEntity<?> getSize(@PathVariable("productId") Long productId) {
+        return new ResponseEntity<>(iProductService.getAllSize(productId), HttpStatus.OK);
     }
 
     @ExceptionHandler(Throwable.class)

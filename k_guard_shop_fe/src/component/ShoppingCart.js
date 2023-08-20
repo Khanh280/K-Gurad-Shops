@@ -70,8 +70,8 @@ export default function ShoppingCart() {
         let totalPrice = 0;
         if (shoppingCarts) {
             for (let p of shoppingCarts) {
-                if (p.quantity <= p.product.quantity) {
-                    totalPrice += p.product.price * p.quantity
+                if (p.quantity <= p.productSize.product.quantity) {
+                    totalPrice += p.productSize.product.price * p.quantity
                 }
             }
         }
@@ -124,6 +124,7 @@ export default function ShoppingCart() {
                                             <th>Sản phẩm</th>
                                             <th>Thương hiệu</th>
                                             <th>Loại</th>
+                                            <th>Size</th>
                                             <th>Số lượng</th>
                                             <th>Giá</th>
                                             <th></th>
@@ -133,29 +134,29 @@ export default function ShoppingCart() {
                                         {
                                             shoppingCarts.map((shoppingCart, index) =>
                                                 <tr key={index} className="row-table-height" style={{
-                                                    // opacity: shoppingCart.quantity > shoppingCart.product.quantity ? "30%" : "",
-                                                    position: shoppingCart.quantity > shoppingCart.product.quantity ? "relative" : ""
+                                                    // opacity: shoppingCart.quantity > shoppingCart.productSize.product.quantity ? "30%" : "",
+                                                    position: shoppingCart.quantity > shoppingCart.productSize.product.quantity ? "relative" : ""
                                                 }}>
                                                     <td className="row-table-height d-flex">
                                                         <img
                                                             src={shoppingCart?.image}
                                                             style={{
                                                                 width: "5rem",
-                                                                opacity: shoppingCart.quantity > shoppingCart.product.quantity ? "30%" : "",
+                                                                opacity: shoppingCart.quantity > shoppingCart.productSize.product.quantity ? "30%" : "",
                                                             }}/>
 
-                                                        <p className="row-table">{shoppingCart?.product?.name}</p>
+                                                        <p className="row-table">{shoppingCart?.productSize?.product?.name}</p>
                                                         {
-                                                            shoppingCart.quantity > shoppingCart.product.quantity ?
+                                                            shoppingCart.quantity > shoppingCart?.productSize?.product?.quantity ?
                                                                 <>
                                                                     <sup><i
                                                                         className="bi bi-exclamation-circle  error-quantity"
-                                                                        title={"Chỉ còn " + shoppingCart.product.quantity + " sản phẩm trong kho."}
+                                                                        title={"Chỉ còn " + shoppingCart.productSize.product.quantity + " sản phẩm trong kho."}
                                                                     ></i>
                                                                         {/*<ul>*/}
                                                                         {/*    <li><p></p></li>*/}
                                                                         {/*    <li><p>Chỉ*/}
-                                                                        {/*        còn {shoppingCart.product.quantity} sản*/}
+                                                                        {/*        còn {shoppingCart.productSize.product.quantity} sản*/}
                                                                         {/*        phẩm trong kho.</p></li>*/}
                                                                         {/*</ul>*/}
                                                                     </sup>
@@ -164,10 +165,13 @@ export default function ShoppingCart() {
                                                         }
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">{shoppingCart?.product?.brand?.name}</p>
+                                                        <p className="row-table">{shoppingCart?.productSize?.product?.brand?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">{shoppingCart?.product?.productType?.name}</p>
+                                                        <p className="row-table">{shoppingCart?.productSize?.product?.productType?.name}</p>
+                                                    </td>
+                                                    <td className="row-table-height">
+                                                        <p className="row-table">{shoppingCart?.productSize?.sizes?.name}</p>
                                                     </td>
                                                     <td className="row-table-height">
                                                         <div className="row-table d-flex"
@@ -177,7 +181,7 @@ export default function ShoppingCart() {
                                                                         backgroundColor: "white",
                                                                         border: "none",
                                                                     }}
-                                                                    onClick={() => isLogin ? editQuantity("minus", shoppingCart.id) : editQuantity("minus", shoppingCart.product.id)}><span
+                                                                    onClick={() => isLogin ? editQuantity("minus", shoppingCart.id) : editQuantity("minus", shoppingCart?.productSize?.id)}><span
                                                                 style={{
                                                                     fontWeight: "bold",
                                                                     color: "black"
@@ -193,7 +197,7 @@ export default function ShoppingCart() {
                                                                         backgroundColor: "white",
                                                                         border: "none",
                                                                     }}
-                                                                    onClick={() => isLogin ? editQuantity("plus", shoppingCart.id) : editQuantity("plus", shoppingCart.product.id)}><span
+                                                                    onClick={() => isLogin ? editQuantity("plus", shoppingCart.id) : editQuantity("plus", shoppingCart?.productSize?.id)}><span
                                                                 style={{
                                                                     fontWeight: "bold",
                                                                     color: "black"
@@ -201,14 +205,14 @@ export default function ShoppingCart() {
                                                         </div>
                                                     </td>
                                                     <td className="row-table-height">
-                                                        <p className="row-table">{shoppingCart?.product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</p>
+                                                        <p className="row-table">{shoppingCart?.productSize?.product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</p>
                                                     </td>
                                                     <td className="row-table-height">
                                                         <div className="row-table" style={{marginBottom: "1rem"}}>
                                                             <i className="bi bi-x" style={{cursor: "pointer"}}
                                                                title="Xóa sản phẩm"
-                                                               onClick={() => isLogin ? modals(shoppingCart.product.name, shoppingCart.id) :
-                                                                   modals(shoppingCart.product.name, shoppingCart.product.id)}></i>
+                                                               onClick={() => isLogin ? modals(shoppingCart.productSize.product.name, shoppingCart.id) :
+                                                                   modals(shoppingCart.productSize.product.name, shoppingCart.productSize.product.id)}></i>
                                                         </div>
                                                     </td>
                                                 </tr>

@@ -2,6 +2,7 @@ package com.example.k_guard_shop_be.service.product;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.dto.ProductDTO;
+import com.example.k_guard_shop_be.dto.ProductSizeDTO;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
 import com.example.k_guard_shop_be.model.Sizes;
@@ -80,8 +81,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Sizes> getAllSize() {
-        return iSizeRepository.findAll();
+    public List<ProductSizeDTO> getAllSize(Long productId) {
+        return iSizeRepository.getAllSize(productId);
     }
 
     @Override

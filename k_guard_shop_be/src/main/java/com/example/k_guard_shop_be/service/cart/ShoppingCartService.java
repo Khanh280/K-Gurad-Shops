@@ -3,6 +3,7 @@ package com.example.k_guard_shop_be.service.cart;
 import com.example.k_guard_shop_be.controller.CustomerRestController;
 import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.repository.IShoppingCartRepository;
+import com.example.k_guard_shop_be.service.IProductSizeService;
 import com.example.k_guard_shop_be.service.brand.IBrandService;
 import com.example.k_guard_shop_be.service.product.IProductService;
 import com.example.k_guard_shop_be.service.product_type.IProductTypeService;
@@ -29,21 +30,24 @@ public class ShoppingCartService implements IShoppingCartService {
     private CustomerRestController customerRestController;
     @Autowired
     private IProductService iProductService;
+    @Autowired
+    private IProductSizeService iProductSizeService;
 
     @Override
     public ResponseEntity<?> saveShoppingCartSession(ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         HttpSession session = httpServletRequest.getSession();
-        Brand brand = iBrandService.getBrandByProductId(shoppingCart.getProduct().getId());
-        ProductType productType = iProductTypeService.getProductTypeByProductId(shoppingCart.getProduct().getId());
-        shoppingCart.getProduct().setBrand(brand);
-        shoppingCart.getProduct().setProductType(productType);
+        Brand brand = iBrandService.getBrandByProductId(shoppingCart.getProductSize().getProduct().getId());
+        ProductType productType = iProductTypeService.getProductTypeByProductId(shoppingCart.getProductSize().getProduct().getId());
+        shoppingCart.getProductSize().getProduct().setBrand(brand);
+        shoppingCart.getProductSize().getProduct().setProductType(productType);
         if (session.getAttribute("cart") != null) {
             shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
             int count = 0;
             for (int i = 0; i < shoppingCartList.size(); i++) {
-                if (shoppingCart.getProduct().getId() == shoppingCartList.get(i).getProduct().getId()) {
-                    if (shoppingCartList.get(i).getQuantity() + shoppingCart.getQuantity() > shoppingCart.getProduct().getQuantity()) {
+                if (shoppingCartList.get(i).getProductSize().getId() == shoppingCart.getProductSize().getId()
+                        && shoppingCart.getProductSize().getProduct().getId() == shoppingCartList.get(i).getProductSize().getProduct().getId()) {
+                    if (shoppingCartList.get(i).getQuantity() + shoppingCart.getQuantity() > shoppingCart.getProductSize().getProduct().getQuantity()) {
                         return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.BAD_REQUEST);
                     }
                     shoppingCartList.get(i).setQuantity(shoppingCartList.get(i).getQuantity() + shoppingCart.getQuantity());
@@ -51,14 +55,14 @@ public class ShoppingCartService implements IShoppingCartService {
                 }
             }
             if (count == 0) {
-                if (shoppingCart.getQuantity() > shoppingCart.getProduct().getQuantity()) {
+                if (shoppingCart.getQuantity() > shoppingCart.getProductSize().getProduct().getQuantity()) {
                     return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.BAD_REQUEST);
                 }
                 shoppingCartList.add(shoppingCart);
             }
         } else {
             session.setAttribute("cart", shoppingCartList);
-            if (shoppingCart.getQuantity() > shoppingCart.getProduct().getQuantity()) {
+            if (shoppingCart.getQuantity() > shoppingCart.getProductSize().getProduct().getQuantity()) {
                 return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.BAD_REQUEST);
             }
             shoppingCartList.add(shoppingCart);
@@ -75,9 +79,12 @@ public class ShoppingCartService implements IShoppingCartService {
             ShoppingCart newShoppingCart = new ShoppingCart();
             int count = 0;
             for (int i = 0; i < shoppingCartList.size(); i++) {
-                if (shoppingCartList.get(i).getProduct().getId() == shoppingCart.getProduct().getId()) {
+//                if (shoppingCartList.get(i).getProductSize().getProduct().getId() == shoppingCart.getProductSize().getProduct().getId() &&
+//                        shoppingCart.getProductSize().getSizes().getId() == shoppingCartList.get(i).getProductSize().getSizes().getId()) {
+                if (shoppingCartList.get(i).getProductSize().getId() == shoppingCart.getProductSize().getId() &&
+                        shoppingCartList.get(i).getProductSize().getProduct().getId() == shoppingCart.getProductSize().getProduct().getId()) {
                     newShoppingCart = shoppingCartList.get(i);
-                    if (newShoppingCart.getQuantity() + shoppingCart.getQuantity() > shoppingCart.getProduct().getQuantity()) {
+                    if (newShoppingCart.getQuantity() + shoppingCart.getQuantity() > shoppingCart.getProductSize().getProduct().getQuantity()) {
                         return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.BAD_REQUEST);
                     }
                     newShoppingCart.setQuantity(newShoppingCart.getQuantity() + shoppingCart.getQuantity());
@@ -86,7 +93,7 @@ public class ShoppingCartService implements IShoppingCartService {
                 }
             }
             if (count == 0) {
-                if (shoppingCart.getQuantity() > shoppingCart.getProduct().getQuantity()) {
+                if (shoppingCart.getQuantity() > shoppingCart.getProductSize().getProduct().getQuantity()) {
                     return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.BAD_REQUEST);
                 }
                 shoppingCart.setCustomer(customer);
@@ -104,8 +111,7 @@ public class ShoppingCartService implements IShoppingCartService {
 
     @Override
     public ResponseEntity<?> updateShoppingCart(String operator, Long id, String isLogin, HttpServletRequest httpServletRequest) {
-        ShoppingCart shoppingCart = iShoppingCartRepository.getCartById(id);
-        Product product = iProductService.getProductById(shoppingCart.getProduct().getId());
+        Product product;
         HttpSession session = httpServletRequest.getSession();
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
         Integer sign = 0;
@@ -120,6 +126,8 @@ public class ShoppingCartService implements IShoppingCartService {
                 sign = 0;
         }
         if (isLogin.equals("true")) {
+            ShoppingCart shoppingCart = iShoppingCartRepository.getCartById(id);
+            product = iProductService.getProductById(shoppingCart.getProductSize().getProduct().getId());
             Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
             if (shoppingCart.getQuantity() + sign > product.getQuantity()) {
                 return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.BAD_REQUEST);
@@ -133,8 +141,10 @@ public class ShoppingCartService implements IShoppingCartService {
             return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.OK);
         } else {
             if (shoppingCartList != null) {
+                ProductSize productSize = iProductSizeService.getProductSizeById(id);
+                product = iProductService.getProductById(productSize.getProduct().getId());
                 for (int i = 0; i < shoppingCartList.size(); i++) {
-                    if (shoppingCartList.get(i).getProduct().getId() == id) {
+                    if (shoppingCartList.get(i).getProductSize().getId() == id) {
                         if (shoppingCartList.get(i).getQuantity() + sign > product.getQuantity()) {
                             return new ResponseEntity<>(session.getAttribute("cart"), HttpStatus.BAD_REQUEST);
                         }
@@ -156,7 +166,7 @@ public class ShoppingCartService implements IShoppingCartService {
         List<ShoppingCart> shoppingCartList = (List<ShoppingCart>) session.getAttribute("cart");
         if (shoppingCartList != null) {
             for (int i = 0; i < shoppingCartList.size(); i++) {
-                if (shoppingCartList.get(i).getProduct().getId() == productId) {
+                if (shoppingCartList.get(i).getProductSize().getProduct().getId() == productId) {
                     shoppingCartList.remove(shoppingCartList.get(i));
                     break;
                 }
@@ -174,7 +184,7 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     @Override
-    public  ResponseEntity<?> showShoppingCart(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> showShoppingCart(HttpServletRequest httpServletRequest) {
         List<ShoppingCart> shoppingCartList = new ArrayList<>();
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         HttpSession session = httpServletRequest.getSession();
@@ -182,8 +192,8 @@ public class ShoppingCartService implements IShoppingCartService {
             List<ShoppingCart> cartSession = (List<ShoppingCart>) session.getAttribute("cart");
             for (int i = 0; i < cartSession.size(); i++) {
                 ShoppingCart newCart = new ShoppingCart();
-                ShoppingCart cartDuplicate = iShoppingCartRepository.getCartByCustomerIdAndProductId(customer.getId(), cartSession.get(i).getProduct().getId());
-                if (cartDuplicate.getQuantity() > cartSession.get(i).getProduct().getQuantity()) {
+                ShoppingCart cartDuplicate = iShoppingCartRepository.getCartByCustomerIdAndProductId(customer.getId(), cartSession.get(i).getProductSize().getProduct().getId());
+                if (cartDuplicate.getQuantity() > cartSession.get(i).getProductSize().getProduct().getQuantity()) {
                     return new ResponseEntity<>(iShoppingCartRepository.getAll(customer.getId()), HttpStatus.BAD_REQUEST);
                 }
                 if (cartDuplicate != null) {
@@ -191,7 +201,7 @@ public class ShoppingCartService implements IShoppingCartService {
                     iShoppingCartRepository.save(cartDuplicate);
                 } else {
                     newCart.setCustomer(customer);
-                    newCart.setProduct(cartSession.get(i).getProduct());
+                    newCart.getProductSize().setProduct(cartSession.get(i).getProductSize().getProduct());
                     newCart.setQuantity(cartSession.get(i).getQuantity());
                     newCart.setImage(cartSession.get(i).getImage());
                     shoppingCartList.add(newCart);
@@ -203,7 +213,7 @@ public class ShoppingCartService implements IShoppingCartService {
         if (customer != null) {
             shoppingCartList = iShoppingCartRepository.getAll(customer.getId());
         }
-        return new ResponseEntity<>(shoppingCartList,HttpStatus.OK);
+        return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
     }
 
     @Override

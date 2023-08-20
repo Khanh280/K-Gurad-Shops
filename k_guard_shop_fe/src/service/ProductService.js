@@ -64,8 +64,8 @@ export const getAllProductByBrand = async (brand) => {
     })
     return res;
 }
-export const getSize = async () => {
-    const res = await axios.get("http://localhost:8080/api/product/size",{
+export const getSize = async (productId) => {
+    const res = await axios.get("http://localhost:8080/api/product/size/"+ productId,{
         headers: {
             "Authorization": "Bearer " + await getToken()
         }

@@ -2,6 +2,7 @@ package com.example.k_guard_shop_be.service.product;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.dto.ProductDTO;
+import com.example.k_guard_shop_be.dto.ProductSizeDTO;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
 import com.example.k_guard_shop_be.model.Sizes;
@@ -20,6 +21,6 @@ public interface IProductService {
     void saveProduct(ProductDTO productDTO);
     void deleteProduct(Long id);
     Product getProductById(Long id);
-    List<Sizes> getAllSize();
+    List<ProductSizeDTO> getAllSize(Long productId);
     Map<String,String> validateProduct(BindingResult bindingResult);
 }

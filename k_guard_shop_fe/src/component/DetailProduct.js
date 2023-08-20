@@ -36,8 +36,8 @@ export default function DetailProduct() {
         setImages(res.data)
         setDes(res.data[0].product.description.split("- " || "."))
     }
-    const getSize = async () => {
-        const res = await ProductService.getSize()
+    const getSize = async (productId) => {
+        const res = await ProductService.getSize(productId)
         setSize(() => res.data)
     }
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function DetailProduct() {
         if (token) {
             setIsLogin(() => true)
         }
-        getSize()
+        getSize(param.id)
     }, [])
     if (!images || !imageMain || !product) {
         return null;

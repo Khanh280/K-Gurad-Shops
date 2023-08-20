@@ -10,9 +10,12 @@ public class ShoppingCart {
     @JoinColumn(name="customer_id")
     @ManyToOne
     private Customer customer;
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_size_id")
     @ManyToOne
-    private Product product;
+    private ProductSize productSize;
+    //    @JoinColumn(name = "sizes_id")
+//    @ManyToOne
+//    private Sizes sizes;
     @Column(name = "quantity",nullable = false)
     private Integer quantity;
     @Column(name = "image",nullable = false,columnDefinition = "TEXT")
@@ -23,16 +26,16 @@ public class ShoppingCart {
     public ShoppingCart() {
     }
 
-    public ShoppingCart(Customer customer, Product product, Integer quantity) {
+    public ShoppingCart(Customer customer, ProductSize productSize, Integer quantity) {
         this.customer = customer;
-        this.product = product;
+        this.productSize = productSize;
         this.quantity = quantity;
     }
 
-    public ShoppingCart(Long id, Customer customer, Product product, Integer quantity, String image, boolean isDelete) {
+    public ShoppingCart(Long id, Customer customer, ProductSize productSize, Integer quantity, String image, boolean isDelete) {
         this.id = id;
         this.customer = customer;
-        this.product = product;
+        this.productSize = productSize;
         this.quantity = quantity;
         this.image = image;
         this.isDelete = isDelete;
@@ -54,12 +57,12 @@ public class ShoppingCart {
         this.customer = customer;
     }
 
-    public Product getProduct() {
-        return product;
+    public ProductSize getProductSize() {
+        return productSize;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductSize(ProductSize productSize) {
+        this.productSize = productSize;
     }
 
     public Integer getQuantity() {
