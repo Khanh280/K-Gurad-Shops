@@ -18,6 +18,6 @@ public interface IShoppingCartRepository extends JpaRepository<ShoppingCart,Long
     void deleteCart(@Param("cartId")Long cartId,@Param("customerId")Long customerId);
     @Query(value = "select sc.* from shopping_cart sc where sc.is_delete = false and sc.id = :cartId",nativeQuery = true)
     ShoppingCart getCartById(@Param("cartId")Long cartId);
-    @Query(value = "select sc.* from shopping_cart sc where sc.is_delete = false and sc.customer_id = :customerId and sc.product_id = :productId",nativeQuery = true)
-    ShoppingCart getCartByCustomerIdAndProductId(@Param("customerId")Long customerId,@Param("productId")Long productId);
+    @Query(value = "select sc.* from shopping_cart sc where sc.is_delete = false and sc.customer_id = :customerId and sc.product_size_id = :product_size_id",nativeQuery = true)
+    ShoppingCart getCartByCustomerIdAndProductSizeId(@Param("customerId")Long customerId,@Param("product_size_id")Long product_size_id);
 }
