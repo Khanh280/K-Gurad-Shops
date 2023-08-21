@@ -42,9 +42,19 @@ public class OrdersService implements IOrdersService {
 
     @Transactional
     @Override
-    public List<OrderDetail> saveOrder(HttpServletRequest httpServletRequest) throws RuntimeException {
+    public List<OrderDetail> saveOrder(HttpServletRequest httpServletRequest, String payment) throws RuntimeException {
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-        Orders orders = new Orders(customer);
+        PaymentStatus paymentStatus = new PaymentStatus();
+        switch (payment) {
+            case "true":
+                paymentStatus.setId(2L);
+                break;
+            case "false":
+                paymentStatus.setId(1L);
+            default:
+                paymentStatus.setId(1L);
+        }
+        Orders orders = new Orders(customer, paymentStatus);
         iOrdersRepository.save(orders);
         List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
         List<OrderDetail> orderDetailList = new ArrayList<>();

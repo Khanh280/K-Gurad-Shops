@@ -14,22 +14,26 @@ public class Orders {
     @ManyToOne
     private Customer customer;
     @CreationTimestamp
-    @Column(nullable = false,updatable = false,columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
-//    @Column(name = "status_payment",columnDefinition = "BIT(1) DEFAULT 0")
-//    private boolean statusPayment;
+    @ManyToOne
+    @JoinColumn(name = "payment_status_id", nullable = false)
+    private PaymentStatus paymentStatus;
 
     public Orders() {
     }
 
-    public Orders(Customer customer) {
+    public Orders(Customer customer, PaymentStatus paymentStatus) {
         this.customer = customer;
+        this.paymentStatus = paymentStatus;
     }
 
-    public Orders(Long id, Customer customer, LocalDateTime createDate) {
+
+    public Orders(Long id, Customer customer, LocalDateTime createDate, PaymentStatus paymentStatus) {
         this.id = id;
         this.customer = customer;
         this.createDate = createDate;
+        this.paymentStatus = paymentStatus;
     }
 
     public Long getId() {
@@ -54,5 +58,13 @@ public class Orders {
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

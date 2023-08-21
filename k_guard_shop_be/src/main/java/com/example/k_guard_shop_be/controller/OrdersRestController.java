@@ -57,10 +57,10 @@ public class OrdersRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> saveOrders(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> saveOrders(@RequestBody String payment,HttpServletRequest httpServletRequest) {
         try {
             Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-            List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest);
+            List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest,payment);
             List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
             String to = customer.getEmail();
             String subject = "Bạn có đơn hàng từ K-Guard Shop";

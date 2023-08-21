@@ -9,16 +9,33 @@ import {NavLink} from "react-router-dom";
 
 export default function HistoryOrder() {
     const [orders, setOrder] = useState()
+    const [totalPages, setTotalPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
     const getAllOrderCustomer = async (page) => {
         try {
             const res = await OrdersService.getAllOrderCustomer(page)
             setOrder(() => res.data.content)
+            setTotalPage(() => res.data.totalPages)
+            setCurrentPage(() => page)
         } catch (e) {
 
         }
 
     }
-
+    const pagination = () => {
+        const page = [];
+        for (let i = 0; i < totalPages; i++) {
+            const a = currentPage === i;
+            const className = a ? "activePagination" : "pagination"
+            page.push(
+                <li className={className} onClick={() => getAllOrderCustomer(i)}>{i + 1}</li>
+            )
+        }
+        return page;
+    }
+    const resetFieldName = (resetForm) => {
+        resetForm(); // Reset the form
+    };
     useEffect(() => {
         getAllOrderCustomer(0)
     }, [])
@@ -27,78 +44,114 @@ export default function HistoryOrder() {
     }
     return (
         <>
-            <div className="col-md-3 " style={{minHeight: "40rem"}}>
-                <div className="row mb-4 sticky-col"
-                     style={{minHeight: "25rem", border: "1px solid gray", borderRadius: "5px"}}>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h4>Lịch sử giao dịch</h4>
-                        <img src="/anh/KGuard3.png" alt="" style={{width: "3rem"}}/>
-                    </div>
-                    <div className="">
-                        <div className="d-flex justify-content-between mt-2">
-                            <b>Tổng tiền hàng</b>
-                            {/*<span>{totalPrice().toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>*/}
-                        </div>
-                        <div className="d-flex justify-content-between mt-2">
-                            <b>Phí vận chuyển</b>
-                            {/*<span>{(30000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>*/}
-                        </div>
-                        <hr className="my-1"/>
-                        <div className="d-flex justify-content-between ">
-                            <b>Tổng thanh toán:</b>
-                            {/*<span>{(totalPrice() + 30000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>*/}
-                        </div>
-                        <div className="row mt-2">
-
-
-                        </div>
+            <div className="container">
+                <div className="row  justify-content-center">
+                    <div className=" col-md-5">
+                        <Formik
+                            initialValues={{
+                                name: ""
+                            }}
+                            onSubmit={(values) => {
+                                // const search = async () => {
+                                //     await getAllProduct(types, orderBy, brand.brand, values.name.trim())
+                                //     await setPage(() => 0)
+                                //     await setType("")
+                                //     await setNameSearch(values.name.trim())
+                                // }
+                                // search()
+                                console.log("asd")
+                            }}>
+                            {({resetForm}) => (
+                                <Form>
+                                    <div className="mb-2 d-flex " style={{position: "relative"}}>
+                                        <Field name="name" className="form-control" type="date"
+                                               style={{width: "100%", borderRadius: "5px"}}
+                                               placeholder="Tên sản phẩm"/><span className="cancel-search"
+                                                                                 onClick={() => resetFieldName(resetForm)}>
+                                        {/*<i className="bi bi-x-circle-fill"></i>*/}
+                                    </span>
+                                        <button type="submit"
+                                                className="btn bg-dark text-light align-items-center d-flex ms-2">
+                                            <i className="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </Form>
+                            )}
+                        </Formik>
                     </div>
                 </div>
-            </div>
-            <div className="col-md-9 ">
-                <table className="col-md-12">
-                    <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Ngày mua</th>
-                        <th>Đơn giá</th>
-                        <th>Trạng thái</th>
-                        <th>Chức năng</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        orders.map((order) =>
+                <div className="row">
+                    <div className="col-md-1"></div>
+                    <div className="col-md-10" style={{
+                        border: "1px solid #80808096",
+                        borderRadius: "10px",
+                        boxShadow: "0px 0px 6px 4px #80808096"
+                    }}>
+                        <table className="col-md-12">
+                            <thead>
                             <tr>
-                                <td className="">
-                                    <p className="my-2">{order.id}</p>
-                                </td>
-                                <td className="">
-                                    <p className="my-2">{order?.createDate}</p>
-                                </td>
-                                <td className="">
-                                    <p className="my-2">{order?.totalPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</p>
-                                </td>
-                                <td className="">
-                                    <p className="my-2">Da thanh toan</p>
-                                </td>
-                                <td className="">
-                                    {/*<p className=""><i*/}
-                                    {/*    className="bi bi-exclamation-circle text-info"></i></p>*/}
-                                    <div >
-                                        <NavLink to={`/cart/history/order-detail-customer/${order.id}`}>
-                                            <i className="bi bi-exclamation-circle text-info"
-                                               style={{cursor: "pointer"}}
-                                               title="Chi tiết đơn hàng"></i>
-                                        </NavLink>
-                                    </div>
-                                </td>
+                                <th>Id</th>
+                                <th>Ngày mua</th>
+                                <th>Đơn giá</th>
+                                <th>Trạng thái</th>
+                                <th>Chức năng</th>
+                                <th></th>
                             </tr>
-                        )
-                    }
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                            {
+                                orders.map((order) =>
+                                    <tr>
+                                        <td className="">
+                                            <p className="my-2">{order.id}</p>
+                                        </td>
+                                        <td className="">
+                                            <p className="my-2">{order?.createDate}</p>
+                                        </td>
+                                        <td className="">
+                                            <p className="my-2">{order?.totalPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</p>
+                                        </td>
+                                        <td className="">
+                                            <p className="my-2">{order?.paymentStatus}</p>
+                                        </td>
+                                        <td className="">
+                                            {/*<p className=""><i*/}
+                                            {/*    className="bi bi-exclamation-circle text-info"></i></p>*/}
+                                            <div>
+                                                <NavLink to={`/cart/history/order-detail-customer/${order.id}`}>
+                                                    <i className="bi bi-exclamation-circle text-info"
+                                                       style={{cursor: "pointer"}}
+                                                       title="Chi tiết đơn hàng"></i>
+                                                </NavLink>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                            </tbody>
+                        </table>
+                        <div className="justify-content-end d-flex">
+                            <ul className="d-flex">
+                                {
+                                    currentPage !== 0 ?
+                                        <li className="pagination"
+                                            onClick={() => getAllOrderCustomer(currentPage - 1)}>Trước
+                                        </li> : ""
+                                }
+                                {
+                                    pagination()
+                                }
+                                {
+                                    currentPage === totalPages - 1 ?
+                                        <li className="pagination"
+                                            onClick={() => getAllOrderCustomer(currentPage + 1)}>Sau</li>
+                                        : ""
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-md-1"></div>
+                </div>
             </div>
 
         </>

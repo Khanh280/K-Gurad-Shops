@@ -4,4 +4,5 @@ public interface OrderDTO {
     String getId();
     String getCreateDate();
     String getTotalPrice();
+    String getPaymentStatus();
 }

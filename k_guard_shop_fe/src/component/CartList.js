@@ -15,6 +15,7 @@ export default function CartList() {
     const [shoppingCarts, setShoppingCarts] = useState()
     const [quantity, setQuantity] = useState();
     const [isLogin, setIsLogin] = useState(false)
+    const [optionPayment, setOptionPayment] = useState(0)
     const [customer, setCustomer] = useState()
     const [pricePaypal, setPricePaypal] = useState(0)
     const token = localStorage.getItem("token")
@@ -218,8 +219,8 @@ export default function CartList() {
                         onSubmit={async (values) => {
                             if (isLogin) {
                                 const saveOrder = async () => {
-                                    const res = await OrdersService.saveOrders()
-                                    console.log(res)
+                                    const res = await OrdersService.saveOrders(false)
+                                    setShoppingCarts(() => res.data)
                                 }
                                 await saveOrder()
                                 await toast.success("Thanh toán thành công")
@@ -228,7 +229,7 @@ export default function CartList() {
                                 await toast.warning("Cần phải đăng nhập để thanh toán")
                             }
                         }}>
-                        <Form className="mb-2">
+                        <Form className="mb-2" style={{minHeight: "20rem"}}>
                             <div className="d-flex">
                                 <label className="radio col-md-3">
                                     <Field type="radio" name="card" defaultValue="payment"
@@ -256,7 +257,7 @@ export default function CartList() {
                                 </label>
                                 <label className="radio col-md-3">
                                     <Field type="radio" name="card" defaultValue="payment"/>
-                                    <span>
+                                    <span onClick={() => setOptionPayment(() => 1)}>
                                                 <img width={30}
                                                      src="https://img.icons8.com/officel/48/000000/paypal.png" alt=""/>
                                             </span>
@@ -265,7 +266,7 @@ export default function CartList() {
                             <div className="d-flex">
                                 <label className="radio col-md-12">
                                     <Field type="radio" name="card" defaultValue="payment"/>
-                                    <span id="buy-here">
+                                    <span id="buy-here" onClick={() => setOptionPayment(() => 0)}>
                                                 Thanh toán khi nhận hàng
                                             </span>
                                 </label>
@@ -308,7 +309,18 @@ export default function CartList() {
                                 </div>
                                 <div className="row mt-2">
                                     {
-                                        token ?
+                                        optionPayment === 0 ?
+                                            <div>
+                                                <button type="submit"
+                                                        style={{
+                                                            opacity: totalPrice() <= 0 ? "50%" : "",
+                                                            pointerEvents: totalPrice() <= 0 ? "none" : ""
+                                                        }}
+                                                        className="btn login-button">Đặt
+                                                    hàng
+                                                </button>
+                                            </div>
+                                            :
                                             <PayPalButton
                                                 amount={totalPrice() > 0 ? Math.ceil((totalPrice() + 30000) / 23000) : 0}
                                                 // amount={1}
@@ -330,7 +342,7 @@ export default function CartList() {
                                                     // Gửi dữ liệu đơn hàng đến máy chủ của bạn và đợi phản hồi
 
                                                     try {
-                                                        const res = await OrdersService.saveOrders();
+                                                        const res = await OrdersService.saveOrders(true);
                                                         // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
                                                         setShoppingCarts(() => res.data)
                                                         const captureResult = await actions.order.capture();
@@ -347,13 +359,6 @@ export default function CartList() {
                                                         : toast.error("Thanh toán thất bại")
                                                 }}
                                             />
-                                            :
-                                            <div>
-                                                <button type="submit"
-                                                        className="btn login-button">Đặt
-                                                    hàng
-                                                </button>
-                                            </div>
                                     }
 
                                 </div>

@@ -79,7 +79,7 @@
 }
 .activePagination{
     /*border: 1px solid #F4882F;*/
-    width: 2rem;
+    width: 3rem;
     color: #ffffff;
     text-align: center;
     justify-content: center;
@@ -90,7 +90,7 @@
 }
 .pagination{
     border: 1px solid #F4882F;
-    width: 2rem;
+    width: 3rem;
     color: black;
     text-align: center;
     justify-content: center;

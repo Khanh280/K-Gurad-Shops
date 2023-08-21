@@ -104,12 +104,12 @@ export default function ShoppingCart() {
         <>
             <div className="px-5" style={{marginTop: "12vh"}}>
 
-                <div className="row d-flex">
+                <div className="row d-flex" >
 
                     {
                         shoppingCarts.length > 0 ?
                             <>
-                                <div className="row bg-dark col-md-12 align-items-center d-flex mb-3" align=""
+                                <div className="row bg-dark col-md-12 align-items-center d-flex mb-3 mx-0" align=""
                                      style={{height: "3rem"}}>
                                     <div className="d-flex col-md-12" style={{height: "100%"}}>
                                         <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard
@@ -160,6 +160,7 @@ export default function ShoppingCart() {
                                 </div>
                                 <Outlet/>
                                 <BackUp/>
+
                             </>
                             :
                             <div className="col-md-12" align="center">
@@ -168,6 +169,7 @@ export default function ShoppingCart() {
                             </div>
                     }
                 </div>
+
                 <ToastContainer style={{top: "5.6rem"}}/>
             </div>
         </>
