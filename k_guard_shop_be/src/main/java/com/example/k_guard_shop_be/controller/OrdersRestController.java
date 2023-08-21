@@ -41,24 +41,26 @@ public class OrdersRestController {
 
     @GetMapping("/order-detail-customer")
     public ResponseEntity<?> getAllOrderDetailCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                 HttpServletRequest httpServletRequest) {
-        Pageable pageable = PageRequest.of(page,8);
-        Page<OrderDetailDTO> orderDetailPage = iOrderDetailService.getAllOrderDetailCustomer(httpServletRequest,pageable);
-        return new ResponseEntity<>(orderDetailPage,HttpStatus.OK);
+                                                       @RequestParam(value = "orderId", defaultValue = "") Long orderId,
+                                                       HttpServletRequest httpServletRequest) {
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<OrderDetailDTO> orderDetailPage = iOrderDetailService.getAllOrderDetailCustomer(httpServletRequest, orderId, pageable);
+        return new ResponseEntity<>(orderDetailPage, HttpStatus.OK);
     }
+
     @GetMapping("/order-customer")
     public ResponseEntity<?> getAllOrderCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                  HttpServletRequest httpServletRequest) {
-        Pageable pageable = PageRequest.of(page,8);
-        Page<OrderDTO> orderDTOPage = iOrdersService.getAllOrderCustomer(httpServletRequest,pageable);
-        return new ResponseEntity<>(orderDTOPage,HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<OrderDTO> orderDTOPage = iOrdersService.getAllOrderCustomer(httpServletRequest, pageable);
+        return new ResponseEntity<>(orderDTOPage, HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity<?> saveOrders(HttpServletRequest httpServletRequest) {
         try {
             Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-//            List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest);
+            List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest);
             List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
             String to = customer.getEmail();
             String subject = "Bạn có đơn hàng từ K-Guard Shop";
@@ -71,15 +73,15 @@ public class OrdersRestController {
             table += "<tr>" +
                     "<th>Sản phẩm</th>" + "<th>Size</th>" + "<th>Số lượng</th>" + "<th>Giá tiền</th>" +
                     "</tr>";
-            for (int i = 0; i < shoppingCartList.size(); i++) {
+            for (int i = 0; i < orderDetailList.size(); i++) {
                 table += "<tr>" +
                         "<td style='display: flex'>" +
-//                        "<img src='" + shoppingCartList.get(i).getImage() + "' style='width: 10rem'>" +
-                        "<p' >" + shoppingCartList.get(i).getProductSize().getProduct().getName() + "</p>" +
+//                        "<img src='" + orderDetailList.get(i).getImage() + "' style='width: 10rem'>" +
+                        "<p' >" + orderDetailList.get(i).getProductSize().getProduct().getName() + "</p>" +
                         "</td>" +
-                        "<td>" + shoppingCartList.get(i).getProductSize().getSizes().getName() + "</td>" +
-                        "<td>" + shoppingCartList.get(i).getQuantity() + "</td>" +
-                        "<td>" + shoppingCartList.get(i).getProductSize().getProduct().getPrice() + "</td>" +
+                        "<td>" + orderDetailList.get(i).getProductSize().getSizes().getName() + "</td>" +
+                        "<td>" + orderDetailList.get(i).getQuantity() + "</td>" +
+                        "<td>" + orderDetailList.get(i).getProductSize().getProduct().getPrice() + "</td>" +
                         "</tr>";
             }
             table += "</table>";

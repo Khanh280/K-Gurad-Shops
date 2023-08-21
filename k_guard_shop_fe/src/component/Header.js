@@ -19,12 +19,20 @@ export default function Header() {
     const dispatch = useDispatch()
 
     const getAllProductType = async () => {
-        const res = await ProductService.getAllProductType()
-        setProductType(() => res.data)
+        try {
+            const res = await ProductService.getAllProductType()
+            setProductType(() => res.data)
+        } catch (e) {
+            setProductType(() => [])
+        }
     }
     const getAllBrand = async () => {
-        const res = await ProductService.getAllBrand()
-        setBrand(() => res.data)
+        try {
+            const res = await ProductService.getAllBrand()
+            setBrand(() => res.data)
+        } catch (e) {
+            setBrand(() => [])
+        }
     }
 
     const handlerLogout = () => {
@@ -201,7 +209,7 @@ export default function Header() {
                                         </ul>
                                     </li>
                                     <li>
-                                        <NavLink to="/cart/list" className="me-5"
+                                        <NavLink to="/cart" className="me-5"
                                                  style={({isActive}) => {
                                                      return {
                                                          backgroundColor: isActive ? "#F4882F" : "   ",
@@ -232,7 +240,7 @@ export default function Header() {
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/cart/list" className="me-5"
+                                    <NavLink to="/cart" className="me-5"
                                              style={({isActive}) => {
                                                  return {
                                                      backgroundColor: isActive ? "#F4882F" : "   ",

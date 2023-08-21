@@ -20,8 +20,8 @@ public class OrderDetailService implements IOrderDetailService {
     private CustomerRestController customerRestController;
 
     @Override
-    public Page<OrderDetailDTO> getAllOrderDetailCustomer(HttpServletRequest httpServletRequest, Pageable pageable) {
+    public Page<OrderDetailDTO> getAllOrderDetailCustomer(HttpServletRequest httpServletRequest,Long orderId, Pageable pageable) {
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-        return iOrderDetailRepository.getAllOrderDetailCustomer(customer.getId(), pageable);
+        return iOrderDetailRepository.getAllOrderDetailCustomer(customer.getId(),orderId, pageable);
     }
 }

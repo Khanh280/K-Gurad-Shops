@@ -10,7 +10,7 @@ export default function FullFaceHot() {
             const res = await ProductService.getTop4Product()
             setProducts(() => res.data)
         } catch (e) {
-            setProducts(() => [])
+            console.log(e)
         }
     }
     useEffect(() => {

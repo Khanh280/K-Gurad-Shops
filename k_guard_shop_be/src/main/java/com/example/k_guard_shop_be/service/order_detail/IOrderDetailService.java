@@ -8,6 +8,6 @@ import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 
 public interface IOrderDetailService {
-    Page<OrderDetailDTO> getAllOrderDetailCustomer(HttpServletRequest httpServletRequest, Pageable pageable);
+    Page<OrderDetailDTO> getAllOrderDetailCustomer(HttpServletRequest httpServletRequest,Long orderId, Pageable pageable);
 
 }

@@ -67,4 +67,10 @@ label.radio input:checked + span {
 .error-quantity:hover{
     color: #F4882F;
 }
+.cart-item{
+    color: white;
+}
+.cart-item:hover{
+    color: white;
+}
 

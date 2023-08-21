@@ -23,6 +23,7 @@ export default function ShoppingCart() {
     const [isLogin, setIsLogin] = useState(false)
     const [customer, setCustomer] = useState()
     const [pricePaypal, setPricePaypal] = useState(0)
+    const [chooseOption,setChooseOption] = useState(true)
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
     const getCustomer = async () => {
@@ -110,30 +111,35 @@ export default function ShoppingCart() {
                             <>
                                 <div className="row bg-dark col-md-12 align-items-center d-flex mb-3" align=""
                                      style={{height: "3rem"}}>
-                                    <div className="d-flex col-md-12">
+                                    <div className="d-flex col-md-12" style={{height: "100%"}}>
                                         <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard
                                             Shop | </h4>
                                         {/*<h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>Gio hang</h4>*/}
 
-                                        <ul className="px-0 my-2" style={{display: "flex", color: "white"}}>
-                                            <li>
+                                        <ul className="px-0 my-0 col-md-2 justify-content-evenly" style={{display: "flex", color: "white"}}>
+                                            <li style={{height: "100%",display:"flex",alignItems:"center"}}>
                                                 <NavLink to="/cart/list"
+                                                         className="cart-item"
                                                          style={({isActive}) => {
                                                              return {
-                                                                 backgroundColor: isActive ? "#F4882F" : "   ",
-                                                                 color: isActive ? "black" : "",
-                                                                 borderRadius: "10px",
+                                                                 borderBottom: isActive || chooseOption ? "3px solid #F4882F" : "   ",
+                                                                 color: isActive ? "white" : "",
+                                                                 alignItems: "center",
+                                                                 display: "flex"
                                                              }
                                                          }}
                                                 >Giỏ hàng</NavLink>
                                             </li>
-                                            <li>
+                                            <li style={{height: "100%",display:"flex",alignItems:"center"}}>
                                                 <NavLink to="/cart/history"
+                                                         className="cart-item"
+                                                         onClick={()=> setChooseOption(false)}
                                                          style={({isActive}) => {
                                                              return {
-                                                                 backgroundColor: isActive ? "#F4882F" : "   ",
-                                                                 color: isActive ? "black" : "",
-                                                                 borderRadius: "10px",
+                                                                 borderBottom: isActive ? "3px solid #F4882F" : "   ",
+                                                                 color: isActive ? "white" : "",
+                                                                 alignItems: "center",
+                                                                 display: "flex"
                                                              }
                                                          }}
                                                 >Lịch sử giao dịch</NavLink>

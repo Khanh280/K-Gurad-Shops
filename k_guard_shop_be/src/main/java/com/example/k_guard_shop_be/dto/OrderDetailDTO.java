@@ -6,4 +6,6 @@ public interface OrderDetailDTO {
     String getSize();
     String getQuantity();
     String getPrice();
+    String getLinkImage();
+    String getProductId();
 }

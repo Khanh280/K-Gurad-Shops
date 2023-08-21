@@ -125,7 +125,7 @@ export default function CartList() {
                                             opacity: shoppingCart.quantity > shoppingCart.productSize.product.quantity ? "30%" : "",
                                         }}/>
 
-                                    <p className="row-table">{shoppingCart?.productSize?.product?.name}</p>
+                                    <p className="row-table ms-1">{shoppingCart?.productSize?.product?.name}</p>
                                     {
                                         shoppingCart.quantity > shoppingCart?.productSize?.product?.quantity ?
                                             <>

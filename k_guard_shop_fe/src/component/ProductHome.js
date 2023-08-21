@@ -52,20 +52,28 @@ export default function ProductHome() {
         }
     }
     const getAllProduct = async (nameType, orderBy, brand, nameSearch) => {
-        const res = await ProductService.getAllProduct(nameType, orderBy, brand, nameSearch)
-        await setProducts(() => res.data.content)
-        await setTotalPage(() => res.data.totalPages)
-        await setType(() => nameType)
-        await setPage(() => 0)
-        await setOrderBy(() => orderBy)
-        await setNameSearch(() => nameSearch)
+        try {
+            const res = await ProductService.getAllProduct(nameType, orderBy, brand, nameSearch)
+            await setProducts(() => res.data.content)
+            await setTotalPage(() => res.data.totalPages)
+            await setType(() => nameType)
+            await setPage(() => 0)
+            await setOrderBy(() => orderBy)
+            await setNameSearch(() => nameSearch)
+        } catch (e) {
+            setProducts(() => [])
+        }
     }
     const getAllProductByType = async (type) => {
-        const res = await ProductService.getAllProductByType(type)
-        await setProducts(() => res.data.content)
-        await setTotalPage(() => res.data.totalPages)
-        await setType(() => type)
-        setPage(() => 0)
+       try{
+           const res = await ProductService.getAllProductByType(type)
+           await setProducts(() => res.data.content)
+           await setTotalPage(() => res.data.totalPages)
+           await setType(() => type)
+           setPage(() => 0)
+       }catch (e) {
+           setProducts(()=>[])
+       }
     }
     const getAllProductByBrand = async (brand) => {
         const res = await ProductService.getAllProductByBrand(brand)
@@ -376,57 +384,59 @@ export default function ProductHome() {
                         </div>
                     </div>
                     <div className="col-md-9 pe-0">
-                        <div className="row">
-                            {
-                                products.map((product, index) =>
-                                        // <Link key={index} to={`/product/detail/${product.id}`}
-                                        //       className="col-md-3 product-link">
-                                        <div className="col-md-3">
-                                            <div className=" card-product-home mt-2" style={{maxHeight: "20rem"}}>
-                                                {/*<span className="sale">Mới</span>*/}
-                                                <Link key={index} to={`/product/detail/${product.id}`}
-                                                      className="product-link detail-link">
-                                                    <div className="image">
-                                                        <img
-                                                            src={product?.linkImage}
-                                                            style={{width: "100%", height: "100%"}}/>
-                                                        <p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>
-                                                    </div>
-                                                </Link>
-                                                <div className="details align-items-center d-grid"
-                                                     style={{padding: "0 10px", minHeight: "5rem"}}>
-                                                    <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
-                                                    <div className="price-ratings">
-                                                        <div className="price">
-                                                            <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
+                        <>
+                            <div className="row">
+                                {
+                                    products.map((product, index) =>
+                                            // <Link key={index} to={`/product/detail/${product.id}`}
+                                            //       className="col-md-3 product-link">
+                                            <div className="col-md-3">
+                                                <div className=" card-product-home mt-2" style={{maxHeight: "20rem"}}>
+                                                    {/*<span className="sale">Mới</span>*/}
+                                                    <Link key={index} to={`/product/detail/${product.id}`}
+                                                          className="product-link detail-link">
+                                                        <div className="image">
+                                                            <img
+                                                                src={product?.linkImage}
+                                                                style={{width: "100%", height: "100%"}}/>
+                                                            <p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>
                                                         </div>
-                                                        <div className="ratings">
-                                                            <i className="bi bi-cart-plus" onClick={() => {
+                                                    </Link>
+                                                    <div className="details align-items-center d-grid"
+                                                         style={{padding: "0 10px", minHeight: "5rem"}}>
+                                                        <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
+                                                        <div className="price-ratings">
+                                                            <div className="price">
+                                                                <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
+                                                            </div>
+                                                            <div className="ratings">
+                                                                <i className="bi bi-cart-plus" onClick={() => {
 
-                                                                modals(product)
-                                                            }}
-                                                               style={{fontSize: "1.5rem"}}></i>
+                                                                    modals(product)
+                                                                }}
+                                                                   style={{fontSize: "1.5rem"}}></i>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    // </Link>
-                                )
+                                        // </Link>
+                                    )
+                                }
+                            </div>
+                            {
+                                page < totalPage - 1 ?
+                                    <div className="col-md-12 d-flex justify-content-center mt-2">
+                                        <button id="load-more-product"
+                                                className="btn btn-sm mt-2 justify-content-center load-more-btn"
+                                                onClick={() => loadMore(page, types, brand.brand, orderBy, nameSearch)}
+                                                style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm
+                                            <i className="bi bi-chevron-down"></i></button>
+                                    </div>
+                                    :
+                                    ""
                             }
-                        </div>
-                        {
-                            page < totalPage - 1 ?
-                                <div className="col-md-12 d-flex justify-content-center mt-2">
-                                    <button id="load-more-product"
-                                            className="btn btn-sm mt-2 justify-content-center load-more-btn"
-                                            onClick={() => loadMore(page, types, brand.brand, orderBy, nameSearch)}
-                                            style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm
-                                        <i className="bi bi-chevron-down"></i></button>
-                                </div>
-                                :
-                                ""
-                        }
+                        </>
 
                     </div>
                 </div>

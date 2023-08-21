@@ -21,7 +21,6 @@ export default function Home() {
             const res = await NewsService.getAllNews()
             await setNews(res.data.content)
         } catch (e) {
-            setNews(() => [])
         }
     }
 

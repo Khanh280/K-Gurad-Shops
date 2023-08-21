@@ -16,6 +16,7 @@ import ProductList from "./component/info_store/ProductList";
 import CreateProduct from "./component/info_store/CreateProduct";
 import CartList from "./component/CartList";
 import HistoryOrder from "./component/HistoryOrder";
+import OrderDetailCustomer from "./component/OrderDetailCustomer";
 
 function App() {
     return (
@@ -38,14 +39,15 @@ function App() {
                         <Route path="/register" element={<RegisterForm/>}/>
                         <Route path="/product/detail/:id" element={<DetailProduct/>}/>
                         <Route path="/cart" element={<ShoppingCart/>}>
+                            <Route path="/cart" element={<CartList/>}/>
                             <Route path="/cart/list" element={<CartList/>}/>
                             <Route path="/cart/history" element={<HistoryOrder/>}/>
+                            <Route path="/cart/history/order-detail-customer/:id" element={<OrderDetailCustomer/>}/>
                         </Route>
                     </Routes>
                 </div>
                 <Footer/>
             </Provider>
-
         </>
     );
 }

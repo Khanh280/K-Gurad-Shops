@@ -3,7 +3,7 @@ export const getToken = async ()=>{
     return localStorage.getItem("token")
 }
 export const getAllProduct = async (nameType, orderBy, brand, nameSearch) => {
-    try {
+
         const res = await axios.get("http://localhost:8080/api/product?productType=" + (nameType || "") + "&orderBy=" + (orderBy || "") + "&brand=" + (brand || "") + "&nameSearch=" + (nameSearch || ""),
         {
             headers: {
@@ -11,10 +11,6 @@ export const getAllProduct = async (nameType, orderBy, brand, nameSearch) => {
             }
         })
         return res;
-    } catch (e) {
-        return null;
-    }
-
 }
 export const getAllProductManager = async (page, nameSearch, orderBy) => {
     try {
