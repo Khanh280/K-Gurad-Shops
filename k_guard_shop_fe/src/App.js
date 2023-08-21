@@ -14,6 +14,8 @@ import store from "./redux/store";
 import InfoStore from "./component/info_store/InfoStore";
 import ProductList from "./component/info_store/ProductList";
 import CreateProduct from "./component/info_store/CreateProduct";
+import CartList from "./component/CartList";
+import HistoryOrder from "./component/HistoryOrder";
 
 function App() {
     return (
@@ -35,7 +37,10 @@ function App() {
                         <Route path="/login" element={<LoginForm/>}/>
                         <Route path="/register" element={<RegisterForm/>}/>
                         <Route path="/product/detail/:id" element={<DetailProduct/>}/>
-                        <Route path="/cart" element={<ShoppingCart/>}/>
+                        <Route path="/cart" element={<ShoppingCart/>}>
+                            <Route path="/cart/list" element={<CartList/>}/>
+                            <Route path="/cart/history" element={<HistoryOrder/>}/>
+                        </Route>
                     </Routes>
                 </div>
                 <Footer/>

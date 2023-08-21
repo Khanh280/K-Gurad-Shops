@@ -16,6 +16,8 @@ public class Orders {
     @CreationTimestamp
     @Column(nullable = false,updatable = false,columnDefinition = "TIMESTAMP DEFAULT now()")
     private LocalDateTime createDate;
+//    @Column(name = "status_payment",columnDefinition = "BIT(1) DEFAULT 0")
+//    private boolean statusPayment;
 
     public Orders() {
     }

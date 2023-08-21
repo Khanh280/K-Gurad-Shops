@@ -1,12 +1,19 @@
 package com.example.k_guard_shop_be.controller;
 
+import com.example.k_guard_shop_be.dto.OrderDTO;
+import com.example.k_guard_shop_be.dto.OrderDetailDTO;
 import com.example.k_guard_shop_be.model.Customer;
 import com.example.k_guard_shop_be.model.OrderDetail;
+import com.example.k_guard_shop_be.model.Orders;
 import com.example.k_guard_shop_be.model.ShoppingCart;
 import com.example.k_guard_shop_be.service.EmailServive;
 import com.example.k_guard_shop_be.service.cart.IShoppingCartService;
+import com.example.k_guard_shop_be.service.order_detail.IOrderDetailService;
 import com.example.k_guard_shop_be.service.orders.IOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,6 +36,23 @@ public class OrdersRestController {
     private JavaMailSender javaMailSender;
     @Autowired
     private EmailServive emailServive;
+    @Autowired
+    private IOrderDetailService iOrderDetailService;
+
+    @GetMapping("/order-detail-customer")
+    public ResponseEntity<?> getAllOrderDetailCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                 HttpServletRequest httpServletRequest) {
+        Pageable pageable = PageRequest.of(page,8);
+        Page<OrderDetailDTO> orderDetailPage = iOrderDetailService.getAllOrderDetailCustomer(httpServletRequest,pageable);
+        return new ResponseEntity<>(orderDetailPage,HttpStatus.OK);
+    }
+    @GetMapping("/order-customer")
+    public ResponseEntity<?> getAllOrderCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                 HttpServletRequest httpServletRequest) {
+        Pageable pageable = PageRequest.of(page,8);
+        Page<OrderDTO> orderDTOPage = iOrdersService.getAllOrderCustomer(httpServletRequest,pageable);
+        return new ResponseEntity<>(orderDTOPage,HttpStatus.OK);
+    }
 
     @PostMapping("")
     public ResponseEntity<?> saveOrders(HttpServletRequest httpServletRequest) {
@@ -50,7 +74,7 @@ public class OrdersRestController {
             for (int i = 0; i < shoppingCartList.size(); i++) {
                 table += "<tr>" +
                         "<td style='display: flex'>" +
-                        "<img src='" + shoppingCartList.get(i).getImage() + "' style='width: 10rem'>" +
+//                        "<img src='" + shoppingCartList.get(i).getImage() + "' style='width: 10rem'>" +
                         "<p' >" + shoppingCartList.get(i).getProductSize().getProduct().getName() + "</p>" +
                         "</td>" +
                         "<td>" + shoppingCartList.get(i).getProductSize().getSizes().getName() + "</td>" +

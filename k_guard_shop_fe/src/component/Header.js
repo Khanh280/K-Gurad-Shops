@@ -201,7 +201,7 @@ export default function Header() {
                                         </ul>
                                     </li>
                                     <li>
-                                        <NavLink to="/cart" className="me-5"
+                                        <NavLink to="/cart/list" className="me-5"
                                                  style={({isActive}) => {
                                                      return {
                                                          backgroundColor: isActive ? "#F4882F" : "   ",
@@ -232,7 +232,7 @@ export default function Header() {
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/cart" className="me-5"
+                                    <NavLink to="/cart/list" className="me-5"
                                              style={({isActive}) => {
                                                  return {
                                                      backgroundColor: isActive ? "#F4882F" : "   ",

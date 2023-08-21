@@ -1,6 +1,7 @@
 package com.example.k_guard_shop_be.service.orders;
 
 import com.example.k_guard_shop_be.controller.CustomerRestController;
+import com.example.k_guard_shop_be.dto.OrderDTO;
 import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.repository.IOrderDetailRepository;
 import com.example.k_guard_shop_be.repository.IOrdersRepository;
@@ -9,6 +10,8 @@ import com.example.k_guard_shop_be.repository.IProductTypeRepository;
 import com.example.k_guard_shop_be.service.IProductSizeService;
 import com.example.k_guard_shop_be.service.cart.IShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,12 @@ public class OrdersService implements IOrdersService {
     private IProductRepository iProductRepository;
     @Autowired
     private IProductSizeService iProductSizeService;
+
+    @Override
+    public Page<OrderDTO> getAllOrderCustomer(HttpServletRequest httpServletRequest, Pageable pageable) {
+        Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
+        return iOrdersRepository.getAllOrderCustomer(customer.getId(), pageable);
+    }
 
     @Transactional
     @Override
@@ -55,4 +64,6 @@ public class OrdersService implements IOrdersService {
         iOrderDetailRepository.saveAll(orderDetailList);
         return orderDetailList;
     }
+
+
 }
