@@ -67,7 +67,7 @@ export default function InformationUser() {
                                                     </div>
                                                 </div>
                                                 <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">
-                                                    Projects
+                                                    {/*Projects*/}
                                                 </h6>
                                                 <div className="row">
                                                     <div className="col-sm-6">

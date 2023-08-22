@@ -67,7 +67,7 @@ public class OrdersRestController {
             List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest, payment);
             List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
             if (orderDetailList.size() == 0) {
-                return new ResponseEntity<>(shoppingCartList,HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(shoppingCartList, HttpStatus.BAD_REQUEST);
             }
             String to = customer.getEmail();
             String subject = "Bạn có đơn hàng từ K-Guard Shop";
@@ -80,10 +80,11 @@ public class OrdersRestController {
             table += "<tr>" +
                     "<th>Sản phẩm</th>" + "<th>Size</th>" + "<th>Số lượng</th>" + "<th>Giá tiền</th>" +
                     "</tr>";
+            Long totalPrice = 0L;
             for (int i = 0; i < orderDetailList.size(); i++) {
+                totalPrice += orderDetailList.get(i).getPrice() * orderDetailList.get(i).getQuantity();
                 table += "<tr>" +
                         "<td style='display: flex'>" +
-//                        "<img src='" + orderDetailList.get(i).getProductSize(). + "' style='width: 10rem'>" +
                         "<p' >" + orderDetailList.get(i).getProductSize().getProduct().getName() + "</p>" +
                         "</td>" +
                         "<td>" + orderDetailList.get(i).getProductSize().getSizes().getName() + "</td>" +
@@ -91,6 +92,7 @@ public class OrdersRestController {
                         "<td>" + orderDetailList.get(i).getProductSize().getProduct().getPrice() + "</td>" +
                         "</tr>";
             }
+            table += "<p>Tổng tiền đơn hàng:" + totalPrice + "</p>";
             table += "</table>";
             body += table;
             body += "<p>Chúng tôi xin cảm ơn quý khách đã tin tường và sử dụng dịch vụ của chúng tôi.</p>" +

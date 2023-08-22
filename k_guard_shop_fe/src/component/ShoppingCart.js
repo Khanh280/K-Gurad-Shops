@@ -159,7 +159,7 @@ export default function ShoppingCart() {
                             </div>
                         </div>
                         <Outlet/>
-                        <BackUp/>
+                        {/*<BackUp/>*/}
                     </>
                 </div>
 
