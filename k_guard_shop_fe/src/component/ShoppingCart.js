@@ -23,7 +23,7 @@ export default function ShoppingCart() {
     const [isLogin, setIsLogin] = useState(false)
     const [customer, setCustomer] = useState()
     const [pricePaypal, setPricePaypal] = useState(0)
-    const [chooseOption,setChooseOption] = useState(true)
+    const [chooseOption, setChooseOption] = useState(true)
     const token = localStorage.getItem("token")
     const navigate = useNavigate()
     const getCustomer = async () => {
@@ -104,70 +104,63 @@ export default function ShoppingCart() {
         <>
             <div className="px-5" style={{marginTop: "12vh"}}>
 
-                <div className="row d-flex" >
+                <div className="row d-flex">
 
-                    {
-                        shoppingCarts.length > 0 ?
-                            <>
-                                <div className="row bg-dark col-md-12 align-items-center d-flex mb-3 mx-0" align=""
-                                     style={{height: "3rem"}}>
-                                    <div className="d-flex col-md-12" style={{height: "100%"}}>
-                                        <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard
-                                            Shop | </h4>
-                                        {/*<h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>Gio hang</h4>*/}
 
-                                        <ul className="px-0 my-0 col-md-2 justify-content-evenly" style={{display: "flex", color: "white"}}>
-                                            <li style={{height: "100%",display:"flex",alignItems:"center"}}>
-                                                <NavLink to="/cart/list"
-                                                         className="cart-item"
-                                                         style={({isActive}) => {
-                                                             return {
-                                                                 borderBottom: isActive || chooseOption ? "3px solid #F4882F" : "   ",
-                                                                 color: isActive ? "white" : "",
-                                                                 alignItems: "center",
-                                                                 display: "flex"
-                                                             }
-                                                         }}
-                                                >Giỏ hàng</NavLink>
-                                            </li>
-                                            <li style={{height: "100%",display:"flex",alignItems:"center"}}>
-                                                <NavLink to="/cart/history"
-                                                         className="cart-item"
-                                                         onClick={()=> setChooseOption(false)}
-                                                         style={({isActive}) => {
-                                                             return {
-                                                                 borderBottom: isActive ? "3px solid #F4882F" : "   ",
-                                                                 color: isActive ? "white" : "",
-                                                                 alignItems: "center",
-                                                                 display: "flex"
-                                                             }
-                                                         }}
-                                                >Lịch sử giao dịch</NavLink>
-                                            </li>
-                                            {/*<NavLink to="/cart/list">*/}
-                                            {/*    <li className="d-flex align-items-center" style={{minWidth: "5rem"}}>Giỏ*/}
-                                            {/*        hàng*/}
-                                            {/*    </li>*/}
-                                            {/*</NavLink>*/}
-                                            {/*<NavLink to="/cart/history-order">*/}
-                                            {/*    <li className="d-flex align-items-center"*/}
-                                            {/*        style={{minWidth: "5rem"}}>Lịch sử*/}
-                                            {/*        giao dịch*/}
-                                            {/*    </li>*/}
-                                            {/*</NavLink>*/}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <Outlet/>
-                                <BackUp/>
+                    <>
+                        <div className="row bg-dark col-md-12 align-items-center d-flex mb-3 mx-0" align=""
+                             style={{height: "3rem"}}>
+                            <div className="d-flex col-md-12" style={{height: "100%"}}>
+                                <h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>K-Guard
+                                    Shop | </h4>
+                                {/*<h4 className="px-0 my-2" style={{display: "flex", color: "white"}}>Gio hang</h4>*/}
 
-                            </>
-                            :
-                            <div className="col-md-12" align="center">
-                                <h5>Chưa có sản phẩm nào trong giỏ hàng.</h5>
-                                <NavLink to="/" className="btn btn-sm btn-success">Quay trở lại cửa hàng</NavLink>
+                                <ul className="px-0 my-0 col-md-2 justify-content-evenly"
+                                    style={{display: "flex", color: "white"}}>
+                                    <li style={{height: "100%", display: "flex", alignItems: "center"}}>
+                                        <NavLink to="/cart/list"
+                                                 className="cart-item"
+                                                 style={({isActive}) => {
+                                                     return {
+                                                         borderBottom: isActive || chooseOption ? "3px solid #F4882F" : "   ",
+                                                         color: isActive ? "white" : "",
+                                                         alignItems: "center",
+                                                         display: "flex"
+                                                     }
+                                                 }}
+                                        >Giỏ hàng</NavLink>
+                                    </li>
+                                    <li style={{height: "100%", display: "flex", alignItems: "center"}}>
+                                        <NavLink to="/cart/history"
+                                                 className="cart-item"
+                                                 onClick={() => setChooseOption(false)}
+                                                 style={({isActive}) => {
+                                                     return {
+                                                         borderBottom: isActive ? "3px solid #F4882F" : "   ",
+                                                         color: isActive ? "white" : "",
+                                                         alignItems: "center",
+                                                         display: "flex"
+                                                     }
+                                                 }}
+                                        >Lịch sử giao dịch</NavLink>
+                                    </li>
+                                    {/*<NavLink to="/cart/list">*/}
+                                    {/*    <li className="d-flex align-items-center" style={{minWidth: "5rem"}}>Giỏ*/}
+                                    {/*        hàng*/}
+                                    {/*    </li>*/}
+                                    {/*</NavLink>*/}
+                                    {/*<NavLink to="/cart/history-order">*/}
+                                    {/*    <li className="d-flex align-items-center"*/}
+                                    {/*        style={{minWidth: "5rem"}}>Lịch sử*/}
+                                    {/*        giao dịch*/}
+                                    {/*    </li>*/}
+                                    {/*</NavLink>*/}
+                                </ul>
                             </div>
-                    }
+                        </div>
+                        <Outlet/>
+                        <BackUp/>
+                    </>
                 </div>
 
                 <ToastContainer style={{top: "5.6rem"}}/>

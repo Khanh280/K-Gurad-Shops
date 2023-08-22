@@ -133,18 +133,25 @@ export default function HistoryOrder() {
                         <div className="justify-content-end d-flex">
                             <ul className="d-flex">
                                 {
-                                    currentPage !== 0 ?
-                                        <li className="pagination"
-                                            onClick={() => getAllOrderCustomer(currentPage - 1)}>Trước
-                                        </li> : ""
-                                }
-                                {
-                                    pagination()
-                                }
-                                {
-                                    currentPage === totalPages - 1 ?
-                                        <li className="pagination"
-                                            onClick={() => getAllOrderCustomer(currentPage + 1)}>Sau</li>
+                                    totalPages !== 1 ?
+                                        <>
+                                            {
+                                                currentPage !== 0 ?
+                                                    <li className="pagination"
+                                                        onClick={() => getAllOrderCustomer(currentPage - 1)}>Trước
+                                                    </li> : ""
+                                            }
+                                            {
+                                                pagination()
+                                            }
+                                            {
+                                                currentPage === totalPages - 1 ?
+                                                    ""
+                                                    :
+                                                    <li className="pagination"
+                                                        onClick={() => getAllOrderCustomer(currentPage + 1)}>Sau</li>
+                                            }
+                                        </>
                                         : ""
                                 }
                             </ul>

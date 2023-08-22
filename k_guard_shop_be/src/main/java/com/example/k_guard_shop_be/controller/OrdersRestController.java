@@ -76,7 +76,7 @@ public class OrdersRestController {
             for (int i = 0; i < orderDetailList.size(); i++) {
                 table += "<tr>" +
                         "<td style='display: flex'>" +
-//                        "<img src='" + orderDetailList.get(i).getImage() + "' style='width: 10rem'>" +
+//                        "<img src='" + orderDetailList.get(i).getProductSize(). + "' style='width: 10rem'>" +
                         "<p' >" + orderDetailList.get(i).getProductSize().getProduct().getName() + "</p>" +
                         "</td>" +
                         "<td>" + orderDetailList.get(i).getProductSize().getSizes().getName() + "</td>" +

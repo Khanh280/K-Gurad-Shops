@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as ProductService from "../service/ProductService"
 export const getCustomer = async ()=>{
-    const res = await axios.get("http://localhost:8080/api/customer/detail", {
+    const res = await axios.get("http://localhost:8080/api/customer/info", {
         headers: {
             "Authorization": "Bearer " + await ProductService.getToken()
         }

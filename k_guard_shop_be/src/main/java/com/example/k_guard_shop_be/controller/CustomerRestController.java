@@ -96,10 +96,11 @@ public class CustomerRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/info")
     public ResponseEntity<?> getCustomer(HttpServletRequest httpServletRequest) {
         return new ResponseEntity<>(getCustomerFromToken(httpServletRequest), HttpStatus.OK);
     }
+
 
     public Customer getCustomerFromToken(HttpServletRequest httpServletRequest) {
         String header = httpServletRequest.getHeader("Authorization");

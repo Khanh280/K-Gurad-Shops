@@ -31,11 +31,15 @@ export default function DetailProduct() {
     }
     const dispatch = useDispatch()
     const getProductById = async () => {
-        const res = await ProductService.getProductById(param.id)
-        setProduct(res.data[0].product)
-        setImageMain(res.data[0].link)
-        setImages(res.data)
-        setDes(res.data[0].product.description.split("- " || "."))
+        try {
+            const res = await ProductService.getProductById(param.id)
+            setProduct(res.data[0].product)
+            setImageMain(res.data[0].link)
+            setImages(res.data)
+            setDes(res.data[0].product.description.split("- " || "."))
+        } catch (e) {
+            setProduct(() => null)
+        }
     }
     const getSize = async (productId) => {
         const res = await ProductService.getSize(productId)
@@ -51,7 +55,7 @@ export default function DetailProduct() {
         }
         getSize(param.id)
     }, [])
-    if (!images || !imageMain || !product|| !sizes) {
+    if (!images || !imageMain || !product || !sizes) {
         return null;
     }
     return (
@@ -125,7 +129,7 @@ export default function DetailProduct() {
                                                             id: value.size,
                                                             product: product,
                                                             sizes: {
-                                                                id: sizes.find((item)=> item.id === value.size).sizeId
+                                                                id: sizes.find((item) => item.id === value.size).sizeId
                                                             }
                                                         },
                                                         quantity: quantity,
