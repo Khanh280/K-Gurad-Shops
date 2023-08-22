@@ -201,6 +201,14 @@ export default function Header() {
                                                className="fa-regular fa-user"></i>
                                         </Link>
                                         <ul id="sub-nav-product" style={{maxWidth: "12rem"}}>
+                                            <NavLink className="p-0" to="/information-user">
+                                                <li className="d-flex justify-content-between align-items-center store-manager"
+                                                    style={{width: "100%"}}>
+                                                    Thông tin cá nhân
+                                                    <i className="bi bi-person-lines-fill pe-2"
+                                                       style={{fontSize: "1.5rem"}}></i>
+                                                </li>
+                                            </NavLink>
                                             <li onClick={() => handlerLogout()}
                                                 className="d-flex justify-content-between align-items-center">Đăng xuất
                                                 <i className="bi bi-box-arrow-right  pe-2"

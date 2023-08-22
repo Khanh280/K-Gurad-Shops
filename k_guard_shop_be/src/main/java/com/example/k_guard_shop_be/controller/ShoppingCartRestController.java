@@ -11,6 +11,7 @@ import com.example.k_guard_shop_be.service.product_type.IProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,6 +71,7 @@ public class ShoppingCartRestController {
     }
 
     @PostMapping("/save-product")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> saveProductToCart(@RequestBody ShoppingCart shoppingCart, HttpServletRequest httpServletRequest) {
 //        Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
 //        if (customer != null) {
@@ -183,6 +185,7 @@ public class ShoppingCartRestController {
     }
 
     @PostMapping("/delete-cart-login")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> deleteProductCartLogin(@RequestBody String cartId, HttpServletRequest httpServletRequest) {
         Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
         iShoppingCartService.deleteCartByCustomerId(Long.parseLong(cartId), customer.getId());

@@ -12,6 +12,7 @@ public interface IOrdersRepository extends JpaRepository<Orders, Long> {
     @Query(value = "select o.id                        as id,\n" +
             "       o.create_date               as createDate,\n" +
             "       ps.name                     as paymentStatus,\n" +
+            "       ps.id                     as paymentStatusId,\n" +
             "       sum(od.price * od.quantity) as totalPrice\n" +
             "from orders o\n" +
             "         inner join customer c on o.customer_id = c.id\n" +

@@ -74,6 +74,4 @@ public class OrdersService implements IOrdersService {
         iOrderDetailRepository.saveAll(orderDetailList);
         return orderDetailList;
     }
-
-
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,7 @@ public class OrdersRestController {
     private IOrderDetailService iOrderDetailService;
 
     @GetMapping("/order-detail-customer")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> getAllOrderDetailCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                        @RequestParam(value = "orderId", defaultValue = "") Long orderId,
                                                        HttpServletRequest httpServletRequest) {
@@ -49,6 +51,7 @@ public class OrdersRestController {
     }
 
     @GetMapping("/order-customer")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> getAllOrderCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                  HttpServletRequest httpServletRequest) {
         Pageable pageable = PageRequest.of(page, 8);
@@ -57,11 +60,15 @@ public class OrdersRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> saveOrders(@RequestBody String payment,HttpServletRequest httpServletRequest) {
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    public ResponseEntity<?> saveOrders(@RequestBody String payment, HttpServletRequest httpServletRequest) {
         try {
             Customer customer = customerRestController.getCustomerFromToken(httpServletRequest);
-            List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest,payment);
+            List<OrderDetail> orderDetailList = iOrdersService.saveOrder(httpServletRequest, payment);
             List<ShoppingCart> shoppingCartList = iShoppingCartService.getAll(customer.getId());
+            if (orderDetailList.size() == 0) {
+                return new ResponseEntity<>(shoppingCartList,HttpStatus.BAD_REQUEST);
+            }
             String to = customer.getEmail();
             String subject = "Bạn có đơn hàng từ K-Guard Shop";
             String body = "<h6>Chào " + customer.getName() + ",</p>\n" +
@@ -86,12 +93,12 @@ public class OrdersRestController {
             }
             table += "</table>";
             body += table;
-            body += "\nChúng tôi xin cảm ơn quý khách đã tin tường và sử dụng dịch vụ của chúng tôi.\n" +
-                    "---------------------------------------" + "\n" +
-                    "Name: K-Guard Shop\n" +
-                    "Mobile: 0338410349\n" +
-                    "Email: kguardshop28@gmail.com\n" +
-                    "Address: 02 An Lương, Duy Hải, Duy Xuyên, Quảng Nam";
+            body += "<p>Chúng tôi xin cảm ơn quý khách đã tin tường và sử dụng dịch vụ của chúng tôi.</p>" +
+                    "<p>---------------------------------------</p>" +
+                    "<p>Name: K-Guard Shop</p>" +
+                    "<p>Mobile: 0338410349</p>" +
+                    "<p>Email: kguardshop28@gmail.com</p>" +
+                    "<p>Address: 02 An Lương, Duy Hải, Duy Xuyên, Quảng Nam</p>";
             System.out.println(body);
             emailServive.sendMail(to, subject, body);
             return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);

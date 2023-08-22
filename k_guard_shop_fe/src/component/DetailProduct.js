@@ -51,12 +51,12 @@ export default function DetailProduct() {
     }, [param])
     useEffect(() => {
         if (token) {
-            setIsLogin(() => true)
+            setIsLogin(() => null)
         }
         getSize(param.id)
     }, [])
-    if (!images || !imageMain || !product || !sizes) {
-        return null;
+    if (product === undefined) {
+        return null
     }
     return (
         <>
@@ -67,183 +67,195 @@ export default function DetailProduct() {
                         to="/product" className="ms-2 text-light">Sản phẩm </NavLink> / Chi tiết sản phẩm
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-4 p-0 ">
-                        <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px", overflow: "hidden"}}>
-                            <div className="row">
-                                <img
-                                    src={imageMain}
-                                    style={{width: "100%", objectFit: "cover"}} alt=""/>
-                            </div>
-
-                            <div className="row m-0 align-items-center" style={{borderTop: "1px solid #b3b3b33b"}}>
-                                {
-                                    images.map((image, index) =>
-                                        <div key={index} className="col-md-3 image-detail">
-                                            <img
-                                                src={image.link}
-                                                onClick={() => selectImage(image.link)}
-                                                style={{width: "100%", cursor: "pointer"}}/>
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div className="col-md-8">
+                {
+                    product ?
                         <div className="row">
-                            <h3>{product?.name}</h3>
-                            <h5>Thương hiệu {product?.brand?.name}</h5>
-                            <h5>Giá: {product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</h5>
-                            <p className="m-0"><h5>Chi tiết sản phẩm: </h5>
-                                {
-                                    des.map((item) =>
-                                        item !== "" ?
-                                            <p><i className="bi bi-dot"></i>{item}</p>
-                                            :
-                                            ""
-                                    )
-                                }
-                            </p>
-                        </div>
-                        {
-                            role !== "ROLE_ADMIN" ?
-                                <Formik
-                                    initialValues={{
-                                        product: "",
-                                        quantity: "",
-                                        size: "",
-                                        image: ""
-                                    }}
-                                    validationSchema={yup.object({
-                                        size: yup.number().required("Vui lòng chọn size").min(1, "Vui lòng chọn size")
-                                    })}
-                                    onSubmit={(value, {resetForm}) => {
-                                        const saveCart = async () => {
-                                            if (quantity > 0 && quantity <= 10) {
-                                                try {
-                                                    const newValue = {
-                                                        productSize: {
-                                                            id: value.size,
-                                                            product: product,
-                                                            sizes: {
-                                                                id: sizes.find((item) => item.id === value.size).sizeId
-                                                            }
-                                                        },
-                                                        quantity: quantity,
-                                                        image: imageMain
-                                                    }
-                                                    if (isLogin) {
-                                                        const res = await ShoppingCartService.saveShoppingCartCustomer(newValue)
-                                                        await dispatch(updateCart(res.data.length))
-                                                    } else {
-                                                        const res = await ShoppingCartService.saveShoppingCartSession(newValue)
-                                                        await dispatch(updateCart(res.data.length))
-                                                    }
-                                                    toast.success("Thêm vào giỏ hàng thành công.")
-                                                    resetForm(
-                                                        setQuantity(() => 1)
-                                                    )
-                                                } catch (e) {
-                                                    toast.warning("Số lượng lớn hơn số lượng trong kho.")
-                                                }
-                                            } else {
-                                                toast.error("Số lượng sản phẩm quá lớn.")
-                                            }
-                                        }
-                                        saveCart()
-                                    }}
-                                >
-                                    <Form>
-                                        <div className="row d-flex mb-2 ">
-                                            <div className="col-md-3">
-                                                <div className="row">
-                                                    <div>
-                                                        <Field as="select" className="form-control" name="size" id="">
-                                                            <option value={0}>Chọn Size <sup>*</sup></option>
-                                                            {
-                                                                sizes.map((size, index) =>
-                                                                    <option value={size.id}>{size.sizeName}</option>
-                                                                )
-                                                            }
-                                                        </Field>
-                                                        <ErrorMessage name="size" component="span"
-                                                                      style={{color: "red"}}/>
-                                                    </div>
+                            <div className="col-md-4 p-0 ">
+                                <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px", overflow: "hidden"}}>
+                                    <div className="row">
+                                        <img
+                                            src={imageMain}
+                                            style={{width: "100%", objectFit: "cover"}} alt=""/>
+                                    </div>
+
+                                    <div className="row m-0 align-items-center"
+                                         style={{borderTop: "1px solid #b3b3b33b"}}>
+                                        {
+                                            images.map((image, index) =>
+                                                <div key={index} className="col-md-3 image-detail">
+                                                    <img
+                                                        src={image.link}
+                                                        onClick={() => selectImage(image.link)}
+                                                        style={{width: "100%", cursor: "pointer"}}/>
                                                 </div>
-                                            </div>
-                                            <div className="col-md-2 d-flex" style={{maxHeight: "2.4rem"}}>
-                                                <button type="button" className="btn btn-dark btn-operator-plus"
-                                                        style={{
-                                                            opacity: quantity <= 1 ? "20%" : "",
-                                                            pointerEvents: quantity <= 1 ? "none" : ""
-                                                        }}
-                                                        onClick={() => setQuantity(prevState => prevState - 1)}>
-                                                    <span style={{fontWeight: "bold",}}>-</span></button>
-                                                <Field name="quantity" id="input-quantity-product"
-                                                       className="form-control"
-                                                       type="number"
-                                                       value={quantity} style={{width: "4rem"}}/>
-                                                <button type="button" className="btn btn-dark btn-operator-subs"
-                                                        style={{
-                                                            opacity: quantity >= 10 ? "20%" : "",
-                                                            pointerEvents: quantity >= 10 ? "none" : ""
-                                                        }}
-                                                        onClick={() => setQuantity(prevState => prevState + 1)}><span
-                                                    style={{fontWeight: "bold"}}>+</span></button>
-                                            </div>
-                                            <div className="col-md-7 input-group flex-nowrap"
-                                                 style={{maxHeight: "2.4rem"}}>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div className="col-md-8">
+                                <div className="row">
+                                    <h3>{product?.name}</h3>
+                                    <h5>Thương hiệu {product?.brand?.name}</h5>
+                                    <h5>Giá: {product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</h5>
+                                    <p className="m-0"><h5>Chi tiết sản phẩm: </h5>
+                                        {
+                                            des.map((item) =>
+                                                item !== "" ?
+                                                    <p><i className="bi bi-dot"></i>{item}</p>
+                                                    :
+                                                    ""
+                                            )
+                                        }
+                                    </p>
+                                    <p>Số lượng còn: {product?.quantity} </p>
+                                </div>
+                                {
+                                    role !== "ROLE_ADMIN" ?
+                                        <Formik
+                                            initialValues={{
+                                                product: "",
+                                                quantity: "",
+                                                size: "",
+                                                image: ""
+                                            }}
+                                            validationSchema={yup.object({
+                                                size: yup.number().required("Vui lòng chọn size").min(1, "Vui lòng chọn size")
+                                            })}
+                                            onSubmit={(value, {resetForm}) => {
+                                                const saveCart = async () => {
+                                                    if (quantity > 0 && quantity <= 10) {
+                                                        try {
+                                                            const newValue = {
+                                                                productSize: {
+                                                                    id: value.size,
+                                                                    product: product,
+                                                                    sizes: {
+                                                                        id: sizes.find((item) => item.id === value.size).sizeId
+                                                                    }
+                                                                },
+                                                                quantity: quantity,
+                                                                image: imageMain
+                                                            }
+                                                            if (isLogin) {
+                                                                const res = await ShoppingCartService.saveShoppingCartCustomer(newValue)
+                                                                await dispatch(updateCart(res.data.length))
+                                                            } else {
+                                                                const res = await ShoppingCartService.saveShoppingCartSession(newValue)
+                                                                await dispatch(updateCart(res.data.length))
+                                                            }
+                                                            toast.success("Thêm vào giỏ hàng thành công.")
+                                                            resetForm(
+                                                                setQuantity(() => 1)
+                                                            )
+                                                        } catch (e) {
+                                                            toast.warning("Số lượng trong kho không đủ.")
+                                                        }
+                                                    } else {
+                                                        toast.error("Số lượng sản phẩm quá lớn.")
+                                                    }
+                                                }
+                                                saveCart()
+                                            }}
+                                        >
+                                            <Form>
+                                                <div className="row d-flex mb-2 ">
+                                                    <div className="col-md-3">
+                                                        <div className="row">
+                                                            <div>
+                                                                <Field as="select" className="form-control" name="size"
+                                                                       id="">
+                                                                    <option value={0}>Chọn Size <sup>*</sup></option>
+                                                                    {
+                                                                        sizes.map((size, index) =>
+                                                                            <option
+                                                                                value={size.id}>{size.sizeName}</option>
+                                                                        )
+                                                                    }
+                                                                </Field>
+                                                                <ErrorMessage name="size" component="span"
+                                                                              style={{color: "red"}}/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-2 d-flex" style={{maxHeight: "2.4rem"}}>
+                                                        <button type="button" className="btn btn-dark btn-operator-plus"
+                                                                style={{
+                                                                    opacity: quantity <= 1 ? "20%" : "",
+                                                                    pointerEvents: quantity <= 1 ? "none" : ""
+                                                                }}
+                                                                onClick={() => setQuantity(prevState => prevState - 1)}>
+                                                            <span style={{fontWeight: "bold",}}>-</span></button>
+                                                        <Field name="quantity" id="input-quantity-product"
+                                                               className="form-control"
+                                                               type="number"
+                                                               value={quantity} style={{width: "4rem"}}/>
+                                                        <button type="button" className="btn btn-dark btn-operator-subs"
+                                                                style={{
+                                                                    opacity: quantity >= product.quantity ? "20%" : "",
+                                                                    pointerEvents: quantity >= product.quantity ? "none" : ""
+                                                                }}
+                                                                onClick={() => setQuantity(prevState => prevState + 1)}><span
+                                                            style={{fontWeight: "bold"}}>+</span></button>
+                                                    </div>
+                                                    <div className="col-md-7 input-group flex-nowrap"
+                                                         style={{maxHeight: "2.4rem"}}>
                                           <span className="input-group-text" id="addon-wrapping"
                                                 style={{borderRadius: ".25rem 0 0 .25rem", borderRight: "none"}}>
                                             Tổng tiền
                                           </span>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    disabled
-                                                    aria-label="Username"
-                                                    aria-describedby="addon-wrapping"
-                                                    style={{backgroundColor: "white"}}
-                                                    value={(quantity * product?.price)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + "đ"}
-                                                />
-                                            </div>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            disabled
+                                                            aria-label="Username"
+                                                            aria-describedby="addon-wrapping"
+                                                            style={{backgroundColor: "white"}}
+                                                            value={(quantity * product?.price)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + "đ"}
+                                                        />
+                                                    </div>
 
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-12 justify-content-center d-flex">
+                                                        <button type="submit" className="btn btn-buy-product"><i
+                                                            className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
+                                                            HÀNG
+                                                        </button>
+                                                    </div>
+                                                    <div className="col-md-12 mt-2">
+                                                        <img src="/anh/size-fullface.jpg" alt=""
+                                                             style={{width: "100%"}}/>
+                                                    </div>
+                                                    <div className="col-md-12 mt-2">
+                                                        <img src="/anh/size-ao.png" alt="" style={{width: "100%"}}/>
+                                                    </div>
+                                                </div>
+                                            </Form>
+                                        </Formik>
+                                        :
+                                        <div>
+                                            <b>Loại sản phẩm: </b> <span>{product?.productType?.name}</span>
+                                            <br/>
+                                            <b>Ngày tạo: </b> <span>{product?.createDate}</span>
+                                            <br/>
+                                            <b>Ngày chỉnh sửa: </b> <span>{product?.createDate}</span>
+                                            <br/>
+                                            <b>Số lượng trong kho: </b> <span>{product?.quantity}</span>
                                         </div>
-                                        <div className="row">
-                                            <div className="col-md-12 justify-content-center d-flex">
-                                                <button type="submit" className="btn btn-buy-product"><i
-                                                    className="bi bi-cart-plus"></i> THÊM VÀO GIỎ
-                                                    HÀNG
-                                                </button>
-                                            </div>
-                                            <div className="col-md-12 mt-2">
-                                                <img src="/anh/size-fullface.jpg" alt="" style={{width: "100%"}}/>
-                                            </div>
-                                            <div className="col-md-12 mt-2">
-                                                <img src="/anh/size-ao.png" alt="" style={{width: "100%"}}/>
-                                            </div>
-                                        </div>
-                                    </Form>
-                                </Formik>
-                                :
-                                <div>
-                                    <b>Loại sản phẩm: </b> <span>{product?.productType?.name}</span>
-                                    <br/>
-                                    <b>Ngày tạo: </b> <span>{product?.createDate}</span>
-                                    <br/>
-                                    <b>Ngày chỉnh sửa: </b> <span>{product?.createDate}</span>
-                                    <br/>
-                                    <b>Số lượng trong kho: </b> <span>{product?.quantity}</span>
-                                </div>
 
-                        }
+                                }
 
 
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                        :
+                        <div className="d-flex justify-content-center">
+                            <h4 className="text-danger">Không có sản phẩm</h4>
+                        </div>
+                }
                 <div className=" row mt-5 mb-5">
                     <div className="col-md-12 text-center d-flex">
                         <div className="col-md-4">

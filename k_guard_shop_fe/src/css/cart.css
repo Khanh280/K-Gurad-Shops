@@ -73,4 +73,7 @@ label.radio input:checked + span {
 .cart-item:hover{
     color: white;
 }
+.text-info:hover{
+    color: #F4882F!important;
+}
 

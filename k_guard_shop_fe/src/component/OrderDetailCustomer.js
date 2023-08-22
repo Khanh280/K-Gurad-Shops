@@ -72,12 +72,12 @@ export default function OrderDetailCustomer() {
                 </div>
                 <div className="row">
                     <div className="col-md-1"></div>
-                    <div className="col-md-10" style={{
+                    <div className="col-md-10 justify-content-center d-flex" style={{
                         border: "1px solid #80808096",
                         borderRadius: "10px",
                         boxShadow: "0px 0px 6px 4px #80808096"
                     }}>
-                        <table className="col-md-12">
+                        <table className="col-md-9">
                             <thead>
                             <tr>
                                 {/*<th>Id</th>*/}

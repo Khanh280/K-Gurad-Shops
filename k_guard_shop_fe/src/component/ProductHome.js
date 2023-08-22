@@ -13,7 +13,7 @@ import * as ShoppingCartService from "../service/ShoppingCartService"
 
 export default function ProductHome() {
     const [products, setProducts] = useState()
-    const [totalPage, setTotalPage] = useState()
+    const [totalPage, setTotalPage] = useState(0)
     const [page, setPage] = useState(0)
     const [orderBy, setOrderBy] = useState()
     const brand = useParams();
@@ -65,21 +65,26 @@ export default function ProductHome() {
         }
     }
     const getAllProductByType = async (type) => {
-       try{
-           const res = await ProductService.getAllProductByType(type)
-           await setProducts(() => res.data.content)
-           await setTotalPage(() => res.data.totalPages)
-           await setType(() => type)
-           setPage(() => 0)
-       }catch (e) {
-           setProducts(()=>[])
-       }
+        try {
+            const res = await ProductService.getAllProductByType(type)
+            await setProducts(() => res.data.content)
+            await setTotalPage(() => res.data.totalPages)
+            await setType(() => type)
+            setPage(() => 0)
+            setChooseOption(() => type)
+        } catch (e) {
+            setProducts(() => [])
+        }
     }
     const getAllProductByBrand = async (brand) => {
-        const res = await ProductService.getAllProductByBrand(brand)
-        await setProducts(() => res.data.content)
-        await setTotalPage(() => res.data.totalPages)
-        setPage(() => 0)
+        try {
+            const res = await ProductService.getAllProductByBrand(brand)
+            await setProducts(() => res.data.content)
+            await setTotalPage(() => res.data.totalPages)
+            setPage(() => 0)
+        } catch (e) {
+            setProducts(() => [])
+        }
     }
 
 
@@ -106,10 +111,14 @@ export default function ProductHome() {
                 <td><p id="name" style="margin: 0">
                 </td>
                 </tr>
+                <td>Số lượng còn: </td>
+                <td><p id="quantity-product" style="margin: 0">
+                </td>
+                </tr>
                 <tr>
                 <td style="justify-content: start;align-items: center;display: flex">Số lượng</td>
                 <td>
-                <input type="text"  id="quantity" style="width: 100%;">
+                <input type="number"  id="quantity" style="width: 100%;" min="1">
                 <p style="color:red;" id="error"></p>
                 </td>
                 </tr>
@@ -135,7 +144,7 @@ export default function ProductHome() {
                 // Focus on the first input when the modal is opened
                 document.getElementById('quantity').focus();
                 document.getElementById('name').innerHTML = product.name;
-                // document.getElementById('quantity-store').innerHTML = product.quantity;
+                document.getElementById('quantity-product').innerHTML = product.quantity;
                 const selectElement = document.getElementById("sizeSelect");
                 const quantityInput = document.getElementById("quantity")
                 const confirm = Swal.getConfirmButton()
@@ -143,9 +152,9 @@ export default function ProductHome() {
                 quantityInput.oninput = function () {
                     const quantity = quantityInput.value
 
-                    if (quantity <= 0 || quantity > 10 || isNaN(quantity)) {
+                    if (quantity > product.quantity || isNaN(quantity)) {
                         confirm.disabled = true;
-                        document.getElementById('error').innerText = "Số lượng sản phẩm > 0 và <= 10"
+                        document.getElementById('error').innerText = "Số lượng sản phẩm <= " + product.quantity
                     } else {
                         confirm.disabled = false;
                         document.getElementById('error').innerText = ""
@@ -203,6 +212,7 @@ export default function ProductHome() {
         setNameSearch(() => "")
     };
     useEffect(() => {
+        setTotalPage(() => 0)
         if (token) {
             setIsLogin(() => true)
         }
@@ -289,21 +299,21 @@ export default function ProductHome() {
                                     style={{borderLeft: "1px solid gray", display: 'none'}}>
                                     <li className="ms-1"
                                         style={{
-                                            color: chooseOption == 1 ? "#F4882F" : ""
+                                            color: chooseOption == 2 ? "#F4882F" : ""
                                         }}
                                         onClick={() => {
                                             getAllProduct("3/4", orderBy, brand.brand, nameSearch)
-                                            setChooseOption(() => 1)
+                                            setChooseOption(() => 2)
                                         }}>Mũ
                                         3/4
                                     </li>
                                     <li className="ms-1"
                                         style={{
-                                            color: chooseOption == 2 ? "#F4882F" : ""
+                                            color: chooseOption == 1 ? "#F4882F" : ""
                                         }}
                                         onClick={() => {
                                             getAllProduct("fullface", orderBy, brand.brand, nameSearch)
-                                            setChooseOption(() => 2)
+                                            setChooseOption(() => 1)
                                         }}>Mũ Fullface
                                     </li>
                                 </ul>
@@ -390,7 +400,10 @@ export default function ProductHome() {
                                     products.map((product, index) =>
                                             // <Link key={index} to={`/product/detail/${product.id}`}
                                             //       className="col-md-3 product-link">
-                                            <div className="col-md-3">
+                                            <div className="col-md-3"
+                                                 style={{
+                                                     opacity: product.quantity === "0" ? "50%" : "",
+                                                 }}>
                                                 <div className=" card-product-home mt-2" style={{maxHeight: "20rem"}}>
                                                     {/*<span className="sale">Mới</span>*/}
                                                     <Link key={index} to={`/product/detail/${product.id}`}
@@ -399,7 +412,18 @@ export default function ProductHome() {
                                                             <img
                                                                 src={product?.linkImage}
                                                                 style={{width: "100%", height: "100%"}}/>
-                                                            <p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>
+                                                            {/*<p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>*/}
+                                                            {
+                                                                product.quantity === "0" ?
+                                                                    <p id="out-of-stock"
+                                                                       style={{width: "100%", textAlign: "center"}}>Sản phẩm
+                                                                        tạm hết</p>
+                                                                    :
+                                                                    <p style={{width: "100%", textAlign: "center"}}>Xem sản
+                                                                        phẩm</p>
+
+                                                            }
+
                                                         </div>
                                                     </Link>
                                                     <div className="details align-items-center d-grid"
@@ -409,9 +433,9 @@ export default function ProductHome() {
                                                             <div className="price">
                                                                 <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
                                                             </div>
-                                                            <div className="ratings">
+                                                            <div className="ratings"
+                                                                 style={{pointerEvents: product.quantity === "0" ? "none" : ""}}>
                                                                 <i className="bi bi-cart-plus" onClick={() => {
-
                                                                     modals(product)
                                                                 }}
                                                                    style={{fontSize: "1.5rem"}}></i>
@@ -437,6 +461,13 @@ export default function ProductHome() {
                                     ""
                             }
                         </>
+                        {
+                            products.length <= 0 ?
+                                <div align="center">
+                                    <h4 className="text-danger">Không có sản phẩm</h4>
+                                </div>
+                                : ""
+                        }
 
                     </div>
                 </div>

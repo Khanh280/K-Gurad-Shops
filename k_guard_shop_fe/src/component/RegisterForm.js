@@ -7,6 +7,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import {toast} from "react-toastify";
 
 export default function RegisterForm() {
+    const token = localStorage.getItem("token")
     const [customer, setCustomer] = useState({
         name: "",
         address: "",
@@ -20,7 +21,9 @@ export default function RegisterForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(customer)
+        if(token){
+            navigate("/")
+        }
     }, [customer])
     return (
         <div style={{backgroundImage: "url(/anh/moto-login.jpg)", backgroundSize: "100vw", marginTop: "3vh"}}>

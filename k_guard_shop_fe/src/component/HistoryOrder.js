@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Field, Form, Formik} from "formik";
 import * as OrdersService from "../service/OrdersService";
-import {toast} from "react-toastify";
-import {PayPalButton} from "react-paypal-button-v2";
-import * as OrderService from "../service/OrdersService"
-import Swal from "sweetalert2";
+import "../css/cart.css"
 import {NavLink} from "react-router-dom";
 
 export default function HistoryOrder() {
@@ -93,9 +90,8 @@ export default function HistoryOrder() {
                                 <th>Id</th>
                                 <th>Ngày mua</th>
                                 <th>Đơn giá</th>
-                                <th>Trạng thái</th>
-                                <th>Chức năng</th>
-                                <th></th>
+                                <th className="text-center" style={{width: "15%"}}>Trạng thái</th>
+                                <th className="text-center">Chức năng</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -112,9 +108,14 @@ export default function HistoryOrder() {
                                             <p className="my-2">{order?.totalPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</p>
                                         </td>
                                         <td className="">
-                                            <p className="my-2">{order?.paymentStatus}</p>
+                                            <p className="my-2 d-flex justify-content-center"
+                                               style={{
+                                                   backgroundColor: order.paymentStatusId === "1" ? "#ffc669": "#a1f5a1",
+                                                   borderRadius:  "10px"
+                                               }}
+                                            >{order?.paymentStatus}</p>
                                         </td>
-                                        <td className="">
+                                        <td className="text-center">
                                             {/*<p className=""><i*/}
                                             {/*    className="bi bi-exclamation-circle text-info"></i></p>*/}
                                             <div>

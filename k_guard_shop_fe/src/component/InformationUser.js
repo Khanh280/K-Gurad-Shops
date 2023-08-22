@@ -1,12 +1,22 @@
 import React, {useEffect, useState} from "react";
 import "../css/information_user.css"
 import * as CustomerService from "../service/CustomerService"
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router";
 
 export default function InformationUser() {
     const [user, setUser] = useState()
+    const navigate = useNavigate()
     const getCustomer = async () => {
-        const res = await CustomerService.getCustomer();
-        setUser(() => res.data)
+       try{
+           const res = await CustomerService.getCustomer();
+           setUser(() => res.data)
+       }catch (e) {
+           if(e.response.status === 403 || e.response.status === 401){
+               navigate("/")
+               toast.error("Bạn không có quyền truy cập")
+           }
+       }
     }
     useEffect(() => {
         getCustomer()

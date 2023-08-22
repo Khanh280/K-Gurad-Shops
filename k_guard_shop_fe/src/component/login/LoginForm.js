@@ -9,7 +9,11 @@ import PulseLoader from "react-spinners/PulseLoader";
 
 export default function LoginForm() {
     const navigate = useNavigate();
+    const token = localStorage.getItem("token")
     useEffect(() => {
+        if(token){
+            navigate("/")
+        }
         window.scrollTo(0, 0)
     }, [])
     return (

@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,7 @@ public class CustomerRestController {
     private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         Pageable pageable = PageRequest.of(page, 8);
         Page<Customer> customerPage = iCustomerService.getAll(pageable);
@@ -91,12 +93,14 @@ public class CustomerRestController {
     }
 
     @DeleteMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteCustomer(@RequestBody String id) {
         iCustomerService.deleteCustomer(Long.parseLong(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/info")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER')")
     public ResponseEntity<?> getCustomer(HttpServletRequest httpServletRequest) {
         return new ResponseEntity<>(getCustomerFromToken(httpServletRequest), HttpStatus.OK);
     }

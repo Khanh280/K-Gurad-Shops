@@ -41,7 +41,7 @@ export default function InfoStore() {
         // setCheckRender(() => true)
         // if(checkRender){
             if (role !== "ROLE_ADMIN") {
-                toast.warning("Bạn không có quyền truy cập.")
+                toast.error("Bạn không có quyền truy cập.")
                 navigate("/")
             }else {
                 dropDownOption("product-manager")

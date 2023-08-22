@@ -62,6 +62,18 @@
     background-color: #F4882F;
     justify-content: center;
 }
+.detail-link div #out-of-stock{
+    display: block;
+    color: white;
+    position: absolute;
+    bottom: -12px;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    font-weight: bold;
+    background-color: #F4882F;
+    justify-content: center;
+}
 .detail-link:hover img{
     /*opacity: 60%;*/
 }

@@ -223,18 +223,25 @@ export default function CartList() {
                                     }}
                                     onSubmit={async (values, {setSubmitting}) => {
                                         if (isLogin) {
-                                            const saveOrder = async () => {
-                                                const res = await OrdersService.saveOrders(false)
-                                                setShoppingCarts(() => res.data)
+                                            try {
+                                                const saveOrder = async () => {
+                                                    const res = await OrdersService.saveOrders(false)
+                                                    setShoppingCarts(() => res.data)
+                                                    dispatch(updateCart(res.data.length))
+                                                }
+                                                await saveOrder()
+                                                await navigate("/cart/history")
+                                                await toast.success("Thanh toán thành công")
+                                            } catch (e) {
+                                                console.log(e)
+                                                await toast.error("Thanh toán thất bại")
+                                            } finally {
+                                                setSubmitting(false)
                                             }
-                                            await saveOrder()
-                                            await navigate("/cart/history")
-                                            await toast.success("Thanh toán thành công")
                                         } else {
                                             await navigate("/login")
                                             await toast.warning("Cần phải đăng nhập để thanh toán")
                                         }
-                                        setSubmitting(false)
                                     }}>
                                     {
                                         ({isSubmitting}) => (
@@ -331,13 +338,18 @@ export default function CartList() {
                                                                     {/*    hàng*/}
                                                                     {/*</button>*/}
                                                                     <button
-                                                                        style={{cursor: "pointer", borderRadius: "5px"}}
+                                                                        style={{
+                                                                            cursor: "pointer",
+                                                                            borderRadius: "5px",
+                                                                            pointerEvents: isSubmitting ? "none" : ""
+                                                                        }}
                                                                         className=" login-button">
                                                                         {
                                                                             isSubmitting ?
                                                                                 <PulseLoader
                                                                                     className="d-flex align-items-center justify-content-center"
-                                                                                    color="#F4882F" size={10} margin={10}/>
+                                                                                    color="#F4882F" size={10}
+                                                                                    margin={10}/>
                                                                                 :
                                                                                 "Đặt hàng"
                                                                         }
@@ -368,13 +380,14 @@ export default function CartList() {
                                                                             const res = await OrdersService.saveOrders(true);
                                                                             // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
                                                                             setShoppingCarts(() => res.data)
+                                                                            dispatch(updateCart(res.data.length))
                                                                             const captureResult = await actions.order.capture();
                                                                             console.log(captureResult);
                                                                             await navigate("/cart/history")
                                                                             toast.success("Giao dịch thành công");
                                                                         } catch (e) {
                                                                             // Xử lý trường hợp phản hồi từ máy chủ không thành công
-                                                                            toast.error("Không thể thanh toán đơn hàng trên máy chủ");
+                                                                            toast.error("Thanh toán thất bại");
                                                                         }
                                                                     }}
                                                                     onError={(e) => {
