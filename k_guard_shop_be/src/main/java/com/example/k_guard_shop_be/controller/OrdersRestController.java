@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -54,7 +55,8 @@ public class OrdersRestController {
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> getAllOrderCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                  HttpServletRequest httpServletRequest) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Sort sort = Sort.by("createDate").descending();
+        Pageable pageable = PageRequest.of(page, 8,sort);
         Page<OrderDTO> orderDTOPage = iOrdersService.getAllOrderCustomer(httpServletRequest, pageable);
         return new ResponseEntity<>(orderDTOPage, HttpStatus.OK);
     }
@@ -101,7 +103,7 @@ public class OrdersRestController {
                     "<p>Mobile: 0338410349</p>" +
                     "<p>Email: kguardshop28@gmail.com</p>" +
                     "<p>Address: 02 An Lương, Duy Hải, Duy Xuyên, Quảng Nam</p>";
-            System.out.println(body);
+//            System.out.println(body);
             emailServive.sendMail(to, subject, body);
             return new ResponseEntity<>(shoppingCartList, HttpStatus.OK);
         } catch (Exception e) {

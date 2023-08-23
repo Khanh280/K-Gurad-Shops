@@ -28,7 +28,7 @@ public class EmailServive {
             helper = new MimeMessageHelper(message, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body, true); // Chú ý tham số true ở đây để chỉ ra nội dung là HTML
+            helper.setText(body, true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();

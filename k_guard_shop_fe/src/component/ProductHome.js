@@ -118,7 +118,7 @@ export default function ProductHome() {
                 <tr>
                 <td style="justify-content: start;align-items: center;display: flex">Số lượng</td>
                 <td>
-                <input type="number"  id="quantity" style="width: 100%;" min="1">
+                <input type="text"  id="quantity" style="width: 100%;" min="1">
                 <p style="color:red;" id="error"></p>
                 </td>
                 </tr>
@@ -152,7 +152,7 @@ export default function ProductHome() {
                 quantityInput.oninput = function () {
                     const quantity = quantityInput.value
 
-                    if (quantity > product.quantity || isNaN(quantity)) {
+                    if (+quantity > product.quantity || isNaN(quantity)) {
                         confirm.disabled = true;
                         document.getElementById('error').innerText = "Số lượng sản phẩm <= " + product.quantity
                     } else {

@@ -35,7 +35,7 @@ public class UsersService implements UserDetailsService, IUsersService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
       Users users = iUserRepository.findByUsername(username);
       if (users == null){
-          System.out.println("adfa");
+          throw new UsernameNotFoundException("Không tồn tại tên đăng nhập: " + username);
       }
       List<GrantedAuthority> authorityList = new ArrayList<>();
       String role = users.getRoles().getRole();

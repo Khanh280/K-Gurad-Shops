@@ -359,37 +359,40 @@ export default function CartList() {
                                                                 <PayPalButton
                                                                     amount={totalPrice() > 0 ? Math.ceil((totalPrice() + 30000) / 23000) : 0}
                                                                     // amount={1}
-                                                                    // onSuccess={async (details, data) => {
-                                                                    //
-                                                                    //     toast.success("Transaction completed by " + details.payer.name.given_name);
-                                                                    //     const res = await OrdersService.saveOrders()
-                                                                    //     console.log(res)
-                                                                    //
-                                                                    //     return fetch("/paypal-transaction-complete", {
-                                                                    //         method: "post",
-                                                                    //         body: JSON.stringify({
-                                                                    //             orderID: data.orderID
-                                                                    //         })
-                                                                    //     });
-                                                                    // }}
+                                                                    onSuccess={async (details, data) => {
 
-                                                                    onApprove={async (data, actions) => {
-                                                                        // Gửi dữ liệu đơn hàng đến máy chủ của bạn và đợi phản hồi
+                                                                        const res = await OrdersService.saveOrders(true);
+                                                                        // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
+                                                                        setShoppingCarts(() => res.data)
+                                                                        toast.success("Thanh toán thành công")
+                                                                        await dispatch(updateCart(res.data.length))
+                                                                        await navigate("/cart/history")
+                                                                        return fetch("/paypal-transaction-complete", {
+                                                                            method: "post",
+                                                                            body: JSON.stringify({
+                                                                                orderID: data.orderID
+                                                                            })
+                                                                        });
 
-                                                                        try {
-                                                                            const res = await OrdersService.saveOrders(true);
-                                                                            // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
-                                                                            setShoppingCarts(() => res.data)
-                                                                            dispatch(updateCart(res.data.length))
-                                                                            const captureResult = await actions.order.capture();
-                                                                            console.log(captureResult);
-                                                                            await navigate("/cart/history")
-                                                                            toast.success("Giao dịch thành công");
-                                                                        } catch (e) {
-                                                                            // Xử lý trường hợp phản hồi từ máy chủ không thành công
-                                                                            toast.error("Thanh toán thất bại");
-                                                                        }
                                                                     }}
+
+                                                                    // onApprove={async (data, actions) => {
+                                                                    //     // Gửi dữ liệu đơn hàng đến máy chủ của bạn và đợi phản hồi
+                                                                    //
+                                                                    //     try {
+                                                                    //         const res = await OrdersService.saveOrders(true);
+                                                                    //         // Nếu máy chủ phản hồi thành công, thực hiện việc thanh toán
+                                                                    //         setShoppingCarts(() => res.data)
+                                                                    //         await dispatch(updateCart(res.data.length))
+                                                                    //         const captureResult = await actions.order.capture();
+                                                                    //         toast.success("Thanh toán thành công")
+                                                                    //         console.log(captureResult);
+                                                                    //         await navigate("/cart/history")
+                                                                    //     } catch (e) {
+                                                                    //         // Xử lý trường hợp phản hồi từ máy chủ không thành công
+                                                                    //         toast.error("Thanh toán thất bại");
+                                                                    //     }
+                                                                    // }}
                                                                     onError={(e) => {
                                                                         totalPrice() <= 0
                                                                             ? toast.error("Hiện không có sản phẩm nào.")
