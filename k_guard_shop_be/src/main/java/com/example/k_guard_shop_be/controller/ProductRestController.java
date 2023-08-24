@@ -148,8 +148,12 @@ public class ProductRestController {
     }
 
     @GetMapping("/size/{productId}")
-    public ResponseEntity<?> getSize(@PathVariable("productId") Long productId) {
+    public ResponseEntity<?> getSizeProduct(@PathVariable("productId") Long productId) {
         return new ResponseEntity<>(iProductService.getAllSize(productId), HttpStatus.OK);
+    }
+    @GetMapping("/size")
+    public ResponseEntity<?> getSizeProduct() {
+        return new ResponseEntity<>(iProductService.getAllSize(), HttpStatus.OK);
     }
 
     @ExceptionHandler(Throwable.class)

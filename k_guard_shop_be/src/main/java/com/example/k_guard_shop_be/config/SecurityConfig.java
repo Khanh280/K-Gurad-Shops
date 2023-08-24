@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 //                        "/api/user/confirmPassword","/api/user/checkEmail",
 //                        "/api/user/newPassword","/api/posts", "/api/posts/detailPosts/**",
 //                        "/api/employee/type/contract/productType").permitAll()
-                .antMatchers("/api/user/authenticate","/api/product/**","/api/news","/api/shopping-cart").permitAll()
+                .antMatchers("/api/user/authenticate","/api/product/**","/api/news","/api/shopping-cart/**").permitAll()
 //                .antMatchers("/**").hasRole("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()

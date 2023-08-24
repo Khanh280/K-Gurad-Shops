@@ -86,6 +86,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<Sizes> getAllSize() {
+        return iSizeRepository.findAll();
+    }
+
+    @Override
     public Map<String, String> validateProduct(BindingResult bindingResult) {
         Map<String, String> errorMap = new HashMap<>();
 

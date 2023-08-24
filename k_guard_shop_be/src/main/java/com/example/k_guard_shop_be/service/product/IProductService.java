@@ -14,13 +14,23 @@ import java.util.List;
 import java.util.Map;
 
 public interface IProductService {
-    Page<IProductDTO> getAll(Pageable pageable,String productType,Long brandId,String nameSearch);
-    Page<IProductDTO> getAllByBrand(Pageable pageable,Long brand);
+    Page<IProductDTO> getAll(Pageable pageable, String productType, Long brandId, String nameSearch);
+
+    Page<IProductDTO> getAllByBrand(Pageable pageable, Long brand);
+
     List<IProductDTO> getTopProduct(Integer quantity);
-    Page<IProductDTO> searchByName(Pageable pageable,String name,String productType,Long brandId);
+
+    Page<IProductDTO> searchByName(Pageable pageable, String name, String productType, Long brandId);
+
     void saveProduct(ProductDTO productDTO);
+
     void deleteProduct(Long id);
+
     Product getProductById(Long id);
+
     List<ProductSizeDTO> getAllSize(Long productId);
-    Map<String,String> validateProduct(BindingResult bindingResult);
+
+    List<Sizes> getAllSize();
+
+    Map<String, String> validateProduct(BindingResult bindingResult);
 }

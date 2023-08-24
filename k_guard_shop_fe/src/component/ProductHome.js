@@ -97,7 +97,7 @@ export default function ProductHome() {
         }
     }
     const modals = async (product) => {
-        const res = await ProductService.getSize(product.id)
+        const res = await ProductService.getSizeProduct(product.id)
         const productSizes = res.data;
         // setSize(() => res.data)
         const {value: formValues} = await Swal.fire({
@@ -152,7 +152,7 @@ export default function ProductHome() {
                 quantityInput.oninput = function () {
                     const quantity = quantityInput.value
 
-                    if (+quantity > product.quantity || isNaN(quantity)) {
+                    if (+quantity > product.quantity || quantity <= 0 || isNaN(quantity)) {
                         confirm.disabled = true;
                         document.getElementById('error').innerText = "Số lượng sản phẩm <= " + product.quantity
                     } else {
@@ -203,7 +203,11 @@ export default function ProductHome() {
                 toast.success("Thêm vào giỏ hàng thành công.")
             } catch (e) {
                 dispatch(updateCart(e.response.data.length))
-                toast.warning("Số lượng lớn hơn số lượng trong kho.")
+                if (e.response.status === 403) {
+                    toast.error("Không có quyền thực hiện chức năng.")
+                } else {
+                    toast.warning("Số lượng lớn hơn số lượng trong kho.")
+                }
             }
         }
     }

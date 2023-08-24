@@ -41,8 +41,8 @@ export default function DetailProduct() {
             setProduct(() => null)
         }
     }
-    const getSize = async (productId) => {
-        const res = await ProductService.getSize(productId)
+    const getSizeProduct = async (productId) => {
+        const res = await ProductService.getSizeProduct(productId)
         setSize(() => res.data)
     }
     useEffect(() => {
@@ -51,9 +51,9 @@ export default function DetailProduct() {
     }, [param])
     useEffect(() => {
         if (token) {
-            setIsLogin(() => null)
+            setIsLogin(() => true)
         }
-        getSize(param.id)
+        getSizeProduct(param.id)
     }, [])
     if (product === undefined) {
         return null

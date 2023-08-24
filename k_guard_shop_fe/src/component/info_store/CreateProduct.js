@@ -29,7 +29,7 @@ export default function CreateProduct() {
         setBrand(() => res.data)
     }
     const getSize = async () => {
-        const res = await ProductService.getSize()
+        const res = await ProductService.getAllSize()
         setSize(() => res.data)
     }
 
