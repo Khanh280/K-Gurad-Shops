@@ -18,6 +18,7 @@ import CartList from "./component/CartList";
 import HistoryOrder from "./component/HistoryOrder";
 import OrderDetailCustomer from "./component/OrderDetailCustomer";
 import InformationUser from "./component/InformationUser";
+import NewsPage from "./component/NewsPage";
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                             <Route path="/info-store/create-product" element={<CreateProduct/>}/>
                             <Route path="/info-store/product-list" element={<ProductList/>}/>
                         </Route>
+                        <Route path="/news-page" element={<NewsPage/>}/>
                         <Route path="/product" element={<ProductHome/>}/>
                         <Route path="/product-brand" element={<ProductHome/>}/>
                         <Route path="/product/:type" element={<ProductHome/>}/>

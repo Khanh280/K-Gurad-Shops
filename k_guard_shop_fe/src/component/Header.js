@@ -76,9 +76,10 @@ export default function Header() {
                                  }}
                         >Trang chủ</NavLink>
                     </li>
-                    <li>
-                        {
-                            role === "ROLE_ADMIN" ?
+
+                    {
+                        role === "ROLE_ADMIN" ?
+                            <li>
                                 <NavLink to="/info-store"
                                          style={({isActive}) => {
                                              return {
@@ -88,19 +89,32 @@ export default function Header() {
                                              }
                                          }}
                                 >Quản lý cửa hàng</NavLink>
-                                :
-                                <NavLink to="/b"
-                                         style={({isActive}) => {
-                                             return {
-                                                 backgroundColor: isActive ? "#F4882F" : "   ",
-                                                 color: isActive ? "black" : "",
-                                                 borderRadius: "10px",
-                                             }
-                                         }}
-                                >Giới thiệu</NavLink>
-                        }
-
+                            </li>
+                            :
+                            // <NavLink to="/b"
+                            //          style={({isActive}) => {
+                            //              return {
+                            //                  backgroundColor: isActive ? "#F4882F" : "   ",
+                            //                  color: isActive ? "black" : "",
+                            //                  borderRadius: "10px",
+                            //              }
+                            //          }}
+                            // >Giới thiệu</NavLink>
+                            ""
+                    }
+                    <li>
+                        <NavLink to="/news-page"
+                                 style={({isActive}) => {
+                                     return {
+                                         backgroundColor: isActive ? "#F4882F" : "   ",
+                                         color: isActive ? "black" : "",
+                                         borderRadius: "10px",
+                                     }
+                                 }}
+                        >Tin tức</NavLink>
                     </li>
+
+
                     <li className="nav-product nav-sub">
                         <NavLink to="/product"
                                  style={({isActive}) => {

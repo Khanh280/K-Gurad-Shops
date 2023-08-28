@@ -52,7 +52,7 @@ export default function FullFaceHot() {
                         <div className="col-md-12 d-flex justify-content-center mt-2">
                             <Link to="/product" id="load-more-product"
                                   className="btn btn-sm mt-2 justify-content-center load-more-btn"
-                                  style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm
+                                  style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem tất cả sản phẩm
                                 {/*<i className="bi bi-chevron-down"></i>*/}
                             </Link>
                         </div>

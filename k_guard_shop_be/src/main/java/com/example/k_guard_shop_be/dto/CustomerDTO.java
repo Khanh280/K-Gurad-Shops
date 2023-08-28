@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
-public class CustomerDTO {
+public class CustomerDTO  {
     private Long id;
     @NotBlank(message = "Tên không được để trống")
     @Pattern(regexp = "^(\\s)*[A-Z][a-z]*(\\s)*([A-Z][a-z]*(\\s)*)*([A-Z][a-z]*(\\s)*)$",message = "Tên không được chứa số, ký tự đặc biệt như @,#,$... VD: Kieu Quoc Khanh")

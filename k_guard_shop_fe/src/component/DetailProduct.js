@@ -70,8 +70,8 @@ export default function DetailProduct() {
                 {
                     product ?
                         <div className="row">
-                            <div className="col-md-4 p-0 ">
-                                <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px", overflow: "hidden"}}>
+                            <div className="col-md-4 p-0 " >
+                                <div style={{border: "1px solid #b3b3b33b", borderRadius: "10px", overflow: "hidden",position: "sticky",top:"11vh"}}>
                                     <div className="row">
                                         <img
                                             src={imageMain}
@@ -92,7 +92,6 @@ export default function DetailProduct() {
                                         }
                                     </div>
                                 </div>
-
                             </div>
 
                             <div className="col-md-8">

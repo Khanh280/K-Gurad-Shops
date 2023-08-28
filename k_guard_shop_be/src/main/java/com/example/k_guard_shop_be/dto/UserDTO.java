@@ -1,12 +1,14 @@
 package com.example.k_guard_shop_be.dto;
 
 import com.example.k_guard_shop_be.model.Roles;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserDTO {
+public class UserDTO  {
 
     private Long id;
     @NotBlank(message = "Tên đăng nhập không được để trống")
@@ -78,4 +80,14 @@ public class UserDTO {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+//    @Override
+//    public boolean supports(Class<?> clazz) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void validate(Object target, Errors errors) {
+//
+//    }
 }
