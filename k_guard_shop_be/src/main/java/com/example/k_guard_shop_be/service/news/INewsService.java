@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface INewsService {
     Page<News> getAllNews(Pageable pageable);
+    News getNewsById(Long id);
 }

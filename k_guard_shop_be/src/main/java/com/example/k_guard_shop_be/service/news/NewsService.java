@@ -18,4 +18,9 @@ public class NewsService implements INewsService{
     public Page<News> getAllNews(Pageable pageable) {
         return iNewsRepository.findAll(pageable);
     }
+
+    @Override
+    public News getNewsById(Long id) {
+        return iNewsRepository.findById(id).get();
+    }
 }

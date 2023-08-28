@@ -19,6 +19,7 @@ import HistoryOrder from "./component/HistoryOrder";
 import OrderDetailCustomer from "./component/OrderDetailCustomer";
 import InformationUser from "./component/InformationUser";
 import NewsPage from "./component/NewsPage";
+import DetailNews from "./component/DetailNews";
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
                             <Route path="/info-store/product-list" element={<ProductList/>}/>
                         </Route>
                         <Route path="/news-page" element={<NewsPage/>}/>
+                        <Route path="/news-page/detail/:id" element={<DetailNews/>}/>
                         <Route path="/product" element={<ProductHome/>}/>
                         <Route path="/product-brand" element={<ProductHome/>}/>
                         <Route path="/product/:type" element={<ProductHome/>}/>

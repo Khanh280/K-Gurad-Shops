@@ -22,4 +22,9 @@ public class NewsRestController {
         Page<News> newsPage = iNewsService.getAllNews(pageable);
         return new ResponseEntity<>(newsPage,HttpStatus.OK);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getNewsById(@PathVariable(value = "id")String id){
+        News news = iNewsService.getNewsById(Long.valueOf(id));
+        return new ResponseEntity<>(news,HttpStatus.OK);
+    }
 }

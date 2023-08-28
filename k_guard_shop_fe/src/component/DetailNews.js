@@ -1,21 +1,30 @@
 import React, {useEffect, useState} from "react";
 import * as NewsService from "../service/NewsService"
+import {useParams} from "react-router";
 import {Link, NavLink} from "react-router-dom";
 
-export default function NewsPage() {
+export default function DetailNews() {
+    const [newsDetail, setNewsDetail] = useState()
     const [news, setNews] = useState()
-    const [newCurrent, setNewCurrent] = useState()
     const [descriptions, setDescription] = useState()
+    const param = useParams()
+    const getNewsById = async (id) => {
+        const res = await NewsService.getNewsById(id)
+        setNewsDetail(()=>res.data)
+        // console.log(res.data)
+        setDescription(res.data.content.split("- "))
+    }
     const getAllNews = async () => {
         const res = await NewsService.getAllNews()
         setNews(res.data.content)
-        setNewCurrent(res.data.content[0])
-        setDescription(res.data.content[0].content.split("- "))
     }
     useEffect(() => {
+        getNewsById(param.id)
+    }, [param.id])
+    useEffect(()=>{
         getAllNews()
-    }, [])
-    if (!news) {
+    },[])
+    if (!newsDetail) {
         return null
     }
     return (
@@ -39,10 +48,10 @@ export default function NewsPage() {
                 <div className="row">
                     <div className="col-md-9" >
                         <div align="center" style={{borderRight: "1px solid #a7a7a7db",paddingRight:"1rem"}}>
-                            <h4>{newCurrent.title}</h4>
+                            <h4>{newsDetail.title}</h4>
                             <hr style={{width: "5rem", border: "2px solid #a7a7a7db"}}/>
-                            <p>Đăng ngày {newCurrent?.writeDate}</p>
-                            <img src={newCurrent.image} alt="" style={{width: "80%"}}/>
+                            <p>Đăng ngày {newsDetail?.writeDate}</p>
+                            <img src={newsDetail.image} alt="" style={{width: "80%"}}/>
                             {
                                 descriptions.map((description) =>
                                     <p style={{textAlign: "justify"}}>{description}</p>
