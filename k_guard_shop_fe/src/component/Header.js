@@ -103,7 +103,7 @@ export default function Header() {
                             ""
                     }
                     <li>
-                        <NavLink to="/news-page"
+                        <NavLink to="/news-page/list"
                                  style={({isActive}) => {
                                      return {
                                          backgroundColor: isActive ? "#F4882F" : "   ",

@@ -5,11 +5,19 @@ import * as yup from "yup";
 import * as ProductService from "../../service/ProductService";
 import {toast} from "react-toastify";
 import PulseLoader from "react-spinners/PulseLoader";
+import {getDownloadURL, ref, uploadBytesResumable} from "@firebase/storage";
+import {storage} from "../../firebase";
+import {log10} from "chart.js/helpers";
+
 
 export default function CreateProduct() {
     const [productTypes, setProductType] = useState()
     const [brands, setBrand] = useState()
     const [sizes, setSize] = useState()
+    const [image1, setImage1] = useState()
+    const [image2, setImage2] = useState()
+    const [image3, setImage3] = useState()
+    const [image4, setImage4] = useState()
     const [customer, setCustomer] = useState({
         name: "",
         address: "",
@@ -32,8 +40,55 @@ export default function CreateProduct() {
         const res = await ProductService.getAllSize()
         setSize(() => res.data)
     }
-
     const navigate = useNavigate();
+    const handleFileSelect =(event, setFile) => {
+        const file = event.target.files[0];
+        if (file) {
+            setFile(file);
+        }
+    };
+    const handleAvatarFileSelect = (event) => {
+        handleFileSelect(event, setImage1);
+    };
+    const handleImage1FileUpload = async () => {
+        return handleFileUpload(image1, setImage1);
+    };
+    const handleImage2FileUpload = async () => {
+        return handleFileUpload(image2, setImage2);
+    };
+    const handleImage3FileUpload = async () => {
+        return handleFileUpload(image3, setImage3);
+    };
+    const handleImage4FileUpload = async () => {
+        return handleFileUpload(image4, setImage4);
+    };
+    const handleFileUpload = async (file, setFile, setFileUrl) => {
+        return new Promise((resolve, reject) => {
+            if (!file) return reject("No file selected");
+            const newName = "k_guard_shop" + Date.now() + "_" + (file.name.length >= 5 ? file.name.slice(0, 5) : file.name);
+
+            const storageRef = ref(storage, `files/${newName}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress = Math.round(
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    );
+                },
+                (error) => {
+                    reject(error);
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    setFile(downloadURL);
+                    resolve(downloadURL);
+                }
+            );
+        });
+    };
+
 
     useEffect(() => {
         getProductType()
@@ -58,7 +113,10 @@ export default function CreateProduct() {
                         brand: brands[0].id,
                         productType: productTypes[0].id,
                         sizes: sizes[0].id,
-                        images: []
+                        image1: "",
+                        image2: "",
+                        image3: "",
+                        image4: ""
                     }}
                     validationSchema={yup.object({
                         // name: yup.string().required("Tên không được để trống"),
@@ -73,43 +131,45 @@ export default function CreateProduct() {
                         // email: yup.string().required("Email không được để trống")
                     })}
                     onSubmit={async (values, {setSubmitting, resetForm}) => {
-                        const newValue = {
-                            ...values,
-                            brand: brands.find((brand)=> brand.id === values.brand),
-                            productType: productTypes.find((productType)=> productType.id === values.productType),
-                            sizes: sizes.find((size)=> size.id === values.sizes),
-                            image: [{
-                                id: "",
-                                product: {
-                                    id:""
-                                },
-                                link: values.images
-                            }]
-
-                        }
-
-                        try {
-                            await ProductService.saveProduct(newValue);
-                            navigate("/info-store/product-list")
-                            toast.success("Thêm sản phẩm thành công.")
-                        } catch (e) {
-                            // await setCustomer({
-                            //     ...customer,
-                            //     name: e.response.data.name || "",
-                            //     address: e.response.data.address || "",
-                            //     phoneNumber: e.response.data.phoneNumber || "",
-                            //     gender: e.response.data.gender || "",
-                            //     username: e.response.data.username || "",
-                            //     password: e.response.data.password || "",
-                            //     email: e.response.data.email || ""
-                            // })
-                        } finally {
-                            setSubmitting(false)
-                        }
+                        const res = await Promise.all([handleImage1FileUpload(),handleImage2FileUpload()]);
+                        console.log(res[0])
+                        // const newValue = {
+                        //     ...values,
+                        //     brand: brands.find((brand) => brand.id === values.brand),
+                        //     productType: productTypes.find((productType) => productType.id === values.productType),
+                        //     sizes: sizes.find((size) => size.id === values.sizes),
+                        //     image: [{
+                        //         id: "",
+                        //         product: {
+                        //             id: ""
+                        //         },
+                        //         link: values.images
+                        //     }]
+                        //
+                        // }
+                        //
+                        // try {
+                        //     await ProductService.saveProduct(newValue);
+                        //     navigate("/info-store/product-list")
+                        //     toast.success("Thêm sản phẩm thành công.")
+                        // } catch (e) {
+                        //     // await setCustomer({
+                        //     //     ...customer,
+                        //     //     name: e.response.data.name || "",
+                        //     //     address: e.response.data.address || "",
+                        //     //     phoneNumber: e.response.data.phoneNumber || "",
+                        //     //     gender: e.response.data.gender || "",
+                        //     //     username: e.response.data.username || "",
+                        //     //     password: e.response.data.password || "",
+                        //     //     email: e.response.data.email || ""
+                        //     // })
+                        // } finally {
+                        //     setSubmitting(false)
+                        // }
                     }}
                 >
                     {
-                        ({isSubmitting}) => (
+                        ({isSubmitting,setFieldValue}) => (
                             <Form>
                                 <div className="row card1" style={{
                                     border: "1px solid gray",
@@ -237,9 +297,10 @@ export default function CreateProduct() {
                                             </div>
                                         </div>
                                         <div className="row d-flex height-row">
-                                            <div className="col-md-8">
+                                            <div className="col-md-12">
                                                 <label className="mt-1 mb-0" htmlFor="description"><b>Mô tả</b></label>
-                                                <Field className="form-control " id="description" name="description"
+                                                <Field as="textarea" className="form-control " id="description"
+                                                       name="description"
                                                        placeholder=""/>
                                                 <ErrorMessage name="description" component="p"
                                                               className="text-danger"/>
@@ -250,11 +311,96 @@ export default function CreateProduct() {
                                                         <p>&nbsp;</p>
                                                 }
                                             </div>
-                                            <div className="col-md-4">
-                                                <label className="mt-1 mb-0" htmlFor="images"><b>Hình ảnh</b></label>
-                                                <Field className="form-control " id="images"
-                                                       name="images"
-                                                       placeholder=""/>
+                                        </div>
+                                        <div className="row d-flex height-row">
+                                            <div className="col-md-3">
+                                                <label className="mt-1 mb-0" htmlFor="images1"><b>Hình ảnh 1</b></label>
+                                                <Field type="file" className="form-control" id="images1"
+                                                       name="image1"
+                                                       placeholder=""
+                                                       onChange={(event)=> {
+                                                           handleFileSelect(event,setImage1)
+                                                           setFieldValue("image1",event.target.value)
+                                                       }}
+                                                       />
+                                                {
+                                                    image1 ?
+                                                        <img src={URL.createObjectURL(image1)} alt="" id="image1" style={{width: "18rem"}}/>
+                                                        : ""
+                                                }
+                                                <ErrorMessage name="images" component="p"
+                                                              className="text-danger"/>
+                                                {
+                                                    customer.image !== "" ?
+                                                        <p className="text-danger">{customer.image}</p>
+                                                        :
+                                                        <p>&nbsp;</p>
+                                                }
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label className="mt-1 mb-0" htmlFor="images2"><b>Hình ảnh 2</b></label>
+                                                <Field type="file" className="form-control" id="images2"
+                                                       name="image2"
+                                                       placeholder=""
+                                                       onChange={(event)=> {
+                                                           handleFileSelect(event,setImage2)
+                                                           setFieldValue("image2",event.target.value)
+                                                       }}
+                                                />
+                                                {
+                                                    image2 ?
+                                                        <img src={URL.createObjectURL(image2)} alt="" id="image2" style={{width: "18rem"}}/>
+                                                        : ""
+                                                }
+                                                <ErrorMessage name="images" component="p"
+                                                              className="text-danger"/>
+                                                {
+                                                    customer.image !== "" ?
+                                                        <p className="text-danger">{customer.image}</p>
+                                                        :
+                                                        <p>&nbsp;</p>
+                                                }
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label className="mt-1 mb-0" htmlFor="images3"><b>Hình ảnh 3</b></label>
+                                                <Field type="file" className="form-control" id="images3"
+                                                       name="image3"
+                                                       placeholder=""
+                                                       onChange={(event)=> {
+                                                           handleFileSelect(event,setImage3)
+                                                           setFieldValue("image3",event.target.value)
+                                                       }}
+                                                />
+                                                {
+                                                    image3 ?
+                                                        <img src={URL.createObjectURL(image3)} alt="" id="image3" style={{width: "18rem"}}/>
+                                                        : ""
+                                                }
+
+                                                <ErrorMessage name="images" component="p"
+                                                              className="text-danger"/>
+                                                {
+                                                    customer.image !== "" ?
+                                                        <p className="text-danger">{customer.image}</p>
+                                                        :
+                                                        <p>&nbsp;</p>
+                                                }
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label className="mt-1 mb-0" htmlFor="images4"><b>Hình ảnh 4</b></label>
+                                                <Field type="file" className="form-control" id="images4"
+                                                       name="image4"
+                                                       placeholder=""
+                                                       onChange={(event)=> {
+                                                           handleFileSelect(event,setImage4)
+                                                           setFieldValue("image4",event.target.value)
+                                                       }}
+                                                />
+                                                {
+                                                    image4 ?
+                                                        <img src={URL.createObjectURL(image4)} alt="" id="image4" style={{width: "18rem"}}/>
+                                                        : ""
+                                                }
 
                                                 <ErrorMessage name="images" component="p"
                                                               className="text-danger"/>
