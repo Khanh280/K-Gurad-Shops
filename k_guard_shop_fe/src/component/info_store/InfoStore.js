@@ -84,22 +84,32 @@ export default function InfoStore() {
                                                 ></i></p>
                                             <ul id="product-manager" className="ms-2 dropdown-item-product-type"
                                                 style={{borderLeft: "1px solid gray", display: 'none'}}>
-                                                <NavLink to="/info-store/create-product">
+                                                <NavLink to="/info-store/create-product" style={({isActive}) => {
+                                                    return {
+                                                        color: isActive ? "#F4882F" : ""
+                                                    }
+                                                }}>
+
                                                     <li className="ms-1"
-                                                        style={{
-                                                            color: chooseOption === 1 ? "#F4882F" : ""
-                                                        }}
+
+                                                        // style={{
+                                                        //     color: chooseOption === 1 ? "#F4882F" : ""
+                                                        // }}
                                                         onClick={() => {
                                                             // getAllProduct("3/4", orderBy, brand.brand, nameSearch)
                                                             setChooseOption(() => 1)
                                                         }}>Thêm mới sản phẩm
                                                     </li>
                                                 </NavLink>
-                                                <NavLink to="/info-store/product-list">
+                                                <NavLink to="/info-store/product-list" style={({isActive}) => {
+                                                    return {
+                                                        color: isActive ? "#F4882F" : ""
+                                                    }
+                                                }}>
                                                     <li className="ms-1"
-                                                        style={{
-                                                            color: chooseOption === 2 ? "#F4882F" : ""
-                                                        }}
+                                                        // style={{
+                                                        //     color: chooseOption === 2 ? "#F4882F" : ""
+                                                        // }}
                                                         onClick={() => {
                                                             // getAllProduct("fullface", orderBy, brand.brand, nameSearch)
                                                             setChooseOption(() => 2)

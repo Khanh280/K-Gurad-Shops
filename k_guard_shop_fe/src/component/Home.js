@@ -156,7 +156,7 @@ export default function Home() {
                         <div className="col-md-4">
                             <hr/>
                         </div>
-                        <h3 className=" col-md-4 sub-title-product">SẢN PHẨM NỔI BẬT </h3>
+                        <h3 className=" col-md-4 sub-title-product">SẢN PHẨM MỚI </h3>
                         <div className="col-md-4">
                             <hr/>
                         </div>

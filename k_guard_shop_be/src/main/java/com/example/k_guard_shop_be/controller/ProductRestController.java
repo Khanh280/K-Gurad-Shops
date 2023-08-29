@@ -2,6 +2,7 @@ package com.example.k_guard_shop_be.controller;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.dto.ProductDTO;
+import com.example.k_guard_shop_be.dto.ProductDTOPlus;
 import com.example.k_guard_shop_be.model.Brand;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
@@ -111,22 +112,23 @@ public class ProductRestController {
     }
 
     @PostMapping("")
-    @Transactional
+//    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> saveProduct(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> saveProduct(@Validated @RequestBody ProductDTOPlus productDTOPlus, BindingResult bindingResult) {
         Map<String, String> errorMap = iProductService.validateProduct(bindingResult);
         if(errorMap != null){
             return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
         }
-        iProductService.saveProduct(productDTO);
+//        iProductService.saveProduct(productDTOPlus);
 //        Product product = new Product();
-//        BeanUtils.copyProperties(productDTO, product);
+//        BeanUtils.copyProperties(productDTOPlus, product);
 //        iProductService.saveProduct(product);
 //        List<Images> imagesList = new ArrayList<>();
-//        for (Images i : productDTO.getImage()) {
+//        for (Images i : productDTOPlus.getImage()) {
 //            imagesList.add(new Images(i.getId(), product, i.getLink()));
 //        }
 //        iImageService.saveImage(imagesList);
+        System.out.println(productDTOPlus);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

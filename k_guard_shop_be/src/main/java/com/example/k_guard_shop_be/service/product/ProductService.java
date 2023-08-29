@@ -1,20 +1,19 @@
 package com.example.k_guard_shop_be.service.product;
 
 import com.example.k_guard_shop_be.dto.IProductDTO;
-import com.example.k_guard_shop_be.dto.ProductDTO;
-import com.example.k_guard_shop_be.dto.ProductSizeDTO;
+import com.example.k_guard_shop_be.dto.ProductDTOPlus;
+import com.example.k_guard_shop_be.dto.IProductSizeDTO;
 import com.example.k_guard_shop_be.model.Images;
 import com.example.k_guard_shop_be.model.Product;
 import com.example.k_guard_shop_be.model.Sizes;
 import com.example.k_guard_shop_be.repository.IImageRepository;
 import com.example.k_guard_shop_be.repository.IProductRepository;
+import com.example.k_guard_shop_be.repository.IProductSizeRepository;
 import com.example.k_guard_shop_be.repository.ISizeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -34,6 +33,8 @@ public class ProductService implements IProductService {
     private ISizeRepository iSizeRepository;
     @Autowired
     private IImageService iImageService;
+    @Autowired
+    private IProductSizeRepository iProductSizeRepository;
 
     @Override
     public Page<IProductDTO> getAll(Pageable pageable, String productType, Long brandId, String nameSearch) {
@@ -59,12 +60,14 @@ public class ProductService implements IProductService {
 
     @Transactional
     @Override
-    public void saveProduct(ProductDTO productDTO) {
+    public void saveProduct(ProductDTOPlus productDTOPlus) {
         Product product = new Product();
-        BeanUtils.copyProperties(productDTO, product);
+        BeanUtils.copyProperties(productDTOPlus.getProductSize().getProduct(), product);
         iProductRepository.save(product);
+        productDTOPlus.getProductSize().setProduct(product);
+        iProductSizeRepository.save(productDTOPlus.getProductSize());
         List<Images> imagesList = new ArrayList<>();
-        for (Images i : productDTO.getImage()) {
+        for (Images i : productDTOPlus.getImagesList()) {
             imagesList.add(new Images(i.getId(), product, i.getLink()));
         }
         iImageService.saveImage(imagesList);
@@ -81,7 +84,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductSizeDTO> getAllSize(Long productId) {
+    public List<IProductSizeDTO> getAllSize(Long productId) {
         return iSizeRepository.getAllSize(productId);
     }
 

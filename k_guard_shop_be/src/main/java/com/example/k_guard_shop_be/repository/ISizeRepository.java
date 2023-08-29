@@ -1,6 +1,6 @@
 package com.example.k_guard_shop_be.repository;
 
-import com.example.k_guard_shop_be.dto.ProductSizeDTO;
+import com.example.k_guard_shop_be.dto.IProductSizeDTO;
 import com.example.k_guard_shop_be.model.Sizes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +13,5 @@ public interface ISizeRepository extends JpaRepository<Sizes, Long> {
             "inner join product p on ps.product_id = p.id\n" +
             "inner join sizes s on ps.size_id = s.id\n" +
             "where p.id = :productId", nativeQuery = true)
-    List<ProductSizeDTO> getAllSize(@Param("productId")Long productId);
+    List<IProductSizeDTO> getAllSize(@Param("productId")Long productId);
 }

@@ -41,7 +41,7 @@ export default function CreateProduct() {
         setSize(() => res.data)
     }
     const navigate = useNavigate();
-    const handleFileSelect =(event, setFile) => {
+    const handleFileSelect = (event, setFile) => {
         const file = event.target.files[0];
         if (file) {
             setFile(file);
@@ -82,7 +82,7 @@ export default function CreateProduct() {
                 },
                 async () => {
                     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    setFile(downloadURL);
+                    // setFile(downloadURL);
                     resolve(downloadURL);
                 }
             );
@@ -119,57 +119,62 @@ export default function CreateProduct() {
                         image4: ""
                     }}
                     validationSchema={yup.object({
-                        // name: yup.string().required("Tên không được để trống"),
-                        // address: yup.string().required("Địa chỉ không được để trống"),
-                        // phoneNumber: yup.string().required("Số điện thoại không được để trống"),
-                        // gender: yup.number().required("Vui lòng chọn giới tính")
-                        //     .min(0, "Vui lòng chọn giới tính hợp lệ")
-                        //     .max(2, "Vui lòng chọn giới tính hợp lệ"),
-                        // username: yup.string().required("Tên đăng nhập không được để trống"),
-                        // password: yup.string().required("Mật khẩu không được để trống"),
-                        // confirmPassword: yup.string().required("Mật khẩu không được để trống"),
-                        // email: yup.string().required("Email không được để trống")
+                        name: yup.string().required("Tên không được để trống"),
+                        price: yup.number().required("Giá không được để trống").min(1,"Giá lớn hơn 0"),
+                        quantity: yup.number().required("Số lượng không được để trống").min(1,"Số lượng lớn hơn 0"),
+                        brand: yup.number().required("Vui lòng chọn thương hiệu")
+                            .min(1, "Vui lòng chọn chọn thương hiệu hợp lệ"),
+                        productType: yup.number().required("Vui lòng chọn loại sản phẩm").min(1,"Vui lòng chọn loại sản phẩm hợp lệ"),
+                        sizes: yup.number().required("Vui lòng chọn size").min(1,"Vui lòng chọn size hợp lệ"),
+                        image1: yup.string().required("")
                     })}
                     onSubmit={async (values, {setSubmitting, resetForm}) => {
-                        const res = await Promise.all([handleImage1FileUpload(),handleImage2FileUpload()]);
-                        console.log(res[0])
-                        // const newValue = {
-                        //     ...values,
-                        //     brand: brands.find((brand) => brand.id === values.brand),
-                        //     productType: productTypes.find((productType) => productType.id === values.productType),
-                        //     sizes: sizes.find((size) => size.id === values.sizes),
-                        //     image: [{
-                        //         id: "",
-                        //         product: {
-                        //             id: ""
-                        //         },
-                        //         link: values.images
-                        //     }]
-                        //
-                        // }
-                        //
-                        // try {
-                        //     await ProductService.saveProduct(newValue);
-                        //     navigate("/info-store/product-list")
-                        //     toast.success("Thêm sản phẩm thành công.")
-                        // } catch (e) {
-                        //     // await setCustomer({
-                        //     //     ...customer,
-                        //     //     name: e.response.data.name || "",
-                        //     //     address: e.response.data.address || "",
-                        //     //     phoneNumber: e.response.data.phoneNumber || "",
-                        //     //     gender: e.response.data.gender || "",
-                        //     //     username: e.response.data.username || "",
-                        //     //     password: e.response.data.password || "",
-                        //     //     email: e.response.data.email || ""
-                        //     // })
-                        // } finally {
-                        //     setSubmitting(false)
-                        // }
+                        const res = await Promise.all([handleImage1FileUpload(), handleImage2FileUpload(), handleImage3FileUpload(), handleImage4FileUpload()]);
+                        console.log(res)
+                        const productDTO = {
+                            productSize: {
+                                id: "",
+                                product: {
+                                    name:values.name,
+                                    description: values.description,
+                                    brand: brands.find((brand) => brand.id === values.brand),
+                                    productType: productTypes.find((productType) => productType.id === values.productType),
+                                    quantity: values.quantity,
+                                    price: values.price
+                                },
+                                sizes: sizes.find((size) => size.id === values.sizes)
+                            },
+                            imagesList: res.map((item) => ({
+                                id: "",
+                                product: {
+                                    id: ""
+                                },
+                                link: item
+                            }))
+                        }
+                        console.log(productDTO)
+                        try {
+                            await ProductService.saveProduct(productDTO);
+                            // navigate("/info-store/product-list")
+                            toast.success("Thêm sản phẩm thành công.")
+                        } catch (e) {
+                            // await setCustomer({
+                            //     ...customer,
+                            //     name: e.response.data.name || "",
+                            //     address: e.response.data.address || "",
+                            //     phoneNumber: e.response.data.phoneNumber || "",
+                            //     gender: e.response.data.gender || "",
+                            //     username: e.response.data.username || "",
+                            //     password: e.response.data.password || "",
+                            //     email: e.response.data.email || ""
+                            // })
+                        } finally {
+                            setSubmitting(false)
+                        }
                     }}
                 >
                     {
-                        ({isSubmitting,setFieldValue}) => (
+                        ({isSubmitting, setFieldValue}) => (
                             <Form>
                                 <div className="row card1" style={{
                                     border: "1px solid gray",
@@ -184,7 +189,7 @@ export default function CreateProduct() {
                                                     className="login ms-0 col-md-12 justify-content-center d-flex"><h3>Thêm mới sản phẩm</h3></span>
                                     </div>
                                     <div className="col-md-12 input-field d-flex flex-column mt-3">
-                                        <div className="row d-flex height-row">
+                                        <div className="row d-flex" style={{maxHeight: "6rem"}}>
                                             <div className="col-md-4">
                                                 <label className="mt-1 mb-0" htmlFor="name"><b>Tên sản phẩm</b></label>
                                                 <Field className="form-control " id="name" name="name"
@@ -231,7 +236,7 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                         </div>
-                                        <div className="row d-flex height-row">
+                                        <div className="row d-flex" style={{maxHeight: "6rem"}}>
                                             <div className="col-md-4">
                                                 <label className="mt-1 mb-0" htmlFor="productType"><b>Loại sản phẩm</b></label>
                                                 <Field as="select" className="form-control " id="productType"
@@ -296,7 +301,7 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                         </div>
-                                        <div className="row d-flex height-row">
+                                        <div className="row d-flex" style={{maxHeight: "6rem"}}>
                                             <div className="col-md-12">
                                                 <label className="mt-1 mb-0" htmlFor="description"><b>Mô tả</b></label>
                                                 <Field as="textarea" className="form-control " id="description"
@@ -312,20 +317,21 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                         </div>
-                                        <div className="row d-flex height-row">
+                                        <div className="row d-flex" style={{minHeight: "6rem"}}>
                                             <div className="col-md-3">
-                                                <label className="mt-1 mb-0" htmlFor="images1"><b>Hình ảnh 1</b></label>
+                                                <label className="mt-1 mb-0" htmlFor="images1"><b>Ảnh chính</b></label>
                                                 <Field type="file" className="form-control" id="images1"
                                                        name="image1"
                                                        placeholder=""
-                                                       onChange={(event)=> {
-                                                           handleFileSelect(event,setImage1)
-                                                           setFieldValue("image1",event.target.value)
+                                                       onChange={(event) => {
+                                                           handleFileSelect(event, setImage1)
+                                                           setFieldValue("image1", event.target.value)
                                                        }}
-                                                       />
+                                                />
                                                 {
                                                     image1 ?
-                                                        <img src={URL.createObjectURL(image1)} alt="" id="image1" style={{width: "18rem"}}/>
+                                                        <img className="mt-3" src={URL.createObjectURL(image1)} alt="" id="image1"
+                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
                                                         : ""
                                                 }
                                                 <ErrorMessage name="images" component="p"
@@ -338,18 +344,19 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                             <div className="col-md-3">
-                                                <label className="mt-1 mb-0" htmlFor="images2"><b>Hình ảnh 2</b></label>
+                                                <label className="mt-1 mb-0" htmlFor="images2"><b>Ảnh phụ</b></label>
                                                 <Field type="file" className="form-control" id="images2"
                                                        name="image2"
                                                        placeholder=""
-                                                       onChange={(event)=> {
-                                                           handleFileSelect(event,setImage2)
-                                                           setFieldValue("image2",event.target.value)
+                                                       onChange={(event) => {
+                                                           handleFileSelect(event, setImage2)
+                                                           setFieldValue("image2", event.target.value)
                                                        }}
                                                 />
                                                 {
                                                     image2 ?
-                                                        <img src={URL.createObjectURL(image2)} alt="" id="image2" style={{width: "18rem"}}/>
+                                                        <img className="mt-3" src={URL.createObjectURL(image2)} alt="" id="image2"
+                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
                                                         : ""
                                                 }
                                                 <ErrorMessage name="images" component="p"
@@ -362,18 +369,19 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                             <div className="col-md-3">
-                                                <label className="mt-1 mb-0" htmlFor="images3"><b>Hình ảnh 3</b></label>
+                                                <label className="mt-1 mb-0" htmlFor="images3"><b>Ảnh phụ</b></label>
                                                 <Field type="file" className="form-control" id="images3"
                                                        name="image3"
                                                        placeholder=""
-                                                       onChange={(event)=> {
-                                                           handleFileSelect(event,setImage3)
-                                                           setFieldValue("image3",event.target.value)
+                                                       onChange={(event) => {
+                                                           handleFileSelect(event, setImage3)
+                                                           setFieldValue("image3", event.target.value)
                                                        }}
                                                 />
                                                 {
                                                     image3 ?
-                                                        <img src={URL.createObjectURL(image3)} alt="" id="image3" style={{width: "18rem"}}/>
+                                                        <img className="mt-3" src={URL.createObjectURL(image3)} alt="" id="image3"
+                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
                                                         : ""
                                                 }
 
@@ -387,18 +395,19 @@ export default function CreateProduct() {
                                                 }
                                             </div>
                                             <div className="col-md-3">
-                                                <label className="mt-1 mb-0" htmlFor="images4"><b>Hình ảnh 4</b></label>
+                                                <label className="mt-1 mb-0" htmlFor="images4"><b>Ảnh phụ</b></label>
                                                 <Field type="file" className="form-control" id="images4"
                                                        name="image4"
                                                        placeholder=""
-                                                       onChange={(event)=> {
-                                                           handleFileSelect(event,setImage4)
-                                                           setFieldValue("image4",event.target.value)
+                                                       onChange={(event) => {
+                                                           handleFileSelect(event, setImage4)
+                                                           setFieldValue("image4", event.target.value)
                                                        }}
                                                 />
                                                 {
                                                     image4 ?
-                                                        <img src={URL.createObjectURL(image4)} alt="" id="image4" style={{width: "18rem"}}/>
+                                                        <img className="mt-3" src={URL.createObjectURL(image4)} alt="" id="image4"
+                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
                                                         : ""
                                                 }
 
