@@ -13,6 +13,11 @@ public class ProductDTOPlus {
     public ProductDTOPlus() {
     }
 
+    public ProductDTOPlus(ProductSize productSize, List<Images> imagesList) {
+        this.productSize = productSize;
+        this.imagesList = imagesList;
+    }
+
     public ProductDTOPlus(Long id, ProductSize productSize, List<Images> imagesList) {
         this.id = id;
         this.productSize = productSize;

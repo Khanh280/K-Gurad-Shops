@@ -167,10 +167,10 @@ export default function ProductList() {
                                                      className="btn btn-info d-flex align-items-center justify-content-center"
                                                      style={{width: "2rem", height: "2rem"}}>
                                                 <i className="bi bi-info-square" title="Chi tiết"></i></NavLink>
-                                            <button
+                                            <NavLink to={`/info-store/update-product/${product.id}`}
                                                 className="btn btn-warning ms-1 d-flex align-items-center justify-content-center"
                                                 style={{width: "2rem", height: "2rem"}}><i
-                                                className="bi bi-pencil-square" title="Chỉnh sửa"></i></button>
+                                                className="bi bi-pencil-square" title="Chỉnh sửa"></i></NavLink>
                                             <button
                                                 className="btn btn-danger ms-1 d-flex align-items-center justify-content-center"
                                                 style={{width: "2rem", height: "2rem"}}

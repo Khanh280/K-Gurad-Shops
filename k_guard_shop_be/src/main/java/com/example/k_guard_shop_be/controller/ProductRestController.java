@@ -3,11 +3,9 @@ package com.example.k_guard_shop_be.controller;
 import com.example.k_guard_shop_be.dto.IProductDTO;
 import com.example.k_guard_shop_be.dto.ProductDTO;
 import com.example.k_guard_shop_be.dto.ProductDTOPlus;
-import com.example.k_guard_shop_be.model.Brand;
-import com.example.k_guard_shop_be.model.Images;
-import com.example.k_guard_shop_be.model.Product;
-import com.example.k_guard_shop_be.model.ProductType;
+import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.repository.IProductTypeRepository;
+import com.example.k_guard_shop_be.service.IProductSizeService;
 import com.example.k_guard_shop_be.service.brand.IBrandService;
 import com.example.k_guard_shop_be.service.product.IImageService;
 import com.example.k_guard_shop_be.service.product.IProductService;
@@ -40,6 +38,8 @@ public class ProductRestController {
     private IImageService iImageService;
     @Autowired
     private IProductTypeService iProductTypeService;
+    @Autowired
+    private IProductSizeService iProductSizeService;
     @Autowired
     private IBrandService iBrandService;
 
@@ -116,18 +116,10 @@ public class ProductRestController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> saveProduct(@Validated @RequestBody ProductDTOPlus productDTOPlus, BindingResult bindingResult) {
         Map<String, String> errorMap = iProductService.validateProduct(bindingResult);
-        if(errorMap != null){
-            return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
+        if (errorMap != null) {
+            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
         }
         iProductService.saveProduct(productDTOPlus);
-//        Product product = new Product();
-//        BeanUtils.copyProperties(productDTOPlus, product);
-//        iProductService.saveProduct(product);
-//        List<Images> imagesList = new ArrayList<>();
-//        for (Images i : productDTOPlus.getImage()) {
-//            imagesList.add(new Images(i.getId(), product, i.getLink()));
-//        }
-//        iImageService.saveImage(imagesList);
         System.out.println(productDTOPlus);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -149,10 +141,19 @@ public class ProductRestController {
         return new ResponseEntity<>(imagesList, HttpStatus.OK);
     }
 
+    @GetMapping("/update/{id}")
+    public ResponseEntity<?> getProductUpdate(@PathVariable("id")Long id) {
+        ProductSize productSize = iProductSizeService.getProductSizeByProductId(id);
+        List<Images> imagesList = iImageService.getAllByProductId(id);
+        ProductDTOPlus  productDTOPlus = new ProductDTOPlus(productSize,imagesList);
+        return new ResponseEntity<>(productDTOPlus,HttpStatus.OK);
+    }
+
     @GetMapping("/size/{productId}")
     public ResponseEntity<?> getSizeProduct(@PathVariable("productId") Long productId) {
         return new ResponseEntity<>(iProductService.getAllSize(productId), HttpStatus.OK);
     }
+
     @GetMapping("/size")
     public ResponseEntity<?> getSizeProduct() {
         return new ResponseEntity<>(iProductService.getAllSize(), HttpStatus.OK);

@@ -21,6 +21,7 @@ import InformationUser from "./component/InformationUser";
 import NewsPage from "./component/news/NewsPage";
 import DetailNews from "./component/news/DetailNews";
 import NewsList from "./component/news/NewsList";
+import UpdateProduct from "./component/info_store/UpdateProduct";
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                         <Route path="/info-store" element={<InfoStore/>}>
                             <Route path="/info-store" element={<ProductList/>}/>
                             <Route path="/info-store/create-product" element={<CreateProduct/>}/>
+                            <Route path="/info-store/update-product/:id" element={<UpdateProduct/>}/>
                             <Route path="/info-store/product-list" element={<ProductList/>}/>
                         </Route>
                         <Route path="/news-page" element={<NewsPage/>}>

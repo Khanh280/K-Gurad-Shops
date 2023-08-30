@@ -13,4 +13,9 @@ public class ProductSizeService implements IProductSizeService{
     public ProductSize getProductSizeById(Long id) {
         return iProductSizeRepository.findById(id).get();
     }
+
+    @Override
+    public ProductSize getProductSizeByProductId(Long id) {
+        return iProductSizeRepository.getProductSizeByProductId(id);
+    }
 }

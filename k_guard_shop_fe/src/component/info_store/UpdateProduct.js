@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as yup from "yup";
 import * as ProductService from "../../service/ProductService";
@@ -10,14 +10,16 @@ import {storage} from "../../firebase";
 import {log10} from "chart.js/helpers";
 
 
-export default function CreateProduct() {
+export default function UpdateProduct() {
     const [productTypes, setProductType] = useState()
+    const [product,setProduct] = useState()
     const [brands, setBrand] = useState()
     const [sizes, setSize] = useState()
     const [image1, setImage1] = useState()
     const [image2, setImage2] = useState()
     const [image3, setImage3] = useState()
     const [image4, setImage4] = useState()
+    const param = useParams()
     const [customer, setCustomer] = useState({
         name: "",
         address: "",
@@ -27,6 +29,10 @@ export default function CreateProduct() {
         password: "",
         email: ""
     })
+    const getProductById = async (id)=>{
+        const res = await  ProductService.getProductUpdateById(id)
+        console.log(res)
+    }
 
     const getProductType = async () => {
         const res = await ProductService.getAllProductType()
@@ -91,12 +97,13 @@ export default function CreateProduct() {
 
 
     useEffect(() => {
+        getProductById(param.id)
         getProductType()
         getBrand()
         getSize()
         console.log(customer)
     }, [customer])
-    if (!productTypes || !brands || !sizes) {
+    if (!productTypes || !brands || !sizes || !product) {
         return null;
     }
     return (

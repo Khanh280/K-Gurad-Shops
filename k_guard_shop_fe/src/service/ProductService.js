@@ -96,6 +96,15 @@ export const getProductById = async (id) => {
     })
     return res;
 }
+export const getProductUpdateById = async (id) => {
+    const res = await axios.get("http://localhost:8080/api/product/update/"+ id, {
+        headers: {
+            'Content-Type': 'text/plain', // Set the Content-Type header to indicate the raw data format
+            "Authorization": "Bearer " + await getToken()
+        }
+    })
+    return res;
+}
 export const getTop4Product = async () => {
     const res = await axios.get("http://localhost:8080/api/product/top-product/4",{
         headers: {
