@@ -119,7 +119,7 @@ public class ProductRestController {
         if (errorMap != null) {
             return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
         }
-        iProductService.saveProduct(productDTOPlus);
+//        iProductService.saveProduct(productDTOPlus);
         System.out.println(productDTOPlus);
         return new ResponseEntity<>(HttpStatus.OK);
     }

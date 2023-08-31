@@ -12,13 +12,18 @@ import {log10} from "chart.js/helpers";
 
 export default function UpdateProduct() {
     const [productTypes, setProductType] = useState()
-    const [product,setProduct] = useState()
+    const [product, setProduct] = useState()
     const [brands, setBrand] = useState()
     const [sizes, setSize] = useState()
+    const [productSize, setProductSize] = useState()
     const [image1, setImage1] = useState()
     const [image2, setImage2] = useState()
     const [image3, setImage3] = useState()
     const [image4, setImage4] = useState()
+    const [image1Url, setImage1Url] = useState()
+    const [image2Url, setImage2Url] = useState()
+    const [image3Url, setImage3Url] = useState()
+    const [image4Url, setImage4Url] = useState()
     const param = useParams()
     const [customer, setCustomer] = useState({
         name: "",
@@ -29,8 +34,13 @@ export default function UpdateProduct() {
         password: "",
         email: ""
     })
-    const getProductById = async (id)=>{
-        const res = await  ProductService.getProductUpdateById(id)
+    const getProductById = async (id) => {
+        const res = await ProductService.getProductUpdateById(id)
+        setProductSize(() => res.data.productSize)
+        setImage1Url(() => res.data.imagesList[0].link)
+        setImage2Url(() => res.data.imagesList[1].link)
+        setImage3Url(() => res.data.imagesList[2].link)
+        setImage4Url(() => res.data.imagesList[3].link)
         console.log(res)
     }
 
@@ -103,7 +113,7 @@ export default function UpdateProduct() {
         getSize()
         console.log(customer)
     }, [customer])
-    if (!productTypes || !brands || !sizes || !product) {
+    if (!productTypes || !brands || !sizes || !productSize) {
         return null;
     }
     return (
@@ -112,27 +122,31 @@ export default function UpdateProduct() {
             <div className="col-md-10">
                 <Formik
                     initialValues={{
-                        id: "",
-                        name: "",
-                        description: "",
-                        price: "",
-                        quantity: 0,
-                        brand: brands[0].id,
-                        productType: productTypes[0].id,
-                        sizes: sizes[0].id,
+                        id: productSize?.product?.id,
+                        name: productSize?.product?.name,
+                        description: productSize?.product?.description,
+                        price: productSize?.product?.price,
+                        quantity: productSize?.product?.quantity,
+                        brand: productSize?.product?.brand?.id,
+                        productType: productSize?.product?.productType?.id,
+                        sizes: productSize?.sizes?.id,
                         image1: "",
                         image2: "",
                         image3: "",
                         image4: ""
+                        // image1: image1,
+                        // image2: image2,
+                        // image3: image3,
+                        // image4: image4
                     }}
                     validationSchema={yup.object({
                         name: yup.string().required("Tên không được để trống"),
-                        price: yup.number().required("Giá không được để trống").min(1,"Giá lớn hơn 0"),
-                        quantity: yup.number().required("Số lượng không được để trống").min(1,"Số lượng lớn hơn 0"),
+                        price: yup.number().required("Giá không được để trống").min(1, "Giá lớn hơn 0"),
+                        quantity: yup.number().required("Số lượng không được để trống").min(1, "Số lượng lớn hơn 0"),
                         brand: yup.number().required("Vui lòng chọn thương hiệu")
                             .min(1, "Vui lòng chọn chọn thương hiệu hợp lệ"),
-                        productType: yup.number().required("Vui lòng chọn loại sản phẩm").min(1,"Vui lòng chọn loại sản phẩm hợp lệ"),
-                        sizes: yup.number().required("Vui lòng chọn size").min(1,"Vui lòng chọn size hợp lệ"),
+                        productType: yup.number().required("Vui lòng chọn loại sản phẩm").min(1, "Vui lòng chọn loại sản phẩm hợp lệ"),
+                        sizes: yup.number().required("Vui lòng chọn size").min(1, "Vui lòng chọn size hợp lệ"),
                         image1: yup.string().required("Vui lòng nhập ảnh chính")
                     })}
                     onSubmit={async (values, {setSubmitting, resetForm}) => {
@@ -142,7 +156,7 @@ export default function UpdateProduct() {
                             productSize: {
                                 id: "",
                                 product: {
-                                    name:values.name,
+                                    name: values.name,
                                     description: values.description,
                                     brand: brands.find((brand) => brand.id === values.brand),
                                     productType: productTypes.find((productType) => productType.id === values.productType),
@@ -193,7 +207,7 @@ export default function UpdateProduct() {
                                 }}>
                                     <div className="col-md-12 d-flex flex-column">
                                                 <span
-                                                    className="login ms-0 col-md-12 justify-content-center d-flex"><h3>Thêm mới sản phẩm</h3></span>
+                                                    className="login ms-0 col-md-12 justify-content-center d-flex"><h3>Cập nhật sản phẩm</h3></span>
                                     </div>
                                     <div className="col-md-12 input-field d-flex flex-column mt-3">
                                         <div className="row d-flex" style={{maxHeight: "6rem"}}>
@@ -333,14 +347,17 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage1)
                                                            setFieldValue("image1", event.target.value)
-                                                       }}
-                                                />
-                                                {
-                                                    image1 ?
-                                                        <img className="mt-3" src={URL.createObjectURL(image1)} alt="" id="image1"
-                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
-                                                        : ""
-                                                }
+                                                           setImage1Url(()=>null)
+                                                       }}/>
+
+                                                        <img className="mt-3" src={(image1Url ? image1Url : URL.createObjectURL(image1))} alt=""
+                                                             id="image1"
+                                                             style={{
+                                                                 width: "11rem",
+                                                                 height: "11rem",
+                                                                 objectFit: "cover"
+                                                             }}/>
+
                                                 <ErrorMessage name="image1" component="p"
                                                               className="text-danger"/>
                                                 {
@@ -358,14 +375,18 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage2)
                                                            setFieldValue("image2", event.target.value)
+                                                           setImage2Url(()=>null)
                                                        }}
                                                 />
-                                                {
-                                                    image2 ?
-                                                        <img className="mt-3" src={URL.createObjectURL(image2)} alt="" id="image2"
-                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
-                                                        : ""
-                                                }
+
+                                                        <img className="mt-3" src={(image2Url ? image2Url : URL.createObjectURL(image2))} alt=""
+                                                             id="image2"
+                                                             style={{
+                                                                 width: "11rem",
+                                                                 height: "11rem",
+                                                                 objectFit: "cover"
+                                                             }}/>
+
                                                 <ErrorMessage name="images" component="p"
                                                               className="text-danger"/>
                                                 {
@@ -383,14 +404,18 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage3)
                                                            setFieldValue("image3", event.target.value)
+                                                           setImage3Url(()=>null)
                                                        }}
                                                 />
-                                                {
-                                                    image3 ?
-                                                        <img className="mt-3" src={URL.createObjectURL(image3)} alt="" id="image3"
-                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
-                                                        : ""
-                                                }
+
+                                                        <img className="mt-3" src={(image3Url ? image3Url : URL.createObjectURL(image3))} alt=""
+                                                             id="image3"
+                                                             style={{
+                                                                 width: "11rem",
+                                                                 height: "11rem",
+                                                                 objectFit: "cover"
+                                                             }}/>
+
 
                                                 <ErrorMessage name="images" component="p"
                                                               className="text-danger"/>
@@ -409,14 +434,18 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage4)
                                                            setFieldValue("image4", event.target.value)
+                                                           setImage4Url(()=>null)
                                                        }}
                                                 />
-                                                {
-                                                    image4 ?
-                                                        <img className="mt-3" src={URL.createObjectURL(image4)} alt="" id="image4"
-                                                             style={{width: "11rem",height: "11rem",objectFit: "cover"}}/>
-                                                        : ""
-                                                }
+
+                                                        <img className="mt-3" src={(image4Url ? image4Url : URL.createObjectURL(image4))} alt=""
+                                                             id="image4"
+                                                             style={{
+                                                                 width: "11rem",
+                                                                 height: "11rem",
+                                                                 objectFit: "cover"
+                                                             }}/>
+
 
                                                 <ErrorMessage name="images" component="p"
                                                               className="text-danger"/>
@@ -457,7 +486,7 @@ export default function UpdateProduct() {
                                                                 className="d-flex align-items-center justify-content-center"
                                                                 color="#F4882F" size={10} margin={10}/>
                                                             :
-                                                            "Thêm"
+                                                            "Cập nhật"
                                                     }
                                                 </button>
                                             </div>
