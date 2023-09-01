@@ -196,7 +196,7 @@ export default function ProductList() {
                 </table>
             </div>
 
-            <div className="col-md-12 d-flex justify-content-end">
+            <div className="col-md-12 d-flex justify-content-end mt-1">
                 <ul className="d-flex">
                     {
                         currentPage === 0 ?

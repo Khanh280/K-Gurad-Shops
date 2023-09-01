@@ -16,6 +16,7 @@ export default function UpdateProduct() {
     const [brands, setBrand] = useState()
     const [sizes, setSize] = useState()
     const [productSize, setProductSize] = useState()
+    const [imagesList, setImageList] = useState()
     const [image1, setImage1] = useState()
     const [image2, setImage2] = useState()
     const [image3, setImage3] = useState()
@@ -37,6 +38,7 @@ export default function UpdateProduct() {
     const getProductById = async (id) => {
         const res = await ProductService.getProductUpdateById(id)
         setProductSize(() => res.data.productSize)
+        setImageList(() => res.data.imagesList)
         setImage1Url(() => res.data.imagesList[0].link)
         setImage2Url(() => res.data.imagesList[1].link)
         setImage3Url(() => res.data.imagesList[2].link)
@@ -67,42 +69,46 @@ export default function UpdateProduct() {
         handleFileSelect(event, setImage1);
     };
     const handleImage1FileUpload = async () => {
-        return handleFileUpload(image1, setImage1);
+        return handleFileUpload(image1, setImage1, image1Url);
     };
     const handleImage2FileUpload = async () => {
-        return handleFileUpload(image2, setImage2);
+        return handleFileUpload(image2, setImage2, image2Url);
     };
     const handleImage3FileUpload = async () => {
-        return handleFileUpload(image3, setImage3);
+        return handleFileUpload(image3, setImage3, image3Url);
     };
     const handleImage4FileUpload = async () => {
-        return handleFileUpload(image4, setImage4);
+        return handleFileUpload(image4, setImage4, image4Url);
     };
-    const handleFileUpload = async (file, setFile, setFileUrl) => {
-        return new Promise((resolve, reject) => {
-            if (!file) return reject("No file selected");
-            const newName = "k_guard_shop" + Date.now() + "_" + (file.name.length >= 5 ? file.name.slice(0, 5) : file.name);
+    const handleFileUpload = async (file, setFile, imageUrl) => {
+        if (imageUrl) {
+            return imageUrl;
+        } else {
+            return new Promise((resolve, reject) => {
+                if (!file) return reject("No file selected");
+                const newName = "k_guard_shop" + Date.now() + "_" + (file.name.length >= 5 ? file.name.slice(0, 5) : file.name);
 
-            const storageRef = ref(storage, `files/${newName}`);
-            const uploadTask = uploadBytesResumable(storageRef, file);
+                const storageRef = ref(storage, `files/${newName}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
 
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    const progress = Math.round(
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    );
-                },
-                (error) => {
-                    reject(error);
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    // setFile(downloadURL);
-                    resolve(downloadURL);
-                }
-            );
-        });
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        const progress = Math.round(
+                            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                        );
+                    },
+                    (error) => {
+                        reject(error);
+                    },
+                    async () => {
+                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        // setFile(downloadURL);
+                        resolve(downloadURL);
+                    }
+                );
+            });
+        }
     };
 
 
@@ -122,7 +128,7 @@ export default function UpdateProduct() {
             <div className="col-md-10">
                 <Formik
                     initialValues={{
-                        id: productSize?.product?.id,
+                        id: productSize?.id,
                         name: productSize?.product?.name,
                         description: productSize?.product?.description,
                         price: productSize?.product?.price,
@@ -147,37 +153,58 @@ export default function UpdateProduct() {
                             .min(1, "Vui lòng chọn chọn thương hiệu hợp lệ"),
                         productType: yup.number().required("Vui lòng chọn loại sản phẩm").min(1, "Vui lòng chọn loại sản phẩm hợp lệ"),
                         sizes: yup.number().required("Vui lòng chọn size").min(1, "Vui lòng chọn size hợp lệ"),
-                        image1: yup.string().required("Vui lòng nhập ảnh chính")
+                        // image1: yup.string().required("Vui lòng nhập ảnh chính")
                     })}
                     onSubmit={async (values, {setSubmitting, resetForm}) => {
-                        const res = await Promise.all([handleImage1FileUpload(), handleImage2FileUpload(), handleImage3FileUpload(), handleImage4FileUpload()]);
-                        console.log(res)
-                        const productDTO = {
-                            productSize: {
-                                id: "",
-                                product: {
-                                    name: values.name,
-                                    description: values.description,
-                                    brand: brands.find((brand) => brand.id === values.brand),
-                                    productType: productTypes.find((productType) => productType.id === values.productType),
-                                    quantity: values.quantity,
-                                    price: values.price
-                                },
-                                sizes: sizes.find((size) => size.id === values.sizes)
-                            },
-                            imagesList: res.map((item) => ({
-                                id: "",
+                        const res = await Promise.all([
+                            {
+                                id: imagesList[0]?.id,
                                 product: {
                                     id: ""
                                 },
-                                link: item
-                            }))
+                                link: await handleImage1FileUpload()
+                            },
+                            {
+                                id: imagesList[1]?.id,
+                                product: {
+                                    id: ""
+                                },
+                                link: await handleImage2FileUpload()
+                            }, {
+                                id: imagesList[2]?.id,
+                                product: {
+                                    id: ""
+                                },
+                                link: await handleImage3FileUpload()
+                            }, {
+                                id: imagesList[3]?.id,
+                                product: {
+                                    id: ""
+                                },
+                                link: await handleImage4FileUpload()
+                            }]);
+                        console.log(res)
+                        const productDTO = {
+                            productSize: {
+                                id: values.id,
+                                product: {
+                                    id: productSize?.product?.id,
+                                    name: values.name,
+                                    description: values.description,
+                                    brand: brands.find((brand) => brand.id === +values.brand),
+                                    productType: productTypes.find((productType) => productType.id === +values.productType),
+                                    quantity: values.quantity,
+                                    price: values.price
+                                },
+                                sizes: sizes.find((size) => size.id === +values.sizes)
+                            },
+                            imagesList: res.map(item => item)
                         }
                         console.log(productDTO)
                         try {
                             await ProductService.saveProduct(productDTO);
-                            // navigate("/info-store/product-list")
-                            toast.success("Thêm sản phẩm thành công.")
+                            navigate("/info-store/product-list")
+                            toast.success("Cập nhật sản phẩm thành công.")
                         } catch (e) {
                             // await setCustomer({
                             //     ...customer,
@@ -340,23 +367,25 @@ export default function UpdateProduct() {
                                         </div>
                                         <div className="row d-flex" style={{minHeight: "6rem"}}>
                                             <div className="col-md-3">
-                                                <label className="mt-1 mb-0" htmlFor="images1"><b>Ảnh chính</b></label>
-                                                <Field type="file" className="form-control" id="images1"
+                                                <label className="mt-1 mb-0" htmlFor="image1"><b>Ảnh chính</b></label>
+                                                <Field type="file" className="form-control" id="image1"
                                                        name="image1"
                                                        placeholder=""
+                                                       defaultValue={image1Url}
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage1)
                                                            setFieldValue("image1", event.target.value)
-                                                           setImage1Url(()=>null)
+                                                           setImage1Url(() => null)
                                                        }}/>
 
-                                                        <img className="mt-3" src={(image1Url ? image1Url : URL.createObjectURL(image1))} alt=""
-                                                             id="image1"
-                                                             style={{
-                                                                 width: "11rem",
-                                                                 height: "11rem",
-                                                                 objectFit: "cover"
-                                                             }}/>
+                                                <img className="mt-3"
+                                                     src={(image1Url ? image1Url : URL.createObjectURL(image1))} alt=""
+                                                     id="image1"
+                                                     style={{
+                                                         width: "11rem",
+                                                         height: "11rem",
+                                                         objectFit: "cover"
+                                                     }}/>
 
                                                 <ErrorMessage name="image1" component="p"
                                                               className="text-danger"/>
@@ -375,17 +404,18 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage2)
                                                            setFieldValue("image2", event.target.value)
-                                                           setImage2Url(()=>null)
+                                                           setImage2Url(() => null)
                                                        }}
                                                 />
 
-                                                        <img className="mt-3" src={(image2Url ? image2Url : URL.createObjectURL(image2))} alt=""
-                                                             id="image2"
-                                                             style={{
-                                                                 width: "11rem",
-                                                                 height: "11rem",
-                                                                 objectFit: "cover"
-                                                             }}/>
+                                                <img className="mt-3"
+                                                     src={(image2Url ? image2Url : URL.createObjectURL(image2))} alt=""
+                                                     id="image2"
+                                                     style={{
+                                                         width: "11rem",
+                                                         height: "11rem",
+                                                         objectFit: "cover"
+                                                     }}/>
 
                                                 <ErrorMessage name="images" component="p"
                                                               className="text-danger"/>
@@ -404,17 +434,18 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage3)
                                                            setFieldValue("image3", event.target.value)
-                                                           setImage3Url(()=>null)
+                                                           setImage3Url(() => null)
                                                        }}
                                                 />
 
-                                                        <img className="mt-3" src={(image3Url ? image3Url : URL.createObjectURL(image3))} alt=""
-                                                             id="image3"
-                                                             style={{
-                                                                 width: "11rem",
-                                                                 height: "11rem",
-                                                                 objectFit: "cover"
-                                                             }}/>
+                                                <img className="mt-3"
+                                                     src={(image3Url ? image3Url : URL.createObjectURL(image3))} alt=""
+                                                     id="image3"
+                                                     style={{
+                                                         width: "11rem",
+                                                         height: "11rem",
+                                                         objectFit: "cover"
+                                                     }}/>
 
 
                                                 <ErrorMessage name="images" component="p"
@@ -434,17 +465,18 @@ export default function UpdateProduct() {
                                                        onChange={(event) => {
                                                            handleFileSelect(event, setImage4)
                                                            setFieldValue("image4", event.target.value)
-                                                           setImage4Url(()=>null)
+                                                           setImage4Url(() => null)
                                                        }}
                                                 />
 
-                                                        <img className="mt-3" src={(image4Url ? image4Url : URL.createObjectURL(image4))} alt=""
-                                                             id="image4"
-                                                             style={{
-                                                                 width: "11rem",
-                                                                 height: "11rem",
-                                                                 objectFit: "cover"
-                                                             }}/>
+                                                <img className="mt-3"
+                                                     src={(image4Url ? image4Url : URL.createObjectURL(image4))} alt=""
+                                                     id="image4"
+                                                     style={{
+                                                         width: "11rem",
+                                                         height: "11rem",
+                                                         objectFit: "cover"
+                                                     }}/>
 
 
                                                 <ErrorMessage name="images" component="p"

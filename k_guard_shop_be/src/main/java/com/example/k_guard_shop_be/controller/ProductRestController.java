@@ -69,7 +69,7 @@ public class ProductRestController {
                                                                   @RequestParam(value = "orderBy", defaultValue = "0") String orderBy
     ) {
         Sort sort = checkOrderBy(orderBy);
-        Pageable pageable = PageRequest.of(page, 4, sort);
+        Pageable pageable = PageRequest.of(page, 5, sort);
         Page<IProductDTO> productPage;
         productPage = iProductService.getAll(pageable, productType, brand, nameSearch);
         if (productPage.getTotalElements() == 0 || productPage.getContent().size() == 0) {
@@ -119,7 +119,7 @@ public class ProductRestController {
         if (errorMap != null) {
             return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
         }
-//        iProductService.saveProduct(productDTOPlus);
+        iProductService.saveProduct(productDTOPlus);
         System.out.println(productDTOPlus);
         return new ResponseEntity<>(HttpStatus.OK);
     }
