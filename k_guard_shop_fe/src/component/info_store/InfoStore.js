@@ -40,12 +40,12 @@ export default function InfoStore() {
     useEffect(() => {
         // setCheckRender(() => true)
         // if(checkRender){
-            if (role !== "ROLE_ADMIN") {
-                toast.error("Bạn không có quyền truy cập.")
-                navigate("/")
-            }else {
-                dropDownOption("product-manager")
-            }
+        if (role !== "ROLE_ADMIN") {
+            toast.error("Bạn không có quyền truy cập.")
+            navigate("/")
+        } else {
+            dropDownOption("product-manager")
+        }
         // }
 
         // setChooseOption(()=>2)
@@ -141,21 +141,27 @@ export default function InfoStore() {
                                                 >
                                                 </li>
                                             </ul>
-                                            <p id="click">Lợi nhuận
+                                            <p id="click">Doanh thu
                                                 <i id="profit-icon" className="bi bi-chevron-down"
                                                    onClick={() => dropDownOption("profit")}
                                                 ></i></p>
                                             <ul id="profit-manager" className="ms-2 dropdown-item-product-type"
                                                 style={{borderLeft: "1px solid gray", display: 'none'}}>
-                                                <li className="ms-1"
-                                                    style={{
-                                                        color: chooseOption === 5 ? "#F4882F" : ""
-                                                    }}
-                                                    onClick={() => {
-                                                        // getAllProduct("fullface", orderBy, brand.brand, nameSearch)
-                                                        setChooseOption(() => 5)
-                                                    }}>Giáp bảo hộ
-                                                </li>
+                                                <NavLink to="/info-store/top10" style={({isActive}) => {
+                                                    return {
+                                                        color: isActive ? "#F4882F" : ""
+                                                    }
+                                                }}>
+                                                    <li className="ms-1"
+                                                        style={{
+                                                            color: chooseOption === 5 ? "#F4882F" : ""
+                                                        }}
+                                                        onClick={() => {
+                                                            // getAllProduct("fullface", orderBy, brand.brand, nameSearch)
+                                                            setChooseOption(() => 5)
+                                                        }}>Top 10 sản phẩm bán chạy
+                                                    </li>
+                                                </NavLink>
                                                 <li className="ms-1"
                                                     style={{
                                                         color: chooseOption === 6 ? "#F4882F" : ""
