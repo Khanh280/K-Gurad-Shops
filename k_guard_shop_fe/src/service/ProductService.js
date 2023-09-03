@@ -122,9 +122,9 @@ export const saveProduct = async (product) => {
         }
     })
 }
-export const getTop10Product = async () => {
+export const getTop10Product = async (startMonth, endMonth, years) => {
     try {
-        const res = await axios.get("http://localhost:8080/api/profit", {
+        const res = await axios.get("http://localhost:8080/api/profit?startMonth=" + (startMonth || "") + "&endMonth=" + (endMonth || "") + "&years=" + (years || ""), {
             headers: {
                 "Authorization": "Bearer " + await getToken()
             }
