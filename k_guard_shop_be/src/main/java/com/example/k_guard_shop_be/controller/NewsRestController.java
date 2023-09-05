@@ -18,7 +18,7 @@ public class NewsRestController {
     private INewsService iNewsService;
     @GetMapping("")
     public ResponseEntity<?> getAll(@RequestParam(value = "page",defaultValue = "0")Integer page){
-        Pageable pageable = PageRequest.of(page,8);
+        Pageable pageable = PageRequest.of(page,4);
         Page<News> newsPage = iNewsService.getAllNews(pageable);
         return new ResponseEntity<>(newsPage,HttpStatus.OK);
     }

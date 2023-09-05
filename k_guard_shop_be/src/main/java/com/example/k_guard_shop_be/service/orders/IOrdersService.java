@@ -13,4 +13,6 @@ import java.util.List;
 public interface IOrdersService {
     Page<OrderDTO> getAllOrderCustomer(HttpServletRequest httpServletRequest, Pageable pageable);
     List<OrderDetail> saveOrder(HttpServletRequest httpServletRequest,String payment);
+    Page<OrderDTO> getAll(Pageable pageable);
+    Page<OrderDetail>  getOrderDetail(Long orderId, Pageable pageable);
 }

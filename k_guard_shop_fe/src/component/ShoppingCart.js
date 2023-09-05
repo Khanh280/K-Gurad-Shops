@@ -25,6 +25,7 @@ export default function ShoppingCart() {
     const [pricePaypal, setPricePaypal] = useState(0)
     const [chooseOption, setChooseOption] = useState(true)
     const token = localStorage.getItem("token")
+    const role = localStorage.getItem("role")
     const navigate = useNavigate()
     const getCustomer = async () => {
         const res = await CustomerService.getCustomer()
@@ -130,20 +131,24 @@ export default function ShoppingCart() {
                                                  }}
                                         >Giỏ hàng</NavLink>
                                     </li>
-                                    <li style={{height: "100%", display: "flex", alignItems: "center"}}>
-                                        <NavLink to="/cart/history"
-                                                 className="cart-item"
-                                                 onClick={() => setChooseOption(false)}
-                                                 style={({isActive}) => {
-                                                     return {
-                                                         borderBottom: isActive ? "3px solid #F4882F" : "   ",
-                                                         color: isActive ? "white" : "",
-                                                         alignItems: "center",
-                                                         display: "flex"
-                                                     }
-                                                 }}
-                                        >Lịch sử giao dịch</NavLink>
-                                    </li>
+                                    {
+                                        role === "ROLE_CUSTOMER" ?
+                                            <li style={{height: "100%", display: "flex", alignItems: "center"}}>
+                                                <NavLink to="/cart/history"
+                                                         className="cart-item"
+                                                         onClick={() => setChooseOption(false)}
+                                                         style={({isActive}) => {
+                                                             return {
+                                                                 borderBottom: isActive ? "3px solid #F4882F" : "   ",
+                                                                 color: isActive ? "white" : "",
+                                                                 alignItems: "center",
+                                                                 display: "flex"
+                                                             }
+                                                         }}
+                                                >Lịch sử giao dịch</NavLink>
+                                            </li>
+                                            : ""
+                                    }
                                     {/*<NavLink to="/cart/list">*/}
                                     {/*    <li className="d-flex align-items-center" style={{minWidth: "5rem"}}>Giỏ*/}
                                     {/*        hàng*/}

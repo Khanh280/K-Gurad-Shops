@@ -142,7 +142,7 @@ export default function Top10() {
                 <table className="table table-hover">
                     <thead>
                     <tr style={{textAlign: "start"}}>
-                        <th>Id</th>
+                        <th>#</th>
                         <th>Sản phẩm</th>
                         <th>Doanh thu (VND)</th>
                         <th>Số lượng đã bán</th>
@@ -154,7 +154,7 @@ export default function Top10() {
                         products ?
                             products.map((product, index) =>
                                 <tr className="p-0" key={index}>
-                                    <td>{product.id}</td>
+                                    <td>{index+1}</td>
                                     <td className="p-0">
                                         <div>
                                             <img src={product.image} alt="" style={{width: "3rem"}}/>

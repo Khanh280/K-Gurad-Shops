@@ -74,4 +74,14 @@ public class OrdersService implements IOrdersService {
         iOrderDetailRepository.saveAll(orderDetailList);
         return orderDetailList;
     }
+
+    @Override
+    public Page<OrderDTO> getAll(Pageable pageable) {
+        return iOrdersRepository.getAllOrder(pageable);
+    }
+
+    @Override
+    public Page<OrderDetail> getOrderDetail(Long orderId, Pageable pageable) {
+        return iOrdersRepository.getOrderDetail(orderId,pageable);
+    }
 }

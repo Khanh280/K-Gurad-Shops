@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface IProductSizeRepository extends JpaRepository<ProductSize,Long> {
-    @Query(value = "select * from product_size as ps where ps.product_id = :productId",nativeQuery = true)
+    @Query(value = "select * from product_size as ps where ps.product_id = :productId limit 1",nativeQuery = true)
     ProductSize getProductSizeByProductId(@Param("productId")Long productId);
 }

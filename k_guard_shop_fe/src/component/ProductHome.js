@@ -398,80 +398,92 @@ export default function ProductHome() {
                         </div>
                     </div>
                     <div className="col-md-9 pe-0">
-                        <>
-                            <div className="row">
-                                {
-                                    products.map((product, index) =>
-                                            // <Link key={index} to={`/product/detail/${product.id}`}
-                                            //       className="col-md-3 product-link">
-                                            <div className="col-md-3"
-                                                 style={{
-                                                     opacity: product.quantity === "0" ? "50%" : "",
-                                                 }}>
-                                                <div className=" card-product-home mt-2" style={{maxHeight: "20rem"}}>
-                                                    {/*<span className="sale">Mới</span>*/}
-                                                    <Link key={index} to={`/product/detail/${product.id}`}
-                                                          className="product-link detail-link">
-                                                        <div className="image">
-                                                            <img
-                                                                src={product?.linkImage}
-                                                                style={{width: "100%", height: "100%"}}/>
-                                                            {/*<p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>*/}
-                                                            {
-                                                                product.quantity === "0" ?
-                                                                    <p id="out-of-stock"
-                                                                       style={{width: "100%", textAlign: "center"}}>Sản phẩm
-                                                                        tạm hết</p>
-                                                                    :
-                                                                    <p style={{width: "100%", textAlign: "center"}}>Xem sản
-                                                                        phẩm</p>
+                        {
+                            products.length > 0 ?
+                                <>
+                                    <div className="row">
+                                        {
+                                            products.map((product, index) =>
+                                                    // <Link key={index} to={`/product/detail/${product.id}`}
+                                                    //       className="col-md-3 product-link">
+                                                    <div className="col-md-3"
+                                                         style={{
+                                                             opacity: product.quantity === "0" ? "50%" : "",
+                                                         }}>
+                                                        <div className=" card-product-home mt-2"
+                                                             style={{maxHeight: "20rem"}}>
+                                                            {/*<span className="sale">Mới</span>*/}
+                                                            <Link key={index} to={`/product/detail/${product.id}`}
+                                                                  className="product-link detail-link">
+                                                                <div className="image">
+                                                                    <img
+                                                                        src={product?.linkImage}
+                                                                        style={{width: "100%", height: "100%"}}/>
+                                                                    {/*<p style={{width: "100%", textAlign: "center"}}>Xem sản phẩm</p>*/}
+                                                                    {
+                                                                        product.quantity === "0" ?
+                                                                            <p id="out-of-stock"
+                                                                               style={{
+                                                                                   width: "100%",
+                                                                                   textAlign: "center"
+                                                                               }}>Sản phẩm
+                                                                                tạm hết</p>
+                                                                            :
+                                                                            <p style={{
+                                                                                width: "100%",
+                                                                                textAlign: "center"
+                                                                            }}>Xem sản
+                                                                                phẩm</p>
 
-                                                            }
+                                                                    }
 
-                                                        </div>
-                                                    </Link>
-                                                    <div className="details align-items-center d-grid"
-                                                         style={{padding: "0 10px", minHeight: "5rem"}}>
-                                                        <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
-                                                        <div className="price-ratings">
-                                                            <div className="price">
-                                                                <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
-                                                            </div>
-                                                            <div className="ratings"
-                                                                 style={{pointerEvents: product.quantity === "0" ? "none" : ""}}>
-                                                                <i className="bi bi-cart-plus" onClick={() => {
-                                                                    modals(product)
-                                                                }}
-                                                                   style={{fontSize: "1.5rem"}}></i>
+                                                                </div>
+                                                            </Link>
+                                                            <div className="details align-items-center d-grid"
+                                                                 style={{padding: "0 10px", minHeight: "5rem"}}>
+                                                                <h6 style={{fontSize: "1rem"}}>{product.name}</h6>
+                                                                <div className="price-ratings">
+                                                                    <div className="price">
+                                                                        <span>{product?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ</span>
+                                                                    </div>
+                                                                    <div className="ratings"
+                                                                         style={{pointerEvents: product.quantity === "0" ? "none" : ""}}>
+                                                                        <i className="bi bi-cart-plus" onClick={() => {
+                                                                            modals(product)
+                                                                        }}
+                                                                           style={{fontSize: "1.5rem"}}></i>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        // </Link>
-                                    )
-                                }
-                            </div>
-                            {
-                                page < totalPage - 1 ?
-                                    <div className="col-md-12 d-flex justify-content-center mt-2">
-                                        <button id="load-more-product"
-                                                className="btn btn-sm mt-2 justify-content-center load-more-btn"
-                                                onClick={() => loadMore(page, types, brand.brand, orderBy, nameSearch)}
-                                                style={{backgroundColor: "#fff", border: "1px solid #F4882F"}}>Xem thêm
-                                            <i className="bi bi-chevron-down"></i></button>
+                                                // </Link>
+                                            )
+                                        }
                                     </div>
-                                    :
-                                    ""
-                            }
-                        </>
-                        {
-                            products.length <= 0 ?
+                                    {
+                                        page < totalPage - 1 ?
+                                            <div className="col-md-12 d-flex justify-content-center mt-2">
+                                                <button id="load-more-product"
+                                                        className="btn btn-sm mt-2 justify-content-center load-more-btn"
+                                                        onClick={() => loadMore(page, types, brand.brand, orderBy, nameSearch)}
+                                                        style={{
+                                                            backgroundColor: "#fff",
+                                                            border: "1px solid #F4882F"
+                                                        }}>Xem thêm
+                                                    <i className="bi bi-chevron-down"></i></button>
+                                            </div>
+                                            :
+                                            ""
+                                    }
+                                </> :
+
                                 <div align="center">
                                     <h4 className="text-danger">Không có sản phẩm</h4>
                                 </div>
-                                : ""
+
                         }
+
 
                     </div>
                 </div>

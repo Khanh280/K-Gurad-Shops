@@ -41,6 +41,14 @@ public class OrdersRestController {
     @Autowired
     private IOrderDetailService iOrderDetailService;
 
+    @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllOrder(@RequestParam(value = "page", defaultValue = "0") Integer page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<OrderDTO> orderDTOPage = iOrdersService.getAll(pageable);
+        return new ResponseEntity<>(orderDTOPage,HttpStatus.OK);
+    }
+
     @GetMapping("/order-detail-customer")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> getAllOrderDetailCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -56,9 +64,15 @@ public class OrdersRestController {
     public ResponseEntity<?> getAllOrderCustomer(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                  HttpServletRequest httpServletRequest) {
         Sort sort = Sort.by("createDate").descending();
-        Pageable pageable = PageRequest.of(page, 8,sort);
+        Pageable pageable = PageRequest.of(page, 8, sort);
         Page<OrderDTO> orderDTOPage = iOrdersService.getAllOrderCustomer(httpServletRequest, pageable);
         return new ResponseEntity<>(orderDTOPage, HttpStatus.OK);
+    }
+    @GetMapping("/{id}/{page}")
+    public ResponseEntity<?> detailOrder(@PathVariable("orderId")Long orderID,@PathVariable("page")Integer page){
+        Pageable pageable = PageRequest.of(page,10);
+        Page<OrderDetail> orderDetailPage = iOrdersService.getOrderDetail(orderID,pageable);
+        return new ResponseEntity<>(orderDetailPage,HttpStatus.OK);
     }
 
     @PostMapping("")

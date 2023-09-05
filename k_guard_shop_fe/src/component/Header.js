@@ -156,17 +156,17 @@ export default function Header() {
                             }
                         </ul>
                     </li>
-                    <li>
-                        <NavLink to="/e"
-                                 style={({isActive}) => {
-                                     return {
-                                         backgroundColor: isActive ? "#F4882F" : "   ",
-                                         color: isActive ? "black" : "",
-                                         borderRadius: "10px",
-                                     }
-                                 }}
-                        >Liên hệ</NavLink>
-                    </li>
+                    {/*<li>*/}
+                    {/*    <NavLink to="/e"*/}
+                    {/*             style={({isActive}) => {*/}
+                    {/*                 return {*/}
+                    {/*                     backgroundColor: isActive ? "#F4882F" : "   ",*/}
+                    {/*                     color: isActive ? "black" : "",*/}
+                    {/*                     borderRadius: "10px",*/}
+                    {/*                 }*/}
+                    {/*             }}*/}
+                    {/*    >Liên hệ</NavLink>*/}
+                    {/*</li>*/}
 
 
                     {

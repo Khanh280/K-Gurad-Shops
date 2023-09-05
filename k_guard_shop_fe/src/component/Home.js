@@ -314,30 +314,30 @@ export default function Home() {
                     {
                         news ?
                             <Carousel interval={1000}>
-                                <Carousel.Item>
-                                    <div
-                                        className="row portfolio-container"
-                                        data-aos="fade-up"
-                                        data-aos-delay={1000}
-                                    >
-                                        {
-                                            news.map((item, index) =>
-                                                <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
-                                                    <div className="card-post-home">
-                                                        <span className="sale">HOT</span>
-                                                        <div className="image" style={{minHeight: "10rem"}}>
-                                                            <img style={{maxHeight: "10rem"}}
-                                                                 src={item.image}/>
-                                                        </div>
-                                                        <div className="details" style={{minHeight: "7rem"}}>
-                                                            <p>{item.title}</p>
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                            )
-                                        }
-                                    </div>
-                                </Carousel.Item>
+                                {/*<Carousel.Item>*/}
+                                {/*    <div*/}
+                                {/*        className="row portfolio-container"*/}
+                                {/*        data-aos="fade-up"*/}
+                                {/*        data-aos-delay={1000}*/}
+                                {/*    >*/}
+                                {/*        {*/}
+                                {/*            news.map((item, index) =>*/}
+                                {/*                <Link key={index} to={`/news-page/detail/${item.id}`} className="col-md-3 product-link py-2">*/}
+                                {/*                    <div className="card-post-home">*/}
+                                {/*                        <span className="sale">HOT</span>*/}
+                                {/*                        <div className="image" style={{minHeight: "10rem"}}>*/}
+                                {/*                            <img style={{maxHeight: "10rem"}}*/}
+                                {/*                                 src={item.image}/>*/}
+                                {/*                        </div>*/}
+                                {/*                        <div className="details" style={{minHeight: "7rem"}}>*/}
+                                {/*                            <p>{item.title}</p>*/}
+                                {/*                        </div>*/}
+                                {/*                    </div>*/}
+                                {/*                </Link>*/}
+                                {/*            )*/}
+                                {/*        }*/}
+                                {/*    </div>*/}
+                                {/*</Carousel.Item>*/}
                                 <Carousel.Item>
                                     <div
                                         className="row portfolio-container"
@@ -346,7 +346,7 @@ export default function Home() {
                                     >
                                         {
                                             news && news.map((item, index) =>
-                                                <Link key={index} to={`/post`} className="col-md-3 product-link py-2">
+                                                <Link key={index} to={`/news-page/detail/${item.id}`} className="col-md-3 product-link py-2">
                                                     <div className="card-post-home">
                                                         <span className="sale">HOT</span>
                                                         <div className="image" style={{minHeight: "10rem"}}>

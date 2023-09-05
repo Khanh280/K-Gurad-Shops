@@ -137,12 +137,12 @@ export default function CreateProduct() {
                                 product: {
                                     name:values.name,
                                     description: values.description,
-                                    brand: brands.find((brand) => brand.id === values.brand),
-                                    productType: productTypes.find((productType) => productType.id === values.productType),
+                                    brand: brands.find((brand) => brand.id === +values.brand),
+                                    productType: productTypes.find((productType) => productType.id === +values.productType),
                                     quantity: values.quantity,
                                     price: values.price
                                 },
-                                sizes: sizes.find((size) => size.id === values.sizes)
+                                sizes: sizes.find((size) => size.id === +values.sizes)
                             },
                             imagesList: res.map((item) => ({
                                 id: "",
@@ -155,7 +155,7 @@ export default function CreateProduct() {
                         console.log(productDTO)
                         try {
                             await ProductService.saveProduct(productDTO);
-                            // navigate("/info-store/product-list")
+                            navigate("/info-store/product-list")
                             toast.success("Thêm sản phẩm thành công.")
                         } catch (e) {
                             // await setCustomer({

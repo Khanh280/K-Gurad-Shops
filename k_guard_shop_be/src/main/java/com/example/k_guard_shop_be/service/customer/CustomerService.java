@@ -48,6 +48,7 @@ public class CustomerService implements ICustomerService {
         users.setPassword(test);
         users.setRoles(new Roles(2L, "ROLE_CUSTOMER"));
         customer.setUsers(users);
+        users.setVerifyCode("12345");
         iUsersService.createUser(users);
         iCustomerRepository.save(customer);
     }

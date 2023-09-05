@@ -18,6 +18,7 @@ public class ProducTypeService implements IProductTypeService{
 
     @Override
     public ProductType getProductTypeByProductId(Long productId) {
+
         return iProductTypeRepository.getProductTypeByProductId(productId);
     }
 }

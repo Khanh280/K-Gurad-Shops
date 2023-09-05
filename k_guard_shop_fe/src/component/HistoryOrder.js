@@ -3,6 +3,7 @@ import {Field, Form, Formik} from "formik";
 import * as OrdersService from "../service/OrdersService";
 import "../css/cart.css"
 import {NavLink} from "react-router-dom";
+import moment from "moment";
 
 export default function HistoryOrder() {
     const [orders, setOrder] = useState()
@@ -87,7 +88,7 @@ export default function HistoryOrder() {
                         <table className="col-md-12">
                             <thead>
                             <tr>
-                                <th>Id</th>
+                                <th>#</th>
                                 <th>Ngày mua</th>
                                 <th>Đơn giá</th>
                                 <th className="text-center" style={{width: "15%"}}>Trạng thái</th>
@@ -96,13 +97,13 @@ export default function HistoryOrder() {
                             </thead>
                             <tbody>
                             {
-                                orders.map((order) =>
+                                orders.map((order,index) =>
                                     <tr>
                                         <td className="">
-                                            <p className="my-2">{order.id}</p>
+                                            <p className="my-2">{index}</p>
                                         </td>
                                         <td className="">
-                                            <p className="my-2">{order?.createDate}</p>
+                                            <p className="my-2">{order?.createDate.split(" ")[1].replace(".0","")} {moment(order?.createDate.split(" ")[0], 'YYYY/MM/DD').format('DD/MM/YYYY')}</p>
                                         </td>
                                         <td className="">
                                             <p className="my-2">{order?.totalPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</p>

@@ -33,7 +33,7 @@ export const ChartComponent = ({data}) => {
             },
             title: {
                 display: true, // Hiển thị tiêu đề của biểu đồ
-                text: 'Biểu đồ top 10 doanh thu sẩn phẩm ' , // Tiêu đề biểu đồ
+                text: 'Biểu đồ Top 10 sản phẩm bán chạy' , // Tiêu đề biểu đồ
                 font: {
                     size: 18, // Kích thước font tiêu đề
                 },

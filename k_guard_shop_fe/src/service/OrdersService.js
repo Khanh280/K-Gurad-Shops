@@ -18,6 +18,14 @@ export const getAllOrderCustomer = async (page) => {
     })
     return res;
 }
+export const getAllOrder = async (page) => {
+    const res = await axios.get("http://localhost:8080/api/orders?page=" + page, {
+        headers: {
+            "Authorization": "Bearer " + await ProductService.getToken()
+        }
+    })
+    return res;
+}
 export const getAllOrderDetailCustomer = async (page, orderId) => {
     const res = await axios.get("http://localhost:8080/api/orders/order-detail-customer?page=" + page + "&orderId=" + orderId, {
         headers: {

@@ -23,9 +23,11 @@ export default function DetailNews() {
         setNews(res.data.content)
     }
     useEffect(() => {
+        window.scrollTo(0,0)
         getNewsById(param.id)
     }, [param.id])
     useEffect(() => {
+        window.scrollTo(0,0)
         getAllNews()
     }, [])
     if (newsDetail === undefined) {
