@@ -2,20 +2,21 @@ import React, {useEffect, useState} from "react";
 import * as OrderService from "../../service/OrdersService"
 import "../../css/cart.css"
 import Swal from "sweetalert2";
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink, useNavigate, useParams} from "react-router-dom";
 import {toast} from "react-toastify";
 import axios from "axios";
 import {Field, Form, Formik} from "formik";
 import moment from "moment";
-export default function OrderList() {
+export default function OrderDetail() {
     const [orders, setOrder] = useState()
     const token = localStorage.getItem("token")
     const [totalPages, setTotalPage] = useState()
     const [currentPage, setCurrentPage] = useState(0)
     const [nameSearch, setNameSearch] = useState("")
     const [orderBy, setOrderBy] = useState("")
+    const param = useParams()
     const navigate = useNavigate();
-    const getAllOrder = async (page, nameSearch, orderBy) => {
+    const getOrderDetail = async (page, nameSearch, orderBy) => {
         const res = await OrderService.getAllOrder(page)
         if (res !== null) {
             setOrder(() => res.data.content)
@@ -44,7 +45,7 @@ export default function OrderList() {
             const isCurrentPage = currentPage === i;
             const className = isCurrentPage ? "activePagination" : "pagination"
             page.push(
-                <li className={className} onClick={() => getAllOrder(i, nameSearch, orderBy)}><span
+                <li className={className} onClick={() => getOrderDetail(i, nameSearch, orderBy)}><span
                     className="d-flex align-items-center">{i + 1}</span></li>
             )
         }
@@ -72,7 +73,7 @@ export default function OrderList() {
                         }
                     })
                     await toast.success("Xóa sản phẩm thành công")
-                    await getAllOrder(currentPage,nameSearch,orderBy)
+                    await getOrderDetail(currentPage,nameSearch,orderBy)
                 } catch (e) {
                     toast.error("Xóa sản phẩm thất bại")
                 }
@@ -83,7 +84,7 @@ export default function OrderList() {
         resetForm(); // Reset the form
     };
     useEffect(() => {
-        getAllOrder(currentPage, nameSearch, orderBy)
+        getOrderDetail(currentPage, nameSearch, orderBy)
     }, [])
     if (!orders) {
         return null;
@@ -98,7 +99,7 @@ export default function OrderList() {
                         }}
                         onSubmit={(values) => {
                             const search = async () => {
-                                getAllOrder(0, values.nameSearch.trim(), orderBy)
+                                getOrderDetail(0, values.nameSearch.trim(), orderBy)
                             }
                             search()
 
@@ -121,7 +122,7 @@ export default function OrderList() {
                         )}
                     </Formik>
                     <select className="form-control w-25" style={{height: "2.7rem"}} name="" id=""
-                            onChange={(event) => getAllOrder(0, nameSearch, event.target.value)}
+                            onChange={(event) => getOrderDetail(0, nameSearch, event.target.value)}
                     >
                         <option value="new">Sản phẩm mới nhất</option>
                         <option value="a-z">Sắp xếp A-Z</option>
@@ -185,7 +186,7 @@ export default function OrderList() {
                             ""
                             :
                             <li className=" pagination" style={{width: "3rem"}}
-                                onClick={() => getAllOrder(currentPage - 1)}>Trước</li>
+                                onClick={() => getOrderDetail(currentPage - 1)}>Trước</li>
                     }
                     {
                         pagination()
@@ -195,7 +196,7 @@ export default function OrderList() {
                             ""
                             :
                             <li className="pagination" style={{width: "3rem"}}
-                                onClick={() => getAllOrder(currentPage + 1)}>Sau</li>
+                                onClick={() => getOrderDetail(currentPage + 1)}>Sau</li>
                     }
                 </ul>
                 {/*<button className="btn btn-sm btn-primary" style={{width:"3rem"}}>Trước</button>*/}
