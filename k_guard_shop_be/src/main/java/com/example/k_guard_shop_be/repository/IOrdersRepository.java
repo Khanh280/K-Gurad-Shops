@@ -27,6 +27,7 @@ public interface IOrdersRepository extends JpaRepository<Orders, Long> {
             "       o.create_date               as createDate,\n" +
             "       ps.name                     as paymentStatus,\n" +
             "       ps.id                     as paymentStatusId,\n" +
+            "       c.name                     as customerName,\n" +
             "       sum(od.price * od.quantity) as totalPrice\n" +
             "from orders o\n" +
             "         inner join customer c on o.customer_id = c.id\n" +
@@ -35,8 +36,5 @@ public interface IOrdersRepository extends JpaRepository<Orders, Long> {
             "group by o.id", nativeQuery = true)
     Page<OrderDTO> getAllOrder(Pageable pageable);
 
-    @Query(value = "select od.* from order_detail od\n" +
-            "inner join orders o on od.orders_id = o.id\n" +
-            "where o.id = 146 and od.is_delete = false", nativeQuery = true)
-    Page<OrderDetail> getOrderDetail(@Param("orderId") Long orderId, Pageable pageable);
+
 }

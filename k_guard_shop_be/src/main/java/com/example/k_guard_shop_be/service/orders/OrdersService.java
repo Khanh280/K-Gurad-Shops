@@ -2,6 +2,7 @@ package com.example.k_guard_shop_be.service.orders;
 
 import com.example.k_guard_shop_be.controller.CustomerRestController;
 import com.example.k_guard_shop_be.dto.OrderDTO;
+import com.example.k_guard_shop_be.dto.OrderDetailDTO;
 import com.example.k_guard_shop_be.model.*;
 import com.example.k_guard_shop_be.repository.IOrderDetailRepository;
 import com.example.k_guard_shop_be.repository.IOrdersRepository;
@@ -81,7 +82,8 @@ public class OrdersService implements IOrdersService {
     }
 
     @Override
-    public Page<OrderDetail> getOrderDetail(Long orderId, Pageable pageable) {
-        return iOrdersRepository.getOrderDetail(orderId,pageable);
+    public Page<OrderDetailDTO> getOrderDetail(Long orderId, Pageable pageable) {
+        System.out.println(orderId);
+        return iOrderDetailRepository.getOrderDetail(orderId,pageable);
     }
 }

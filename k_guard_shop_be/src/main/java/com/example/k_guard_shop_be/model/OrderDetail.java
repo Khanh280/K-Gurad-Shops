@@ -15,9 +15,6 @@ public class OrderDetail {
     @JoinColumn(name = "orders_id")
     @ManyToOne
     private Orders orders;
-    //    @JoinColumn(name="product_id")
-//    @ManyToOne
-//    private Product product;
     @JoinColumn(name = "product_size_id")
     @ManyToOne
     private ProductSize productSize;

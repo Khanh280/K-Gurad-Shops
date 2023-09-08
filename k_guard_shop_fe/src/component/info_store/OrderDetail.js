@@ -8,7 +8,7 @@ import axios from "axios";
 import {Field, Form, Formik} from "formik";
 import moment from "moment";
 export default function OrderDetail() {
-    const [orders, setOrder] = useState()
+    const [orderDetails, setOrder] = useState()
     const token = localStorage.getItem("token")
     const [totalPages, setTotalPage] = useState()
     const [currentPage, setCurrentPage] = useState(0)
@@ -16,12 +16,13 @@ export default function OrderDetail() {
     const [orderBy, setOrderBy] = useState("")
     const param = useParams()
     const navigate = useNavigate();
-    const getOrderDetail = async (page, nameSearch, orderBy) => {
-        const res = await OrderService.getAllOrder(page)
+    const getOrderDetail = async (orderId,page) => {
+        const res = await OrderService.getOrderDetail(+orderId,page)
         if (res !== null) {
             setOrder(() => res.data.content)
             setTotalPage(res.data.totalPages)
         }
+        console.log(res.data)
         setCurrentPage(() => page)
         setNameSearch(() => nameSearch)
         setOrderBy(() => orderBy)
@@ -84,9 +85,10 @@ export default function OrderDetail() {
         resetForm(); // Reset the form
     };
     useEffect(() => {
-        getOrderDetail(currentPage, nameSearch, orderBy)
+        console.log(param.id)
+        getOrderDetail(param.id,currentPage)
     }, [])
-    if (!orders) {
+    if (!orderDetails) {
         return null;
     }
     return (
@@ -134,44 +136,53 @@ export default function OrderDetail() {
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Ngày mua</th>
-                        <th>Đơn giá</th>
-                        <th className="text-center" style={{width: "15%"}}>Trạng thái</th>
-                        <th className="text-center">Chức năng</th>
+                        <th>Sản phẩm</th>
+                        <th>Giá sản phẩm</th>
+                        <th>Size</th>
+                        <th>Số lượng</th>
+                        {/*<th className="text-center" style={{width: "15%"}}>Trạng thái</th>*/}
+                        {/*<th className="text-center">Chức năng</th>*/}
                     </tr>
                     </thead>
                     <tbody>
                     {
-                        orders.map((order,index) =>
+                        orderDetails.map((orderDetail,index) =>
                             <tr>
                                 <td className="">
                                     <p className="my-2">{index +1}</p>
                                 </td>
-                                <td className="">
-                                    <p className="my-2">{order?.createDate.split(" ")[1].replace(".0","")} {moment(order?.createDate.split(" ")[0], 'YYYY/MM/DD').format('DD/MM/YYYY')}</p>
+                                <td className="row-table-height d-flex">
+                                    <img src={orderDetail?.linkImage} alt="" style={{width: "5rem"}}/>
+                                    <p className="row-table ms-1">{orderDetail?.productName}</p>
                                 </td>
                                 <td className="">
-                                    <p className="my-2">{order?.totalPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</p>
+                                    <p className="my-2">{orderDetail?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</p>
                                 </td>
                                 <td className="">
-                                    <p className="my-2 d-flex justify-content-center"
-                                       style={{
-                                           backgroundColor: order.paymentStatusId === "1" ? "#ffc669": "#a1f5a1",
-                                           borderRadius:  "10px"
-                                       }}
-                                    >{order?.paymentStatus}</p>
+                                    <p className="my-2">{orderDetail?.size}</p>
                                 </td>
-                                <td className="text-center">
-                                    {/*<p className=""><i*/}
-                                    {/*    className="bi bi-exclamation-circle text-info"></i></p>*/}
-                                    <div>
-                                        <NavLink to={`/cart/history/order-detail-customer/${order.id}`}>
-                                            <i className="bi bi-exclamation-circle text-info"
-                                               style={{cursor: "pointer"}}
-                                               title="Chi tiết đơn hàng"></i>
-                                        </NavLink>
-                                    </div>
+                                <td className="">
+                                    <p className="my-2">{orderDetail?.quantity}</p>
                                 </td>
+                                {/*<td className="">*/}
+                                {/*    <p className="my-2 d-flex justify-content-center"*/}
+                                {/*       style={{*/}
+                                {/*           // backgroundColor: orderDetail.paymentStatusId === "1" ? "#ffc669": "#a1f5a1",*/}
+                                {/*           borderRadius:  "10px"*/}
+                                {/*       }}*/}
+                                {/*    >{orderDetail?.paymentStatus}</p>*/}
+                                {/*</td>*/}
+                                {/*<td className="text-center">*/}
+                                {/*    /!*<p className=""><i*!/*/}
+                                {/*    /!*    className="bi bi-exclamation-circle text-info"></i></p>*!/*/}
+                                {/*    <div>*/}
+                                {/*        <NavLink to={`/cart/history/order-detail-customer/${orderDetail.id}`}>*/}
+                                {/*            <i className="bi bi-exclamation-circle text-info"*/}
+                                {/*               style={{cursor: "pointer"}}*/}
+                                {/*               title="Chi tiết đơn hàng"></i>*/}
+                                {/*        </NavLink>*/}
+                                {/*    </div>*/}
+                                {/*</td>*/}
                             </tr>
                         )
                     }

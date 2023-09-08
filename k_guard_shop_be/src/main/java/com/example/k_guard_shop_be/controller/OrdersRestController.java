@@ -68,10 +68,10 @@ public class OrdersRestController {
         Page<OrderDTO> orderDTOPage = iOrdersService.getAllOrderCustomer(httpServletRequest, pageable);
         return new ResponseEntity<>(orderDTOPage, HttpStatus.OK);
     }
-    @GetMapping("/{id}/{page}")
-    public ResponseEntity<?> detailOrder(@PathVariable("orderId")Long orderID,@PathVariable("page")Integer page){
+    @GetMapping("/order-detail")
+    public ResponseEntity<?> detailOrder(@RequestParam("orderId")Long orderId,@RequestParam(value = "page",defaultValue = "0")Integer page){
         Pageable pageable = PageRequest.of(page,10);
-        Page<OrderDetail> orderDetailPage = iOrdersService.getOrderDetail(orderID,pageable);
+        Page<OrderDetailDTO> orderDetailPage = iOrdersService.getOrderDetail(orderId,pageable);
         return new ResponseEntity<>(orderDetailPage,HttpStatus.OK);
     }
 

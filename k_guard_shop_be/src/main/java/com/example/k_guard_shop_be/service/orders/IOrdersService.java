@@ -1,6 +1,7 @@
 package com.example.k_guard_shop_be.service.orders;
 
 import com.example.k_guard_shop_be.dto.OrderDTO;
+import com.example.k_guard_shop_be.dto.OrderDetailDTO;
 import com.example.k_guard_shop_be.model.Customer;
 import com.example.k_guard_shop_be.model.OrderDetail;
 import com.example.k_guard_shop_be.model.Orders;
@@ -14,5 +15,5 @@ public interface IOrdersService {
     Page<OrderDTO> getAllOrderCustomer(HttpServletRequest httpServletRequest, Pageable pageable);
     List<OrderDetail> saveOrder(HttpServletRequest httpServletRequest,String payment);
     Page<OrderDTO> getAll(Pageable pageable);
-    Page<OrderDetail>  getOrderDetail(Long orderId, Pageable pageable);
+    Page<OrderDetailDTO>  getOrderDetail(Long orderId, Pageable pageable);
 }

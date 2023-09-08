@@ -133,6 +133,7 @@ export default function OrderList() {
                     <thead>
                     <tr>
                         <th>#</th>
+                        <th>Tên khách hàng</th>
                         <th>Ngày mua</th>
                         <th>Đơn giá</th>
                         <th className="text-center" style={{width: "15%"}}>Trạng thái</th>
@@ -145,6 +146,9 @@ export default function OrderList() {
                             <tr>
                                 <td className="">
                                     <p className="my-2">{index +1}</p>
+                                </td>
+                                <td className="">
+                                    <p className="my-2">{order?.customerName}</p>
                                 </td>
                                 <td className="">
                                     <p className="my-2">{order?.createDate.split(" ")[1].replace(".0","")} {moment(order?.createDate.split(" ")[0], 'YYYY/MM/DD').format('DD/MM/YYYY')}</p>
@@ -164,7 +168,7 @@ export default function OrderList() {
                                     {/*<p className=""><i*/}
                                     {/*    className="bi bi-exclamation-circle text-info"></i></p>*/}
                                     <div>
-                                        <NavLink to={`/cart/history/order-detail-customer/${order.id}`}>
+                                        <NavLink to={`/info-store/order-detail/${order.id}`}>
                                             <i className="bi bi-exclamation-circle text-info"
                                                style={{cursor: "pointer"}}
                                                title="Chi tiết đơn hàng"></i>

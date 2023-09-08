@@ -25,6 +25,7 @@ import UpdateProduct from "./component/info_store/UpdateProduct";
 import {ChartComponent} from "./component/info_store/ChartComponent";
 import Top10 from "./component/info_store/Top10";
 import OrderList from "./component/info_store/OrderList";
+import OrderDetail from "./component/info_store/OrderDetail";
 
 function App() {
     return (
@@ -41,6 +42,7 @@ function App() {
                             <Route path="/info-store/product-list" element={<ProductList/>}/>
                             <Route path="/info-store/top10" element={<Top10/>}/>
                             <Route path="/info-store/order-list" element={<OrderList/>}/>
+                            <Route path="/info-store/order-detail/:id" element={<OrderDetail/>}/>
                         </Route>
                         <Route path="/news-page" element={<NewsPage/>}>
                             <Route path="/news-page/list" element={<NewsList/>}/>
